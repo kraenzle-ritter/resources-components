@@ -1,6 +1,6 @@
 {
     "name": "kraenzle-ritter/resources-components",
-    "description": ":package_description",
+    "description": "Livewire components for resources",
     "license": "MIT",
     "authors": [
         {
