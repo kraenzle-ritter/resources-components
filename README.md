@@ -1,7 +1,6 @@
 # gnd-lw-component
 
-[![Latest Version on Packagist][ico-version]][https://img.shields.io/packagist/v/kraenzle-ritter/gnd-lw-component.svg?style=flat-square]
-<!--[![Total Downloads][ico-downloads]][https://img.shields.io/packagist/dt/kraenzle-ritter/gnd-lw-component.svg?style=flat-square]-->
+[![Software License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](LICENSE.md)
 
 ## Installation
 
