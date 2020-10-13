@@ -33,7 +33,7 @@ class WikipediaLwComponent extends Component
 
         $this->base_url = $base_uri = 'https://'.$locale.'.wikipedia.org/wiki/';
 
-        $this->search = trim($search) ?: 'Cassirer';
+        $this->search = trim($search) ?: '';
 
         $this->queryOptions = $params['queryOptions'] ?? ['locale' => $locale, 'limit' => 5];
     }
