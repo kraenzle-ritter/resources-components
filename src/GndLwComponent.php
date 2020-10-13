@@ -28,7 +28,7 @@ class GndLwComponent extends Component
     {
         $this->model = $model;
 
-        $this->search = trim($search) ?: 'Cassirer';
+        $this->search = trim($search) ?: '';
 
         $this->queryOptions = $params['queryOptions'] ?? ['limit' => 5];
     }

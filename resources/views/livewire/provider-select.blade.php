@@ -11,19 +11,19 @@
         <br>
         @switch(strtolower($provider))
             @case('geonames')
-                @livewire('geonames-lw-component', [$model, 'search' => $model->resource_search, 'params' => ['queryOptions' => ['size' => 5]]])
+                @livewire('geonames-lw-component', [$model, 'search' => $model->resource_search ?? $model->name, 'params' => ['queryOptions' => ['size' => 5]]])
                 @break
             @case('gnd')
-                @livewire('gnd-lw-component',      [$model, 'search' => $model->resource_search, 'params' => ['queryOptions' => ['size' => 5]]])
+                @livewire('gnd-lw-component',      [$model, 'search' => $model->resource_search ?? $model->name, 'params' => ['queryOptions' => ['size' => 5]]])
                 @break
             @case('metagrid')
-                @livewire('metagrid-lw-component', [$model, 'search' => $model->resource_search, 'params' => ['queryOptions' => ['size' => 5]]])
+                @livewire('metagrid-lw-component', [$model, 'search' => $model->resource_search ?? $model->name, 'params' => ['queryOptions' => ['size' => 5]]])
                 @break
             @case('wikidata')
-                @livewire('wikidata-lw-component', [$model, 'search' => $model->resource_search, 'params' => ['queryOptions' => ['size' => 5]]])
+                @livewire('wikidata-lw-component', [$model, 'search' => $model->resource_search ?? $model->name, 'params' => ['queryOptions' => ['size' => 5]]])
                 @break
             @case('wikipedia')
-                @livewire('wikipedia-lw-component', [$model, 'search' => $model->resource_search, 'params' => ['queryOptions' => ['size' => 5]]])
+                @livewire('wikipedia-lw-component', [$model, 'search' => $model->resource_search ?? $model->name, 'params' => ['queryOptions' => ['size' => 5]]])
                 @break
             @default
                 Kein Povider ausgewählt

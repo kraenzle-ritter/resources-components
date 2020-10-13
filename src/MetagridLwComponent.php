@@ -29,7 +29,7 @@ class MetagridLwComponent extends Component
 
         $locale = $params['locale'] ?? 'de';
 
-        $this->search = trim($search) ?: 'Cassirer';
+        $this->search = trim($search) ?: '';
 
         $this->queryOptions = $params['queryOptions'] ?? ['locale' => $locale, 'limit' => 5];
     }

@@ -10,6 +10,10 @@ Via Composer
 $ composer require kraenzle-ritter/gnd-lw-component
 ```
 
+## Models
+
+The model should have a resources_search attribute or a name attribute.
+
 ## Usage
 Just put the component in your view:
 
