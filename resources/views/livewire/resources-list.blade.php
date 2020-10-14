@@ -6,7 +6,7 @@
                 <ul class="list-group">
                 @foreach($model->resources as $resource)
                     <li class="list-group-item">
-                        <a target="_blank" href={{ $resource->url }}>{{ $resource->provider }}</a>
+                        <a target="_blank" href="{{ $resource->url }}">{{ $resource->provider }}</a>
                         @if($deleteButton)
                             <button
                                 wire:click="removeResource('{{ $resource->id }}')"
