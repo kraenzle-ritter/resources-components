@@ -46,7 +46,7 @@ class Geonames
         $query_string = static::paramsToQueryString($this->query_params);
 
         $search = 'searchJSON?' . $query_string;
-
+\Log::debug($search);
         try {
             $response = $this->client->get($search);
         } catch (RequestException $e) {

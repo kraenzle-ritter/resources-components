@@ -28,7 +28,7 @@ class GeonamesLwComponent extends Component
     {
         $this->model = $model;
 
-        $this->search = trim($search) ?: '';
+        $this->search = trim($search) ?: 'Cassirer';
 
         $this->queryOptions = $params['queryOptions'] ?? ['limit' => 5];
     }

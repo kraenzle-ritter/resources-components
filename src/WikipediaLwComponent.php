@@ -43,7 +43,7 @@ class WikipediaLwComponent extends Component
         $data = [
             'provider' => $this->provider,
             'provider_id' => $provider_id,
-            'url' => $url
+            'url' => str_replace(' ', '_', $url)
         ];
         $this->model->{$this->saveMethod}($data);
         $this->emit('resourcesChanged');
