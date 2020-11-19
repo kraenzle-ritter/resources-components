@@ -4,6 +4,7 @@ namespace KraenzleRitter\ResourcesComponents;
 
 use Livewire\Component;
 use KraenzleRitter\ResourcesComponents\Wikipedia;
+use KraenzleRitter\ResourcesComponents\Events\ResourceSaved;
 
 class WikipediaLwComponent extends Component
 {
@@ -45,8 +46,9 @@ class WikipediaLwComponent extends Component
             'provider_id' => $provider_id,
             'url' => str_replace(' ', '_', $url)
         ];
-        $this->model->{$this->saveMethod}($data);
+        $resource = $this->model->{$this->saveMethod}($data);
         $this->emit('resourcesChanged');
+        event(new ResourceSaved($resource, $this->model->id));
     }
 
     public function removeResource($url)

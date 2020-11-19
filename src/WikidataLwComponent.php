@@ -4,6 +4,7 @@ namespace KraenzleRitter\ResourcesComponents;
 
 use Livewire\Component;
 use KraenzleRitter\ResourcesComponents\Wikidata;
+use KraenzleRitter\ResourcesComponents\Events\ResourceSaved;
 
 class WikidataLwComponent extends Component
 {
@@ -40,8 +41,9 @@ class WikidataLwComponent extends Component
             'url' => $url,
             'full_json' => json_encode($full_json)
         ];
-        $this->model->{$this->saveMethod}($data);
+        $resource = $this->model->{$this->saveMethod}($data);
         $this->emit('resourcesChanged');
+        event(new ResourceSaved($resource, $this->model->id));
     }
 
     public function removeResource($url)

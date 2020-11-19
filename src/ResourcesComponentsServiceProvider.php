@@ -26,6 +26,7 @@ class ResourcesComponentsServiceProvider extends ServiceProvider
         Livewire::component('provider-select', ProviderSelect::class);
         Livewire::component('resources-list', ResourcesList::class);
 
+        Livewire::component('anton-lw-component', AntonLwComponent::class);
         Livewire::component('geonames-lw-component', GeonamesLwComponent::class);
         Livewire::component('gnd-lw-component', GndLwComponent::class);
         Livewire::component('metagrid-lw-component', MetagridLwComponent::class);
@@ -60,7 +61,7 @@ class ResourcesComponentsServiceProvider extends ServiceProvider
      */
     public function provides()
     {
-        return ['provider-select', 'resources-list','gnd-lw-component', 'metagrid-lw-component', 'wikidata-lw-component', 'wikipedia-lw-component'];
+        return ['provider-select', 'resources-list', 'anton-lw-component', 'geonames-lw-component', 'gnd-lw-component', 'metagrid-lw-component', 'wikidata-lw-component', 'wikipedia-lw-component'];
     }
 
     /**
@@ -76,8 +77,8 @@ class ResourcesComponentsServiceProvider extends ServiceProvider
         ], 'gnd-lw-component.config');
 
         // Publishing the views.
-        $this->publishes([
-            __DIR__.'/../resources/views' => base_path('resources/views/vendor/kraenzle-ritter'),
-        ], 'gnd-lw-component.views');
+        // $this->publishes([
+        //     __DIR__.'/../resources/views' => base_path('resources/views/vendor/kraenzle-ritter'),
+        // ], 'gnd-lw-component.views');
     }
 }

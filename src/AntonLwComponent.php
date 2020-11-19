@@ -4,10 +4,9 @@ namespace KraenzleRitter\ResourcesComponents;
 
 use Livewire\Component;
 use KraenzleRitter\Resources\Resource;
-use KraenzleRitter\ResourcesComponents\Geonames;
 use KraenzleRitter\ResourcesComponents\Events\ResourceSaved;
 
-class GeonamesLwComponent extends Component
+class AntonLwComponent extends Component
 {
     public $search;
 
@@ -15,9 +14,11 @@ class GeonamesLwComponent extends Component
 
     public $model;
 
+    public $endpoint;
+
     public $resourceable_id;
 
-    public $provider = 'Geonames';
+    public $provider = 'Anton';
 
     public $saveMethod = 'updateOrCreateResource';
 
@@ -25,11 +26,13 @@ class GeonamesLwComponent extends Component
 
     protected $listeners = ['resourcesChanged' => 'render'];
 
-    public function mount($model, string $search = '', array $params = [])
+    public function mount($model, string $search = '', array $params = [], string $endpoint = 'objects')
     {
         $this->model = $model;
 
         $this->search = trim($search) ?: 'Cassirer';
+
+        $this->endpoint = $endpoint;
 
         $this->queryOptions = $params['queryOptions'] ?? ['limit' => 5];
     }
@@ -37,16 +40,13 @@ class GeonamesLwComponent extends Component
     public function saveResource($provider_id, $url, $full_json = null)
     {
         $data = [
-            'provider' => $this->provider,
+            'provider' => config('resources-components.anton.provider-slug'),
             'provider_id' => $provider_id,
-            'url' => $url,
+            'url' => config('resources-components.anton.url'). '/' . $this->endpoint . '/' . $provider_id ,
             'full_json' => json_decode($full_json)
         ];
-
         $resource = $this->model->{$this->saveMethod}($data);
-
         $this->emit('resourcesChanged');
-
         event(new ResourceSaved($resource, $this->model->id));
     }
 
@@ -60,13 +60,13 @@ class GeonamesLwComponent extends Component
 
     public function render()
     {
-        $client = new Geonames();
+        $client = new Anton();
 
-        $resources = $client->search($this->search, $this->queryOptions);
+        $resources = $client->search($this->search, $this->queryOptions, $this->endpoint);
 
-        $view = view()->exists('vendor.kraenzle-ritter.livewire.geonames-lw-component')
-              ? 'vendor.kraenzle-ritter.livewire.geonames-lw-component'
-              : 'resources-components::geonames-lw-component';
+        $view = view()->exists('vendor.kraenzle-ritter.livewire.anton-lw-component')
+              ? 'vendor.kraenzle-ritter.livewire.anton-lw-component'
+              : 'resources-components::anton-lw-component';
 
         if (!isset($resources) or !count($resources)) {
             return view($view, [

@@ -3,8 +3,9 @@
 namespace KraenzleRitter\ResourcesComponents;
 
 use Livewire\Component;
-use KraenzleRitter\ResourcesComponents\Gnd;
 use KraenzleRitter\Resources\Resource;
+use KraenzleRitter\ResourcesComponents\Gnd;
+use KraenzleRitter\ResourcesComponents\Events\ResourceSaved;
 
 class GndLwComponent extends Component
 {
@@ -41,8 +42,9 @@ class GndLwComponent extends Component
             'url' => $url,
             'full_json' => json_decode($full_json)
         ];
-        $this->model->{$this->saveMethod}($data);
+        $resource = $this->model->{$this->saveMethod}($data);
         $this->emit('resourcesChanged');
+        event(new ResourceSaved($resource, $this->model->id));
     }
 
     public function removeResource($url)

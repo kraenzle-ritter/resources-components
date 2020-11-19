@@ -4,6 +4,7 @@ namespace KraenzleRitter\ResourcesComponents;
 
 use Livewire\Component;
 use KraenzleRitter\ResourcesComponents\Metagrid;
+use KraenzleRitter\ResourcesComponents\Events\ResourceSaved;
 
 class MetagridLwComponent extends Component
 {
@@ -41,9 +42,8 @@ class MetagridLwComponent extends Component
             'provider_id' => $provider_id,
             'url' => $url
         ];
-        $this->model->{$this->saveMethod}($data);
+        $resource = $this->model->{$this->saveMethod}($data);
         $full_json = json_decode($full_json);
-        $this->model->{$this->saveMethod}($data);
 
         $data = null;
         if (isset($full_json->resources)) {
@@ -57,6 +57,7 @@ class MetagridLwComponent extends Component
             }
         }
         $this->emit('resourcesChanged');
+        event(new ResourceSaved($resource, $this->model->id));
     }
 
     public function removeResource($url)

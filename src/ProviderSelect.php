@@ -12,13 +12,16 @@ class ProviderSelect extends Component
 
     public $provider;
 
+    public $endpoint;
+
     public $model;
 
     public $listeners = ['resourcesChanged' => 'hydrate'];
 
-    public function mount($model, $providers)
+    public function mount($model, $providers, $endpoint)
     {
         $this->model = $model;
+        $this->endpoint = $endpoint;
         $this->providers_all = array_map('strtolower', $providers);
         $linked_providers = $this->model->resources->pluck('provider')->toArray();
         $this->providers = array_values(array_diff($this->providers_all, $linked_providers));

@@ -7,7 +7,84 @@
 Via Composer
 
 ``` bash
-$ composer require kraenzle-ritter/gnd-lw-component
+$ composer require kraenzle-ritter/resources-component
+```
+
+To use this package install also `kraenzle-ritter/resources`.
+
+In your views you can use the package then like this:
+
+```
+@livewire('resources-list', [$model, 'deleteButton' => true])
+@livewire('provider-select', [$model, $providers', 'actors'])
+```
+
+The `$model` is the model which should become resourceable.
+
+`$providers` is a list (array) of actually used resource providers. You can pass them by the controller or via a config file. Actual available are any anton installation (see below), geonames, gnd, metagrid, wikipedia, wikidata.
+
+The last parameter for the `provider-select` is the endpoint, that is the entity. You only need this at this time if you use anton as a provider.
+
+The components fire an event (`ResourceSaved`) when saving a resource. So you can define and register a listener in your app:
+
+```php
+<?php
+
+namespace App\Listeners;
+
+use KraenzleRitter\ResourcesComponents\Events\ResourceSaved;
+
+class UpdateLocationWithGeonamesCoordinates
+{
+
+    public function handle(ResourceSaved $event)
+    {
+        if ($this->resource->provider == 'geonames') {
+            \Log::debug($event->resource);
+            \Log::debug($event->model);
+        }
+
+    }
+}
+```
+
+In your EventServiceProvider:
+
+```php
+<?php
+namespace App\Providers;
+
+use Illuminate\Support\Facades\Event;
+use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
+use KraenzleRitter\ResourcesComponents\Events\ResourceSaved;
+use App\Listeners\UpdateLocationWithGeonamesCoordinates;
+
+class EventServiceProvider extends ServiceProvider
+{
+
+    /**
+     * The event listener mappings for the application.
+     *
+     * @var array
+     */
+    protected $listen = [
+        ResourceSaved::class => [
+            UpdateLocationWithGeonamesCoordinates::class
+        ]
+    ];
+```
+
+## .env Variables
+
+For some providers you need set some variables in your .env file:
+
+```
+ANTON_PROVIDER_SLUG=kr
+ANTON_URL=https://kr.anton.ch
+ANTON_API_URL=http://kkr.anton.test/api
+ANTON_API_TOKEN=secret
+
+GEONAMES_USERNAME=demo
 ```
 
 ## Models
