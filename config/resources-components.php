@@ -3,7 +3,10 @@
 return [
     'geonames' => [
         'username' => env('GEONAMES_USERNAME', 'demo'),
-        'limit' => 5
+        //'continent-code' => 'EU', // Restricts the search for toponym of the given continent
+        //'countryBias' => 'CH',    // Records from the countryBias are listed first
+        'limit' => 5, // Default is 5, the maximal allowed value is 1000.
+
     ],
     'gnd' => [
         'limit' => 5
@@ -22,7 +25,8 @@ return [
         'limit' => 5
     ],
     'wikidata' => [
-        'limit' => 5
+        'limit' => 5,
+        'locale' => 'de'
     ],
 
 ];

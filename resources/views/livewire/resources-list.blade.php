@@ -1,4 +1,4 @@
-<div style="margin-left:5rem;">
+<div id="resources-list">
     @if(count($model->resources))
         <div class="card">
             <div class="card-body">

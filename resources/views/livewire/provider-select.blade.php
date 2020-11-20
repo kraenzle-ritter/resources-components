@@ -1,4 +1,4 @@
-<div style="margin-left:5rem;" class="card">
+<div id="provider-select" class="card">
     <div class="card-body">
     <form class="form-inline" > 
         <label>Provider </label>

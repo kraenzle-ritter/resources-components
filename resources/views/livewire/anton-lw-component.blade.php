@@ -7,7 +7,7 @@
         </form>
         <br>
         @if($results)
-            <h5 class="card-title">Anton – {{ __('List') }}</h5>
+            <h5>Anton – {{ __('List') }}</h5>
             @foreach($results as $result)
                 <button
                     wire:click="saveResource('{{ $result->id }}', '{{ $result->links[0]->url }}', '{{ json_encode($result, JSON_UNESCAPED_UNICODE) }}')"

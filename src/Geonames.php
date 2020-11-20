@@ -2,23 +2,21 @@
 
 namespace KraenzleRitter\ResourcesComponents;
 
-use GuzzleHttp\Client;
-use Illuminate\Support\Str;
-use GuzzleHttp\Exception\GuzzleException;
+use Illuminate\Support\Facades\Http;
+use KraenzleRitter\ResourcesComponents\Helpers\Params;
 
 class Geonames
 {
     public $client;
+
+    public $base_uri;
 
     public $username;
 
     public $body;
 
     public $query_params = [
-        'maxRows' => 5,            // Default is 100, the maximal allowed value is 1000.
         'style' => 'FULL',          // Verbosity of returned xml document, default = MEDIUM
-        //'continentCode' => 'EU',    // Restricts the search for toponym of the given continent
-        //'countryBias' => 'CH',    // Records from the countryBias are listed first
         'type' => 'JSON',           // the format type of the returned document, default = xml
         'isNameRequired' => 'true'  // At least one of the search term needs to be part of the place name
     ];
@@ -28,35 +26,30 @@ class Geonames
         // https://www.geonames.org/export/geonames-search.html
         $this->username = config('resources-components.geonames.username');
 
-        /* https://datahub.io/core/continent-codes
-        if (isset(app('settings')['geonames_continentCode']) && in_array(app('settings')['geonames_continentCode'], ['AF', 'AS', 'EU', 'NA', 'OC', 'SA', 'AN'])) {
-            $this->query_params['continentCode'] =  app('settings')['geonames_continentCode'];
-        } else {
-            unset($this->query_params['continentCode']);
-        }*/
+        $this->query_params['maxRows'] = config('resources-components.geonames.limit') ?? 5; // Default is 100, the maximal allowed value is 1000.
+        $this->query_params['continentCode'] =  config('resources-components.geonames.continent-code') ?? '';
+        $this->query_params['countryBias'] = config('resources-components.geonames.country-bias') ?? '';
+        $this->query_params = array_filter($this->query_params);
 
-        $this->client = new Client(['base_uri' => 'http://api.geonames.org/']);
+        $this->base_uri = 'http://api.geonames.org/';
     }
 
     public function search($string, $params = [])
     {
         $this->query_params =  $params ?: $this->query_params;
-
         $this->query_params = array_merge(['q' => $string, 'username' => $this->username], $this->query_params);
-        $query_string = static::paramsToQueryString($this->query_params);
 
+        $query_string = Params::toQueryString($this->query_params);
         $search = 'searchJSON?' . $query_string;
 
-        try {
-            $response = $this->client->get($search);
-        } catch (RequestException $e) {
-                \Log::error(Psr7\str($e->getRequest()));
-            if ($e->hasResponse()) {
-                \Log::debug(Psr7\str($e->getResponse()));
-            }
+        $response = HTTP::get($this->base_uri.$search);
+
+        if ($response->serverError()) {
+            \Log::error(__METHOD__, ['guzzle server error (geonames)']);
+            return [];
         }
 
-        if ($response->getStatusCode() === 200) {
+        if ($response->ok()) {
             $result = json_decode($response->getBody());
         }
 
@@ -74,85 +67,5 @@ class Geonames
         //$body =  $response2->getBody();
 
         return $xml;
-    }
-
-    public function toAntonArray(): array
-    {
-        $array = [];
-        $i = 0;
-        $locale_default = app('settings')['locales']['value'][0];
-        foreach ($this->body->geonames as $row) {
-            $array[$i]['place']['name'] = Str::slug($row->toponymName);
-            if (isset($row->alternateNames)) {
-                $array[$i]['place']['label'] = $this->toLabelArray($row->alternateNames);
-            }
-            if (empty($array[$i]['place']['label'])) {
-                $array[$i]['place']['label'][env('LOCALES_DEFAULT')] = $row->toponymName;
-            }
-
-            $array[$i]['place']['country_code'] = $row->countryCode ?? '';
-            $array[$i]['place']['country_name'] = $row->countryName ?? '';
-            $array[$i]['place']['fcl'] = $row->fcl; //abstract feature code
-
-            $array[$i]['place']['location'] = $row->lng . ', ' . $row->lat;
-
-            $array[$i]['resource']['provider'] = 'geonames';
-            $array[$i]['resource']['resource_id'] = $row->geonameId;
-            $array[$i]['resource']['full_json'] = json_encode($row);
-
-            $array[$i]['resource']['url'] = 'http://api.geonames.org/get?geonameId=' . $row->geonameId . '&style=json&username=antonatgeonames';
-
-            $xml = $this->getPlaceByGeonameId($row->geonameId);
-            $array[$i]['resource']['full_json'] = json_encode($xml, JSON_UNESCAPED_UNICODE);
-            $i++;
-        }
-
-        return $array;
-    }
-
-    private function toLabelArray(array $alternateNames): array
-    {
-        $labelArray = [];
-        foreach ($alternateNames as $label) {
-            if (in_array($label->lang, config('custom.locales'))) {
-                $labelArray[$label->lang] = $label->name;
-            }
-        }
-        return $labelArray;
-    }
-
-    /**
-     * Convert Parameters Array to a Query String.
-     *
-     * Escapes values according to RFC 1738.
-     *
-     * @see http://forum.geonames.org/gforum/posts/list/8.page
-     * @see rawurlencode()
-     * @see https://github.com/Aternus/geonames-client/blob/master/src/Client.php
-     *
-     * @param array $params Associative array of query parameters.
-     *
-     * @return string The query string.
-     */
-    public static function paramsToQueryString(array $params = []) : string
-    {
-        $query_string = [];
-        foreach ($params as $name => $value) {
-            if (empty($name)) {
-                continue;
-            }
-            if (is_array($value)) {
-                // recursion case
-                $result_string = static::paramsToQueryString($value);
-                if (!empty($result_string)) {
-                    $query_string[] = $result_string;
-                }
-            } else {
-                // base case
-                $value = (string)$value;
-                $query_string[] = $name . '=' . rawurlencode($value);
-            }
-        }
-        return implode('&', $query_string);
     }
 }

@@ -3,21 +3,15 @@
 namespace KraenzleRitter\ResourcesComponents;
 
 use GuzzleHttp\Client;
-use Illuminate\Support\Str;
-use GuzzleHttp\Exception\GuzzleException;
+use KraenzleRitter\ResourcesComponents\Helpers\Params;
 
 class Anton
 {
-    public $client;
-
-    public $username;
-
     public $body;
 
-    public $query_params = [
-        'perPage' => 5,  // Default is 100, the maximal allowed value is 1000
-        'page' => 1
-    ];
+    public $url;
+
+    private $token;
 
     public function __construct()
     {
@@ -28,12 +22,14 @@ class Anton
     public function search($string, $params = [], $endpoint = 'objects')
     {
         $this->client = new Client(['base_uri' => $this->url .'/' . $endpoint]);
-        $this->query_params['perPage'] = $params['size'] ?? config('sources-components.anton.limit');
+
+        $this->query_params =  $params ?: $this->query_params;
+        $this->query_params['perPage'] = $params['size'] ?? config('sources-components.anton.limit') ?? 5;
+        $this->query_params['page'] = $params['page'] ?? 1;
         unset($params['size']);
-        //$this->query_params =  $params ?: $this->query_params;
 
         $this->query_params = array_merge(['?search' => $string, 'api_token' => $this->token], $this->query_params);
-        $query_string = static::paramsToQueryString($this->query_params);
+        $query_string = Params::toQueryString($this->query_params);
         $search = $query_string;
 
         try {
@@ -63,42 +59,5 @@ class Anton
         //$body =  $response2->getBody();
 
         return $xml;
-    }
-
-
-
-    /**
-     * Convert Parameters Array to a Query String.
-     *
-     * Escapes values according to RFC 1738.
-     *
-     * @see http://forum.geonames.org/gforum/posts/list/8.page
-     * @see rawurlencode()
-     * @see https://github.com/Aternus/geonames-client/blob/master/src/Client.php
-     *
-     * @param array $params Associative array of query parameters.
-     *
-     * @return string The query string.
-     */
-    public static function paramsToQueryString(array $params = []) : string
-    {
-        $query_string = [];
-        foreach ($params as $name => $value) {
-            if (empty($name)) {
-                continue;
-            }
-            if (is_array($value)) {
-                // recursion case
-                $result_string = static::paramsToQueryString($value);
-                if (!empty($result_string)) {
-                    $query_string[] = $result_string;
-                }
-            } else {
-                // base case
-                $value = (string)$value;
-                $query_string[] = $name . '=' . rawurlencode($value);
-            }
-        }
-        return implode('&', $query_string);
     }
 }

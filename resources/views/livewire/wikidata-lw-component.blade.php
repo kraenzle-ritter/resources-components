@@ -1,18 +1,17 @@
-<div class="card">
+<div>
     @php
         $base_url = 'https://www.wikidata.org/wiki/';
     @endphp
 
     @if(!in_array('wikidata', $model->resources->pluck('provider')->toArray()))
-    <div class="card-body">
+    <div>
         <form class="form gnd-form" > 
             <label class="gnd-label">Wikidata {{ __('Search') }}</label>
             <input wire:model="search" class="form-control wikidata-input" type="text" placeholder="{{ $placeholder ?? '' }}">
         </form>
         <br>
-
         @if($results)
-            <h5 class="card-title">Wikidata – {{ __('List') }}</h5>
+            <h5>Wikidata – {{ __('List') }}</h5>
             @foreach($results as $result)
                 <button
                     wire:click="saveResource('{{ $result->id }}', '{{ $base_url . $result->id }}', '{{ json_encode($result, JSON_UNESCAPED_UNICODE) }}')"
@@ -36,7 +35,3 @@
     </div>
     @endif
 </div>
-
-
-
-

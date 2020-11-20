@@ -1,13 +1,13 @@
-<div class="card">
+<div>
     @if(!in_array('metagrid', $model->resources->pluck('provider')->toArray()))
-    <div class="card-body">
+    <div>
         <form class="form metagrid-form" > 
             <label class="metagrid-label">Metagrid {{ __('Search') }}</label>
             <input wire:model="search" class="form-control metagrid-input" type="text" placeholder="{{ $placeholder ?? '' }}">
         </form>
         <br>
         @if($results)
-            <h5 class="card-title">Metagrid – {{ __('List') }}</h5>
+            <h5>Metagrid – {{ __('List') }}</h5>
             @foreach($results as $result)
                 <h5 class="card-title">{{ $result->provider ?? '' }}</h5>
                 <button
@@ -31,6 +31,3 @@
     </div>
     @endif
 </div>
-
-
-

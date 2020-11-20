@@ -31,7 +31,7 @@ class GeonamesLwComponent extends Component
 
         $this->search = trim($search) ?: 'Cassirer';
 
-        $this->queryOptions = $params['queryOptions'] ?? ['limit' => 5];
+        $this->queryOptions = $params['queryOptions'];
     }
 
     public function saveResource($provider_id, $url, $full_json = null)

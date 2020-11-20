@@ -1,10 +1,10 @@
-<div class="card">
+<div>
     @php
         $base_url = 'https://www.geonames.org/';
     @endphp
 
     @if(!in_array('geonames', $model->resources->pluck('provider')->toArray()))
-    <div class="card-body">
+    <div>
         <form class="form gnd-form" > 
             {{-- <label class="gnd-label">Geonames {{ __('Search') }}</label> --}}
             <input wire:model="search" class="form-control gnd-input" type="text" placeholder="{{ $placeholder ?? '' }}">
@@ -36,6 +36,3 @@
     </div>
     @endif
 </div>
-
-
-
