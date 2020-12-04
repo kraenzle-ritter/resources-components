@@ -10,13 +10,12 @@
             <h5>GND – {{ __('List') }}</h5>
             @foreach($results as $result)
                 <button
-                    wire:click="saveResource('{{ $result->gndIdentifier }}', '{{ $result->id }}', '{{ json_encode($result, JSON_UNESCAPED_UNICODE) }}')"
+                    wire:click="saveResource('{{ $result->gndIdentifier }}', '{{ $result->id }}', '{{ json_encode($result, JSON_UNESCAPED_UNICODE | JSON_ERROR_SYNTAX) }}')"
                     type="submit"
                     class="btn btn-success btn-xs float-right"
                     title="{{ __("Save GND ID for Actor") }}">
                     <i class="fa fa-check" aria-hidden="true"></i>
                 </button>
-
                 <h6>{{ $result->preferredName ?? '' }}</h6>
                 <small>
                     <a href="{{ $result->id }}" target="_blank">{{ $result->id }}</a><br>

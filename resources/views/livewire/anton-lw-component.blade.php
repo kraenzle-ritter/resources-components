@@ -19,7 +19,7 @@
                 <h6>{{ $result->fullname ?? '' }}</h6>
                 <small>
                     <a target="_blank" href="{{ config('resources-components.anton.url') . '/' . $endpoint .'/'. $result->id }}">{{ config('resources-components.anton.url') . '/' . $endpoint .'/'. $result->id }}</a><br>
-                    kba-places-{{ $result->id }}<br>
+                    kba-{{ $endpoint }}-{{ $result->id }}<br>
                     {{ $result->description ?? '' }}
                 </small>
                 <hr>

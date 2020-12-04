@@ -43,7 +43,7 @@ class Gnd
 
         $filters = $params['filters'] ?? [];
 
-        $size = $params['limit'] ?? config('sources-components.gnd.limit') ?? 20;
+        $size = $params['limit'] ?? config('sources-components.gnd.limit') ?? 5;
 
         $search = $search . $this->buildFilter($filters) . '&size=' . $size  .'&format=json';
 

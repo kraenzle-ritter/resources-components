@@ -70,7 +70,6 @@ class GndLwComponent extends Component
                 'results' => []
             ]);
         }
-
         // members : array of matches
         foreach ($resources->member as $resource) {
             $date_start = isset($resource->dateOfBirth) ? $resource->dateOfBirth[0] : '';

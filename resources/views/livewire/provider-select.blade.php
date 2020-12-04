@@ -9,7 +9,6 @@
             </select>
         </form>
         <br>
-
         @switch(strtolower($provider))
             @case(config('resources-components.anton.provider-slug'))
                 @livewire('anton-lw-component', [$model, 'search' => $model->resource_search ?? $model->name, 'params' => ['queryOptions' => ['size' => 5]], $endpoint])
