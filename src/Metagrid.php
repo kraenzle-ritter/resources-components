@@ -35,7 +35,7 @@ class Metagrid
 
         $body = json_decode($response->getBody());
 
-        if (!$body->meta || $body->meta->total == 0) {
+        if (!$body || $body->meta->total == 0) {
             return null;
         }
 
