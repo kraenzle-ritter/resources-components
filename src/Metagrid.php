@@ -16,6 +16,7 @@ class Metagrid
 
     public function __construct()
     {
+
         $this->client = new Client(['base_uri' => 'https://api.metagrid.ch/']);
     }
 
@@ -27,7 +28,8 @@ class Metagrid
 
         $search = str_replace(',', ' ', $search);
         try {
-            $response = $this->client->get('/search/person.json?query=' . $search . '&group=1&_format=json');
+            //https://api.metagrid.ch/search?group=1&query=cassirer&skip=0&take=10
+            $response = $this->client->get('/search?query=' . $search . '&group=1&_format=json');
         } catch (\Exception $e) {
             \Log::error($e->getMessage());
             return [];
