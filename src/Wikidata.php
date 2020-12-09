@@ -19,13 +19,11 @@ class Wikidata
     {
         $client = new Wiki();
 
-        $lang = $params['locale'] ??  config('sources-components.wikidata.locale') ?? 'de';
+        $lang = $params['locale'] ?? config('sources-components.wikidata.locale') ?? 'de';
         $limit = $params['limit'] ?? config('sources-components.wikidata.limit') ?? 5;
 
         $results = $client->search($search, $lang, $limit);
 
         return count($results) ? $results : [];
     }
-
-
 }
