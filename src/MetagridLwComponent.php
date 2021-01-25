@@ -50,7 +50,7 @@ class MetagridLwComponent extends Component
             foreach($full_json->resources as $resource) {
                 $data = [
                     'provider' => $resource->provider->slug,
-                    'provider_id' => $resource->identifier,
+                    'provider_id' => $resource->identifier ?? '',
                     'url' => $resource->link->uri,
                 ];
                 $this->model->{$this->saveMethod}($data);
