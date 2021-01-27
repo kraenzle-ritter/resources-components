@@ -10,6 +10,8 @@ class ResourcesList extends Component
 
     public $deleteButton;
 
+    public $resources;
+
     protected $listeners = ['resourcesChanged' => 'render'];
 
     public function mount($model, $deleteButton = false)
@@ -27,6 +29,7 @@ class ResourcesList extends Component
     public function render()
     {
         $this->model->load('resources');
+        $this->resources = $this->model->resources;
 
         $view = view()->exists('vendor.kraenzle-ritter.livewire.resources-list')
               ? 'vendor.kraenzle-ritter.livewire.resources-list'

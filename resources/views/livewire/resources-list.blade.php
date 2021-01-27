@@ -1,10 +1,10 @@
 <div id="resources-list">
-    @if(count($model->resources))
+    @if(count($resources))
         <div class="card">
             <div class="card-body">
                 <h5 class="card-title">Externe Links</h5>
                 <ul class="list-group">
-                @foreach($model->resources as $resource)
+                @foreach($resources as $resource)
                     <li class="list-group-item">
                         <a target="_blank" href="{{ $resource->url }}">{{ $resource->provider }}</a>
                         @if($deleteButton)

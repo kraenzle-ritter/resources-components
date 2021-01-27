@@ -6,6 +6,7 @@ use GuzzleHttp\Client;
 
 /**
  * GND queries
+ * cf . https://de.wikipedia.org/wiki/Hilfe:GND
  * cf. https://lobid.org/gnd/api
  *
  * Gnd::search('string', $params) : object

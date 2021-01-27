@@ -24,6 +24,17 @@ class Wikidata
 
         $results = $client->search($search, $lang, $limit);
 
+        if (count($results)) {
+            return $results;
+        }
+        if (str_contains($search, ',')) {
+            $array = explode(',', $search);
+            $array = array_reverse($array);
+            $search = join(' ', $array);
+            $results = $client->search($search, $lang, $limit);
+        }
+
         return count($results) ? $results : [];
+
     }
 }

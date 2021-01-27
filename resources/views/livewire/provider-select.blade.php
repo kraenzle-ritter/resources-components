@@ -1,4 +1,5 @@
 <div id="provider-select" class="card">
+@if($providers)
     <div class="card-body">
     <form class="form-inline" > 
         <label>Provider </label>
@@ -32,4 +33,5 @@
                 Kein Provider ausgewählt
         @endswitch
     </div>
+@endif
 </div>

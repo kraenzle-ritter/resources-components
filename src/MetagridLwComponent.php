@@ -6,6 +6,10 @@ use Livewire\Component;
 use KraenzleRitter\ResourcesComponents\Metagrid;
 use KraenzleRitter\ResourcesComponents\Events\ResourceSaved;
 
+/**
+ * https://source.dodis.ch/metagrid-go/metagrid-go/-/wikis/Breaking-changes
+ */
+
 class MetagridLwComponent extends Component
 {
     public $search;
@@ -43,16 +47,19 @@ class MetagridLwComponent extends Component
             'url' => $url
         ];
         $resource = $this->model->{$this->saveMethod}($data);
-        $full_json = json_decode($full_json);
 
+        $full_json = json_decode($full_json);
         $data = null;
         if (isset($full_json->resources)) {
-            foreach($full_json->resources as $resource) {
+            foreach ($full_json->resources as $srcData) {
                 $data = [
-                    'provider' => $resource->provider->slug,
-                    'provider_id' => $resource->identifier ?? '',
-                    'url' => $resource->link->uri,
+                    'provider' => $srcData->provider->slug,
+                    'url' => $srcData->link->uri,
                 ];
+                if (isset($srcData->identifier)) {
+                    $data['provider_id'] = $srcData->identifier ?? '';
+                }
+
                 $this->model->{$this->saveMethod}($data);
             }
         }
