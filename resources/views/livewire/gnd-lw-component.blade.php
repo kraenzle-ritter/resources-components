@@ -16,7 +16,11 @@
                     title="{{ __("Save GND ID for Actor") }}">
                     <i class="fa fa-check" aria-hidden="true"></i>
                 </button>
-                <h6>{{ $result->preferredName ?? '' }}</h6>
+                <h6>{{ $result->preferredName ?? '' }}
+                    {{ isset($result->dateOfBirth[0]) ? substr($result->dateOfBirth[0],0,4) : '' }}
+                    {{ isset($result->dateOfBirth[0]) || isset($result->dateOfDeath[0]) ? '–' : '' }}
+                    {{ isset($result->dateOfDeath[0]) ? substr($result->dateOfDeath[0],0,4) : '' }}
+                </h6>
                 <small>
                     <a href="{{ $result->id }}" target="_blank">{{ $result->id }}</a><br>
                     {{ join('<br>', $result->biographicalOrHistoricalInformation ?? []) }}

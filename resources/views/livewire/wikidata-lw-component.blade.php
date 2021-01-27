@@ -22,8 +22,9 @@
                 </button>
 
                 <h6>{{ $result->label ?? '' }}</h6>
+
                 <small>
-                    <a href="{{ $result->id }}" target="_blank">{{ $base_url . $result->id }}</a><br>
+                    <a href="{{ $base_url . $result->id }}" target="_blank">{{ $result->id }}</a><br>
                     {{ $result->description }}
                 </small>
                 <hr>
