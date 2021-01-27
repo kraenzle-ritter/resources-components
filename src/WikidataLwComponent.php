@@ -42,7 +42,6 @@ class WikidataLwComponent extends Component
             'full_json' => json_encode($full_json)
         ];
         $resource = $this->model->{$this->saveMethod}($data);
-
         $this->model->saveMoreResources('wikidata');
 
         $this->emit('resourcesChanged');

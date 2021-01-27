@@ -43,6 +43,8 @@ class GndLwComponent extends Component
             'full_json' => json_decode($full_json)
         ];
         $resource = $this->model->{$this->saveMethod}($data);
+        $this->model->saveMoreResources('gnd');
+
         $this->emit('resourcesChanged');
         event(new ResourceSaved($resource, $this->model->id));
     }

@@ -47,6 +47,7 @@ class WikipediaLwComponent extends Component
             'url' => str_replace(' ', '_', $url)
         ];
         $resource = $this->model->{$this->saveMethod}($data);
+        $this->model->saveMoreResources('wikipedia');
         $this->emit('resourcesChanged');
         event(new ResourceSaved($resource, $this->model->id));
     }
