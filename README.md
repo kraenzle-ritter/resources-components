@@ -1,6 +1,6 @@
-# gnd-lw-component
-
 [![Latest Stable Version](https://poser.pugx.org/kraenzle-ritter/resources-components/v)](//packagist.org/packages/kraenzle-ritter/resources-components) [![Total Downloads](https://poser.pugx.org/kraenzle-ritter/resources-components/downloads)](//packagist.org/packages/kraenzle-ritter/resources-components) [![Latest Unstable Version](https://poser.pugx.org/kraenzle-ritter/resources-components/v/unstable)](//packagist.org/packages/kraenzle-ritter/resources-components) [![License](https://poser.pugx.org/kraenzle-ritter/resources-components/license)](//packagist.org/packages/kraenzle-ritter/resources-components)
+
+# gnd-lw-component
 
 ## Installation
 
