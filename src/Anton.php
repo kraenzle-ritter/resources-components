@@ -34,15 +34,16 @@ class Anton
 
         try {
             $response = $this->client->get($search);
+            if ($response->ok()) {
+                $result = json_decode($response->getBody());
+            }
         } catch (RequestException $e) {
                 \Log::error(Psr7\str($e->getRequest()));
             if ($e->hasResponse()) {
                 \Log::debug(Psr7\str($e->getResponse()));
             }
-        }
-
-        if ($response->getStatusCode() === 200) {
-            $result = json_decode($response->getBody());
+        } catch(\GuzzleHttp\Exception\ClientException $e) {
+            $result = [];
         }
 
         return $result->data ?? [];
