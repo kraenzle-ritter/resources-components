@@ -34,7 +34,7 @@ class Anton
 
         try {
             $response = $this->client->get($search);
-            if ($response->ok()) {
+            if ($response->getStatusCode() == 200) {
                 $result = json_decode($response->getBody());
             }
         } catch (RequestException $e) {
