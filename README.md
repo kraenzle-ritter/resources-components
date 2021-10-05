@@ -1,6 +1,16 @@
-# gnd-lw-component
+# Resources components (Livewire, Laravel)
 
 [![Latest Stable Version](https://poser.pugx.org/kraenzle-ritter/resources-components/v)](//packagist.org/packages/kraenzle-ritter/resources-components) [![Total Downloads](https://poser.pugx.org/kraenzle-ritter/resources-components/downloads)](//packagist.org/packages/kraenzle-ritter/resources-components) [![Latest Unstable Version](https://poser.pugx.org/kraenzle-ritter/resources-components/v/unstable)](//packagist.org/packages/kraenzle-ritter/resources-components) [![License](https://poser.pugx.org/kraenzle-ritter/resources-components/license)](//packagist.org/packages/kraenzle-ritter/resources-components)
+
+Search for entities in authority databases and link them with your local data.
+
+- Anton
+- Geonames
+- GND
+- Metagrid
+- ortsnamen.ch
+- Wikidata
+- Wikipedia
 
 ## Installation
 
