@@ -19,7 +19,7 @@ class Anton
         $this->token = config('resources-components.anton.token');
     }
 
-    public function search($string, $params = [], $endpoint = 'objects')
+    public function search(string $search, $params = [], $endpoint = 'objects')
     {
         $this->client = new Client(['base_uri' => $this->url .'/' . $endpoint]);
 
@@ -28,7 +28,7 @@ class Anton
         $this->query_params['page'] = $params['page'] ?? 1;
         unset($params['size']);
 
-        $this->query_params = array_merge(['?search' => $string, 'api_token' => $this->token], $this->query_params);
+        $this->query_params = array_merge(['?search' => $search, 'api_token' => $this->token], $this->query_params);
         $query_string = Params::toQueryString($this->query_params);
         $search = $query_string;
 

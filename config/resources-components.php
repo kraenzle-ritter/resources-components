@@ -19,7 +19,7 @@ return [
         'limit' => 5
     ],
     'metagrid' => [
-        'limt' => 5
+        'limit' => 5
     ],
     'wikipedia' => [
         'limit' => 5
@@ -28,5 +28,9 @@ return [
         'limit' => 5,
         'locale' => 'de'
     ],
+    'ortsnamen' => [
+        'limit' => 5,
+        'locale' => 'de'
+    ]
 
 ];

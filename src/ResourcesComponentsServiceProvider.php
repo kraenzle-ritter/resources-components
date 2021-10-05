@@ -30,6 +30,7 @@ class ResourcesComponentsServiceProvider extends ServiceProvider
         Livewire::component('geonames-lw-component', GeonamesLwComponent::class);
         Livewire::component('gnd-lw-component', GndLwComponent::class);
         Livewire::component('metagrid-lw-component', MetagridLwComponent::class);
+        Livewire::component('ortsnamen-lw-component', OrtsnamenLwComponent::class);
         Livewire::component('wikidata-lw-component', WikidataLwComponent::class);
         Livewire::component('wikipedia-lw-component', WikipediaLwComponent::class);
 
@@ -61,7 +62,7 @@ class ResourcesComponentsServiceProvider extends ServiceProvider
      */
     public function provides()
     {
-        return ['provider-select', 'resources-list', 'anton-lw-component', 'geonames-lw-component', 'gnd-lw-component', 'metagrid-lw-component', 'wikidata-lw-component', 'wikipedia-lw-component'];
+        return ['provider-select', 'resources-list', 'anton-lw-component', 'geonames-lw-component', 'gnd-lw-component', 'metagrid-lw-component', 'ortsnamen-lw-component', 'wikidata-lw-component', 'wikipedia-lw-component'];
     }
 
     /**

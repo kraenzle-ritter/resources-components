@@ -39,7 +39,7 @@ class WikidataLwComponent extends Component
             'provider' => $this->provider,
             'provider_id' => $provider_id,
             'url' => $url,
-            'full_json' => json_encode($full_json)
+            'full_json' => json_encode($full_json, JSON_UNESCAPED_UNICODE)
         ];
         $resource = $this->model->{$this->saveMethod}($data);
         $this->model->saveMoreResources('wikidata');

@@ -76,5 +76,4 @@ class Gnd
 
         return '&filter=' . $filter;
     }
-
 }
