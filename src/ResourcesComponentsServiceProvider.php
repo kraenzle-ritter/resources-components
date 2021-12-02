@@ -33,6 +33,7 @@ class ResourcesComponentsServiceProvider extends ServiceProvider
         Livewire::component('ortsnamen-lw-component', OrtsnamenLwComponent::class);
         Livewire::component('wikidata-lw-component', WikidataLwComponent::class);
         Livewire::component('wikipedia-lw-component', WikipediaLwComponent::class);
+        Livewire::component('manual-input-lw-component', ManualInputLwComponent::class);
 
         // Publishing is only necessary when using the CLI.
         if ($this->app->runningInConsole()) {
@@ -62,7 +63,7 @@ class ResourcesComponentsServiceProvider extends ServiceProvider
      */
     public function provides()
     {
-        return ['provider-select', 'resources-list', 'anton-lw-component', 'geonames-lw-component', 'gnd-lw-component', 'metagrid-lw-component', 'ortsnamen-lw-component', 'wikidata-lw-component', 'wikipedia-lw-component'];
+        return ['provider-select', 'resources-list', 'anton-lw-component', 'geonames-lw-component', 'gnd-lw-component', 'metagrid-lw-component', 'ortsnamen-lw-component', 'wikidata-lw-component', 'wikipedia-lw-component', 'manual-input-lw-component'];
     }
 
     /**

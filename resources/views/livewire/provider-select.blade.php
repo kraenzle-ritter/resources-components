@@ -31,6 +31,9 @@
                 @break
             @case('wikipedia')
                 @livewire('wikipedia-lw-component', [$model, 'search' => $model->resource_search ?? $model->name, 'params' => ['queryOptions' => ['size' => 5]]])
+                 @break
+            @case('manual-input')
+                @livewire('manual-input-lw-component', [$model])
                 @break
             @default
                 Kein Provider ausgewählt

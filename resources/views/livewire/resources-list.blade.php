@@ -13,7 +13,7 @@
                                 type="submit"
                                 class="btn btn-danger btn-xs float-right"
                                 title="{{ __("Remove Resource") }}">
-                                <i class="fas fa-trash-alt" aria-hidden="true"></i>
+                                <i class="fas fa-trash" aria-hidden="true"></i>
                             </button>
                         @endif
                     </li>
