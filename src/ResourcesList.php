@@ -29,7 +29,8 @@ class ResourcesList extends Component
     public function render()
     {
         $this->model->load('resources');
-        $this->resources = $this->model->resources->sortBy('provider');
+
+        $this->resources = $this->model->resources; //->sortBy('provider');
 
         $view = view()->exists('vendor.kraenzle-ritter.livewire.resources-list')
               ? 'vendor.kraenzle-ritter.livewire.resources-list'

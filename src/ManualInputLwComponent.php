@@ -4,7 +4,6 @@ namespace KraenzleRitter\ResourcesComponents;
 
 use Livewire\Component;
 use KraenzleRitter\Resources\Resource;
-use KraenzleRitter\ResourcesComponents\Gnd;
 use KraenzleRitter\ResourcesComponents\Events\ResourceSaved;
 
 class ManualInputLwComponent extends Component
@@ -25,32 +24,29 @@ class ManualInputLwComponent extends Component
 
     protected $listeners = ['resourcesChanged' => 'render'];
 
+    protected $rules = [
+        'provider' => 'string',
+        'provider_id' => 'string',
+        'url' => 'required|url'
+    ];
+
     public function mount($model, string $search = '', array $params = [])
     {
         $this->model = $model;
     }
 
+    public function updated($propertyName)
+    {
+        $this->validateOnly($propertyName);
+    }
+
     public function saveResource()
     {
-        $data = [
-            'provider' => $this->provider,
-            'provider_id' => $this->provider_id,
-            'url' => $this->url,
-        ];
-
+        $data= $this->validate();
         $resource = $this->model->{$this->saveMethod}($data);
-        $this->model->saveMoreResources('gnd');
 
         $this->emit('resourcesChanged');
         event(new ResourceSaved($resource, $this->model->id));
-    }
-
-    public function removeResource($url)
-    {
-        Resource::where([
-            'url' => $url
-        ])->delete();
-        $this->emit('resourcesChanged');
     }
 
     public function render()
