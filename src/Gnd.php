@@ -40,7 +40,7 @@ class Gnd
 
     public function search(string $search, $params = [])
     {
-        $search = str_replace(['[', ']'], ' ', $search);
+        $search = str_replace(['[', ']', '!'], ' ', $search);
         $search = 'search?q=' . urlencode($search);
 
         $filters = $params['filters'] ?? [];
