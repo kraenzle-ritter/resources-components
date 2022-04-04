@@ -40,7 +40,7 @@ class Gnd
 
     public function search(string $search, $params = [])
     {
-        $search = str_replace(['[', ']', '!'], ' ', $search);
+        $search = str_replace(['[', ']', '!', '(', ')'], ' ', $search);
         $search = 'search?q=' . urlencode($search);
 
         $filters = $params['filters'] ?? [];
@@ -52,6 +52,7 @@ class Gnd
         try {
             $response = $this->client->get($search);
         } catch (RequestException $e) {
+            return '';
             echo Psr7\str($e->getRequest());
             if ($e->hasResponse()) {
                 echo Psr7\str($e->getResponse());
