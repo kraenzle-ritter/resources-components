@@ -52,10 +52,9 @@ class Gnd
         try {
             $response = $this->client->get($search);
         } catch (RequestException $e) {
-            return '';
-            echo Psr7\str($e->getRequest());
+            \Log::error(Psr7\str($e->getRequest()));
             if ($e->hasResponse()) {
-                echo Psr7\str($e->getResponse());
+                \Log::error(Psr7\str($e->getResponse()));
             }
         }
 
