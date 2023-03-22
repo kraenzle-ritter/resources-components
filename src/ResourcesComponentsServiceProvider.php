@@ -29,6 +29,7 @@ class ResourcesComponentsServiceProvider extends ServiceProvider
         Livewire::component('anton-lw-component', AntonLwComponent::class);
         Livewire::component('geonames-lw-component', GeonamesLwComponent::class);
         Livewire::component('gnd-lw-component', GndLwComponent::class);
+        Livewire::component('idiotikon-lw-component', IdiotikonLwComponent::class);
         Livewire::component('metagrid-lw-component', MetagridLwComponent::class);
         Livewire::component('ortsnamen-lw-component', OrtsnamenLwComponent::class);
         Livewire::component('wikidata-lw-component', WikidataLwComponent::class);

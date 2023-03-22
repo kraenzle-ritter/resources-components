@@ -20,6 +20,9 @@
             @case('gnd')
                 @livewire('gnd-lw-component', [$model, 'search' => $model->resource_search ?? $model->name, 'params' => ['queryOptions' => ['size' => 5]]])
                 @break
+            @case('idiotikon')
+                @livewire('idiotikon-lw-component', [$model, 'search' => $model->resource_search ?? $model->name, 'params' => ['queryOptions' => ['size' => 5]]])
+                @break
             @case('metagrid')
                 @livewire('metagrid-lw-component', [$model, 'search' => $model->resource_search ?? $model->name, 'params' => ['queryOptions' => ['size' => 5]]])
                 @break

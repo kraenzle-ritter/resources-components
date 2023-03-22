@@ -18,6 +18,9 @@ return [
         'api_url' => env('ANTON_API_URL', 'https://kr.anton.ch/api'),
         'limit' => 5
     ],
+    'idiotikon' => [
+        'limit' => 5,
+    ],
     'metagrid' => [
         'limit' => 5
     ],
