@@ -19,7 +19,7 @@
                 </button>
                 <h6>{{ $result->name ?? '' }}</h6>
                 <small>
-                    <a target="_blank" href="{{ $result->lemmaID }}">{{ $result->url }}</a><br>
+                    <a target="_blank" href="{{ $result->url }}">{{ $result->url }}</a><br>
                      idiotikon-{{  $result->lemmaID }}<br>
                     {{ $result->description[0] ?? '' }}
                 </small>
