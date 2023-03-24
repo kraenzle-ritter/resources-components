@@ -7,6 +7,7 @@ Search for entities in authority databases and link them with your local data.
 - Anton
 - Geonames
 - GND
+- Idiotikon
 - Metagrid
 - ortsnamen.ch
 - Wikidata
