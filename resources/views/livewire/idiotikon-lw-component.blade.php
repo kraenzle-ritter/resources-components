@@ -17,7 +17,7 @@
                     title="{{ __("Save Idiotikon ID") }}">
                     <i class="fa fa-check" aria-hidden="true"></i>
                 </button>
-                <h6>{{ $result->name ?? '' }}</h6>
+                <h6>{{ $result->lemmaText ?? '' }}</h6>
                 <small>
                     <a target="_blank" href="{{ $result->url }}">{{ $result->url }}</a><br>
                      idiotikon-{{  $result->lemmaID }}<br>
