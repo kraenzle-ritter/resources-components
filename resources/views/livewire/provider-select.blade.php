@@ -3,7 +3,7 @@
     <div class="card-body">
     <form class="form-inline" >
         <label>Provider</label>
-            <select wire:model="provider" class="form-control">
+            <select wire.model.live="provider" class="form-control">
                 @foreach($providers as $value)
                     <option>{{ $value }}</option>
                 @endforeach

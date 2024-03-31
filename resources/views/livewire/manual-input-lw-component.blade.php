@@ -5,17 +5,17 @@
         <form class="form manual-input-form">
             <div class="form-group">
                 <label for="title" title="The Name of the Provider: eg. Wikipedia (en).">Provider</label>
-                <input type="text" wire:model="provider" class="form-control" id="provider">
+                <input type="text" wire.model.live="provider" class="form-control" id="provider">
                 @error('provider') <span class="error">{{ $message }}</span> @enderror
             </div>
             <div class="form-group">
                 <label for="title" title="The ID which is related to the provider. Most likely the last part of the URL.">Provider ID</label>
-                <input type="text" wire:model="provider_id" class="form-control" id="providerName">
+                <input type="text" wire.model.live="provider_id" class="form-control" id="providerName">
                 @error('provider_id') <span class="error">{{ $message }}</span> @enderror
             </div>
             <div class="form-group">
                 <label for="title" title="Link to the resource.">URL</label>
-                <input type="text" wire:model="url" class="form-control" id="providerName">
+                <input type="text" wire.model.live="url" class="form-control" id="providerName">
                 @error('url') <span class="error">{{ $message }}</span> @enderror
             </div>
             <button

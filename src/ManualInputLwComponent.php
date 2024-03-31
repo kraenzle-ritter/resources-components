@@ -45,7 +45,7 @@ class ManualInputLwComponent extends Component
         $data= $this->validate();
         $resource = $this->model->{$this->saveMethod}($data);
 
-        $this->emit('resourcesChanged');
+        $this->dispatch('resourcesChanged');
         event(new ResourceSaved($resource, $this->model->id));
     }
 

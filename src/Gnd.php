@@ -35,6 +35,7 @@ class Gnd
 
     public function __construct()
     {
+
         $this->client = new Client(['base_uri' => 'https://lobid.org/gnd/']);
     }
 

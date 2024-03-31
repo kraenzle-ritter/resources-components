@@ -49,7 +49,7 @@ class OrtsnamenLwComponent extends Component
         ];
 
         $resource = $this->model->{$this->saveMethod}($data);
-        $this->emit('resourcesChanged');
+        $this->dispatch('resourcesChanged');
         event(new ResourceSaved($resource, $this->model->id));
     }
 
@@ -58,7 +58,7 @@ class OrtsnamenLwComponent extends Component
         Resource::where([
             'url' => $url
         ])->delete();
-        $this->emit('resourcesChanged');
+        $this->dispatch('resourcesChanged');
     }
 
     public function render()

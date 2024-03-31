@@ -44,7 +44,7 @@ class WikidataLwComponent extends Component
         $resource = $this->model->{$this->saveMethod}($data);
         $this->model->saveMoreResources('wikidata');
 
-        $this->emit('resourcesChanged');
+        $this->dispatch('resourcesChanged');
         event(new ResourceSaved($resource, $this->model->id));
     }
 
@@ -53,7 +53,7 @@ class WikidataLwComponent extends Component
         \KraenzleRitter\Resources\Resource::where([
             'url' => $url
         ])->delete();
-        $this->emit('resourcesChanged');
+        $this->dispatch('resourcesChanged');
     }
 
     public function render()

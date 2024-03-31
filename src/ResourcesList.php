@@ -23,7 +23,7 @@ class ResourcesList extends Component
     public function removeResource($id)
     {
         $this->model->removeResource($id);
-        $this->emit('resourcesChanged');
+        $this->dispatch('resourcesChanged');
     }
 
     public function render()

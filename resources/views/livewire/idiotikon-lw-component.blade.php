@@ -1,9 +1,9 @@
 <div>
     @if(!in_array('anton', $model->resources->pluck('provider')->toArray()))
     <div>
-        <form class="form kba-form" > 
+        <form class="form kba-form" >
             {{-- <label class="anton-label">anton {{ __('Search') }}</label> --}}
-            <input wire:model="search" class="form-control anton-input" type="text" placeholder="{{ $placeholder ?? '' }}">
+            <input wire.model.live="search" class="form-control anton-input" type="text" placeholder="{{ $placeholder ?? '' }}">
         </form>
         <br>
 

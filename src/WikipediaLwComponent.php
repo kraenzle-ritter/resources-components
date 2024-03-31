@@ -48,7 +48,7 @@ class WikipediaLwComponent extends Component
         ];
         $resource = $this->model->{$this->saveMethod}($data);
         $this->model->saveMoreResources('wikipedia');
-        $this->emit('resourcesChanged');
+        $this->dispatch('resourcesChanged');
         event(new ResourceSaved($resource, $this->model->id));
     }
 
@@ -57,7 +57,7 @@ class WikipediaLwComponent extends Component
         \KraenzleRitter\Resources\Resource::where([
             'url' => $url
         ])->delete();
-        $this->emit('resourcesChanged');
+        $this->dispatch('resourcesChanged');
     }
 
     public function render()
