@@ -3,7 +3,7 @@
     <div>
         <form class="form wikipedia-form" >
             <label class="wikipedia-label">Wikipedia {{ __('Search') }}</label>
-            <input wire.model.live="search" class="form-control wikipedia-input" type="text" placeholder="{{ $placeholder ?? '' }}">
+            <input wire:model.live="search" class="form-control wikipedia-input" type="text" placeholder="{{ $placeholder ?? '' }}">
         </form>
         <br>
         @if($results)

@@ -7,7 +7,7 @@
     <div>
         <form class="form gnd-form" >
             <label class="gnd-label">Wikidata {{ __('Search') }}</label>
-            <input wire.model.live="search" class="form-control wikidata-input" type="text" placeholder="{{ $placeholder ?? '' }}">
+            <input wire:model.live="search" class="form-control wikidata-input" type="text" placeholder="{{ $placeholder ?? '' }}">
         </form>
         <br>
         @if($results)

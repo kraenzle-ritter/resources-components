@@ -3,7 +3,7 @@
     <div>
         <form class="form metagrid-form" >
             <label class="metagrid-label">Metagrid {{ __('Search') }}</label>
-            <input wire.model.live="search" class="form-control metagrid-input" type="text" placeholder="{{ $placeholder ?? '' }}">
+            <input wire:model.live="search" class="form-control metagrid-input" type="text" placeholder="{{ $placeholder ?? '' }}">
         </form>
         <br>
         @if($results)
