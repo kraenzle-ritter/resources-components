@@ -31,7 +31,6 @@ class ProviderSelect extends Component
 
     public function hydrate()
     {
-        $this->provider]);
         $this->model->load('resources');
         $linked_providers = $this->model->resources->pluck('provider')->toArray();
         $this->providers = array_values(array_diff($this->providers_all, $linked_providers));
