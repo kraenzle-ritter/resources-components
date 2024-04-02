@@ -33,11 +33,6 @@ class ProviderSelect extends Component
         $this->provider = $this->providers[0] ?? '';
     }
 
-    public function updating()
-    {
-        logger(__METHOD__, ['provider' => $this->provider]);
-    }
-
     public function hydrate()
     {
         logger(__METHOD__, ['provider' => $this->provider]);
