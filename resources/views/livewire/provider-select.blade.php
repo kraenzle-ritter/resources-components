@@ -3,9 +3,9 @@
     <div class="card-body">
     <form class="form-inline" >
         <label>Provider</label>
-            <select wire:model.live="provider" class="form-control">
+            <select wire:change="provider" class="form-control">
                 @foreach($providers as $value)
-                    <option value="{{ $value }}">{{ $value }}</option>
+                    <option {{ ($provider == $value) ? 'selected' : '' }}>{{ $value }}</option>
                 @endforeach
             </select>
         </form>

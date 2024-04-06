@@ -2,7 +2,7 @@
 
 namespace KraenzleRitter\ResourcesComponents;
 
-use Wikidata\Wikidata;
+use Wikidata\Wikidata as WikidataBase;
 
 /**
  * Wikidata queries
@@ -17,7 +17,7 @@ class Wikidata
      */
     public function search(string $search, $params = [])
     {
-        $client = new Wikidata();
+        $client = new WikidataBase();
 
         $lang = $params['locale'] ?? config('sources-components.wikidata.locale') ?? 'de';
         $limit = $params['limit'] ?? config('sources-components.wikidata.limit') ?? 5;
