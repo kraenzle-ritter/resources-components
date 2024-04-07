@@ -3,7 +3,7 @@
     <div class="card-body">
     <form class="form-inline" >
         <label>Provider</label>
-            <select wire:change="provider" class="form-control">
+            <select wire:change="setProvider($event.target.value)" class="form-control">
                 @foreach($providers as $value)
                     <option {{ ($provider == $value) ? 'selected' : '' }}>{{ $value }}</option>
                 @endforeach
