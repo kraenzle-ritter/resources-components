@@ -1,4 +1,4 @@
-<div>
+<div class="p-2">
 @if(!in_array('manual-input', $model->resources->pluck('provider')->toArray()))
     <div>
         <h5>Manual input</h5>

@@ -1,8 +1,8 @@
-<div>
+<div class="p-2">
     @if(!in_array('anton', $model->resources->pluck('provider')->toArray()))
     <div>
         <form class="form kba-form" > 
-            {{-- <label class="anton-label">anton {{ __('Search') }}</label> --}}
+            <label class="gnd-label pb-2">Anton {{ __('Search') }}</label>
             <input wire:model.live="search" class="form-control anton-input" type="text" placeholder="{{ $placeholder ?? '' }}">
         </form>
         <br>
@@ -22,7 +22,9 @@
                     kba-{{ $endpoint }}-{{ $result->id }}<br>
                     {{ $result->description ?? '' }}
                 </small>
-                <hr>
+                @if (!$loop->last)
+                    <hr>
+                @endif
             @endforeach
         @else
             {{ __('No matches') }}

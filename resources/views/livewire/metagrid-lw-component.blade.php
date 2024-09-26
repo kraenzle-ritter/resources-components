@@ -1,8 +1,8 @@
-<div>
+<div class="p-2">
     @if(!in_array('metagrid', $model->resources->pluck('provider')->toArray()))
     <div>
         <form class="form metagrid-form" >
-            <label class="metagrid-label">Metagrid {{ __('Search') }}</label>
+            <label class="metagrid-label pb-2">Metagrid {{ __('Search') }}</label>
             <input wire:model.live="search" class="form-control metagrid-input" type="text" placeholder="{{ $placeholder ?? '' }}">
         </form>
         <br>
@@ -23,7 +23,9 @@
                     $name = preg_replace('/^([^0-9]+)(\d{4})-\d{2}-\d{2}$/', '${1} ($2)', $name);
                 @endphp
                 <a href="{{ $result->uri }}" target="_blank">{{ $name }}</a><br>
-                <hr>
+                @if (!$loop->last)
+                    <hr>
+                @endif
             @endforeach
         @else
             {{ __('No matches') }}
