@@ -5,7 +5,7 @@
                 <h5 class="card-title">Externe Links</h5>
                 <ul class="list-group">
                 @foreach($resources as $resource)
-                    <li class="list-group-item">
+                    <li class="list-group-item {{ $resource->provider}}">
                         <a target="_blank" href="{{ $resource->url }}">{{ $resource->provider }}</a>
                         @if($deleteButton)
                             <button
