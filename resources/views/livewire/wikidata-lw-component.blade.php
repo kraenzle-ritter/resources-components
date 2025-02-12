@@ -16,7 +16,7 @@
                 <button
                     wire:click="saveResource('{{ $result->id }}', '{{ $base_url . $result->id }}', '{{ json_encode($result, JSON_UNESCAPED_UNICODE) }}')"
                     type="submit"
-                    class="btn btn-success btn-xs float-right"
+                    class="btn btn-success btn-sm float-end"
                     title="{{ __("Save Wikidata ID for Actor") }}">
                     <i class="fa fa-check" aria-hidden="true"></i>
                 </button>

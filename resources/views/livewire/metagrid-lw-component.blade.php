@@ -13,7 +13,7 @@
                 <button
                     wire:click="saveResource('{{ $result->id }}', '{{ $result->uri }}', '{{ json_encode($result, JSON_UNESCAPED_UNICODE) }}')"
                     type="submit"
-                    class="btn btn-success btn-xs float-right"
+                    class="btn btn-success btn-sm float-end"
                     title="{{ __("Save Metagrid Concordance for Actor") }}">
                     <i class="fa fa-check" aria-hidden="true"></i>
                 </button>

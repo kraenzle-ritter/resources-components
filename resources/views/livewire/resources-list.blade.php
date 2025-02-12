@@ -11,7 +11,7 @@
                             <button
                                 wire:click="removeResource('{{ $resource->id }}')"
                                 type="submit"
-                                class="btn btn-danger btn-xs float-right"
+                                class="btn btn-danger btn-sm float-end"
                                 title="{{ __("Remove Resource") }}">
                                 <i class="fas fa-trash" aria-hidden="true"></i>
                             </button>

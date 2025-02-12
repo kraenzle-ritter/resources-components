@@ -21,7 +21,7 @@
             <button
                 wire:click="saveResource()"
                 type="submit"
-                class="btn btn-success btn-xs float-right"
+                class="btn btn-success btn-sm float-end mt-3"
                 title="{{ __("Save resource") }}">
                 <i class="fa fa-check" aria-hidden="true"></i>
             </button>

@@ -12,7 +12,7 @@
                 <button
                     wire:click="saveResource('{{ $result->pageid }}', '{{ $base_url . $result->title }}')"
                     type="submit"
-                    class="btn btn-success btn-xs float-right"
+                    class="btn btn-success btn-sm float-end"
                     title="{{ __("Save Wikipedia for Actor") }}">
                     <i class="fa fa-check" aria-hidden="true"></i>
                 </button>
