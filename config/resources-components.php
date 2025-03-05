@@ -34,6 +34,10 @@ return [
     'ortsnamen' => [
         'limit' => 5,
         'locale' => 'de'
+    ],
+    'rism_actors' => [
+        'limit' => 5,
+        'locale' => 'de'
     ]
 
 ];
