@@ -24,11 +24,14 @@ class ManualInputLwComponent extends Component
 
     protected $listeners = ['resourcesChanged' => 'render'];
 
-    protected $rules = [
-        'provider' => 'string',
-        'provider_id' => 'string',
-        'url' => 'required|url'
-    ];
+    protected function rules()
+    {
+        return [
+            '$provider' => 'required|string',
+            '$provider_id' => 'nullable|string',
+            '$url' => 'required|url',
+        ];
+    }
 
     public function mount($model, string $search = '', array $params = [])
     {
@@ -37,13 +40,14 @@ class ManualInputLwComponent extends Component
 
     public function updated($propertyName)
     {
-        $this->validateOnly($propertyName);
+        $this->only($propertyName);
     }
 
     public function saveResource()
     {
-        $data= $this->validate();
-        $resource = $this->model->{$this->saveMethod}($data);
+        $resource = $this->model->{$this->saveMethod}(
+            $this->only(['provider', 'provider_id', 'url'])
+        );
 
         $this->dispatch('resourcesChanged');
         event(new ResourceSaved($resource, $this->model->id));
@@ -51,6 +55,7 @@ class ManualInputLwComponent extends Component
 
     public function render()
     {
+        logger(__METHOD__);
         $view = view()->exists('vendor.kraenzle-ritter.livewire.manual-input-lw-component')
               ? 'vendor.kraenzle-ritter.livewire.manual-input-lw-component'
               : 'resources-components::manual-input-lw-component';
