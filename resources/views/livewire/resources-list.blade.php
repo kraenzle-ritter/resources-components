@@ -1,7 +1,7 @@
 <div id="resources-list">
     @if(count($resources))
         <div class="card">
-            <div class="card-body">
+            <div class="card-body no-border">
                 <h5 class="card-title">Externe Links</h5>
                 <ul class="list-group">
                 @foreach($resources as $resource)
