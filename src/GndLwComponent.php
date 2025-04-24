@@ -61,13 +61,15 @@ class GndLwComponent extends Component
     {
         $client = new Gnd();
 
-        $resources = $client->search($this->search, $this->queryOptions);
+        if ($this->search) {
+            $resources = $client->search($this->search, $this->queryOptions);
+        }
 
         $view = view()->exists('vendor.kraenzle-ritter.livewire.gnd-lw-component')
               ? 'vendor.kraenzle-ritter.livewire.gnd-lw-component'
               : 'resources-components::gnd-lw-component';
 
-        if (!isset($resources->member) or !count($resources->member)) {
+        if (!isset($resources) or !isset($resources->member) or !count($resources->member)) {
             return view($view, [
                 'results' => []
             ]);
