@@ -1,8 +1,8 @@
-<div>
+<div class="p-2">
     @if(!in_array('gnd', $model->resources->pluck('provider')->toArray()))
     <div>
         <form class="form gnd-form" > 
-            {{-- <label class="gnd-label">GND {{ __('Search') }}</label> --}}
+            <label class="gnd-label pb-2">GND {{ __('Search') }}</label>
             <input wire:model.live="search" class="form-control gnd-input" type="text" placeholder="{{ $placeholder ?? '' }}">
         </form>
         <br>
@@ -25,8 +25,9 @@
                     <a href="{{ $result->id }}" target="_blank">{{ $result->id }}</a><br>
                     {{ join('<br>', $result->biographicalOrHistoricalInformation ?? []) }}
                 </small>
-                <hr>
-
+                @if (!$loop->last)
+                    <hr>
+                @endif
             @endforeach
         @else
             {{ __('No matches') }}

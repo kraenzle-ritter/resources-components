@@ -1,8 +1,8 @@
-<div>
+<div class="p-2">
     @if(!in_array('wikipedia', $model->resources->pluck('provider')->toArray()))
     <div>
         <form class="form wikipedia-form" >
-            <label class="wikipedia-label">Wikipedia {{ __('Search') }}</label>
+            <label class="wikipedia-label pb-2">Wikipedia {{ __('Search') }}</label>
             <input wire:model.live="search" class="form-control wikipedia-input" type="text" placeholder="{{ $placeholder ?? '' }}">
         </form>
         <br>
@@ -21,7 +21,9 @@
                     <a href="{{ $base_url . $result->title }}" target="_blank">{{ $result->title }}</a><br>
                     {{ strip_tags($result->snippet ?? '') }}
                 </small>
-                <hr>
+                @if (!$loop->last)
+                    <hr>
+                @endif
             @endforeach
         @else
             {{ __('No matches') }}

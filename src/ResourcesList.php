@@ -22,6 +22,7 @@ class ResourcesList extends Component
 
     public function removeResource($id)
     {
+        logger()->debug(__METHOD__ . ' ' . $id);
         $this->model->removeResource($id);
         $this->dispatch('resourcesChanged');
     }

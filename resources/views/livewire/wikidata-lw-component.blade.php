@@ -1,4 +1,4 @@
-<div>
+<div class="p-2">
     @php
         $base_url = 'https://www.wikidata.org/wiki/';
     @endphp
@@ -6,7 +6,7 @@
     @if(!in_array('wikidata', $model->resources->pluck('provider')->toArray()))
     <div>
         <form class="form gnd-form" >
-            <label class="gnd-label">Wikidata {{ __('Search') }}</label>
+            <label class="gnd-label pb-2">Wikidata {{ __('Search') }}</label>
             <input wire:model.live="search" class="form-control wikidata-input" type="text" placeholder="{{ $placeholder ?? '' }}">
         </form>
         <br>
@@ -27,7 +27,9 @@
                     <a href="{{ $base_url . $result->id }}" target="_blank">{{ $result->id }}</a><br>
                     {{ $result->description }}
                 </small>
-                <hr>
+                @if (!$loop->last)
+                    <hr>
+                @endif
 
             @endforeach
         @else

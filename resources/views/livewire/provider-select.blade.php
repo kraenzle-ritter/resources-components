@@ -1,14 +1,17 @@
-<div id="provider-select" class="card">
+<div id="provider-select" class="card my-4">
 @if($providers)
-    <div class="card-body">
-    <form class="form-inline" >
-        <label>Provider</label>
-            <select wire:change="setProvider($event.target.value)" class="form-control">
-                @foreach($providers as $value)
-                    <option {{ ($provider == $value) ? 'selected' : '' }}>{{ $value }}</option>
-                @endforeach
-            </select>
-        </form>
+    <div class="card-header">
+        <h5>New links</h5>
+    </div>
+    <div>
+    <form class="form-inline p-2">
+        <label class="py-2">Provider</label>
+        <select wire:change="setProvider($event.target.value)" class="form-select">
+            @foreach($providers as $value)
+                <option {{ ($provider == $value) ? 'selected' : '' }}>{{ $value }}</option>
+            @endforeach
+        </select>
+    </form>
         <br>
         @switch(strtolower($provider))
             @case(config('resources-components.anton.provider-slug'))
@@ -41,6 +44,5 @@
             @default
                 Kein Provider ausgewählt
         @endswitch
-    </div>
 @endif
 </div>

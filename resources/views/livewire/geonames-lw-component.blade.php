@@ -1,4 +1,4 @@
-<div>
+<div class="p-2">
     @php
         $base_url = 'https://www.geonames.org/';
     @endphp
@@ -6,7 +6,7 @@
     @if(!in_array('geonames', $model->resources->pluck('provider')->toArray()))
     <div>
         <form class="form gnd-form" > 
-            {{-- <label class="gnd-label">Geonames {{ __('Search') }}</label> --}}
+            <label class="gnd-label pb-2">Geonames {{ __('Search') }}</label>
             <input wire:model.live="search" class="form-control gnd-input" type="text" placeholder="{{ $placeholder ?? '' }}">
         </form>
         <br>
@@ -27,8 +27,9 @@
                     {{ $result->fclName ?? '' }}<br>
                     {{ $result->countryName ?? '' }}
                 </small>
-                <hr>
-
+                @if (!$loop->last)
+                    <hr>
+                @endif
             @endforeach
         @else
             {{ __('No matches') }}
