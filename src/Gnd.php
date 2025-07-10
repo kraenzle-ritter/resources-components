@@ -35,7 +35,6 @@ class Gnd
 
     public function __construct()
     {
-
         $this->client = new Client(['base_uri' => 'https://lobid.org/gnd/']);
     }
 
@@ -57,6 +56,7 @@ class Gnd
             if ($e->hasResponse()) {
                 \Log::error(Psr7\str($e->getResponse()));
             }
+            return '';
         }
 
         if ($response->getStatusCode() == 200) {
