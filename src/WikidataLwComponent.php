@@ -50,16 +50,12 @@ class WikidataLwComponent extends AbstractLivewireComponent
 
     public function render()
     {
-        $results = [];
-
-        if ($this->search) {
-            $client = $this->getProviderClient();
-            $resources = $client->search($this->search, $this->queryOptions);
-            $results = $this->processResults($resources);
-        }
+        $results = $this->performSearch();
 
         return view($this->getViewName(), [
-            'results' => $results
+            'results' => $results,
+            'hasError' => $this->hasError,
+            'errorMessage' => $this->errorMessage
         ]);
     }
 }

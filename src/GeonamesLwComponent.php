@@ -36,4 +36,15 @@ class GeonamesLwComponent extends AbstractLivewireComponent
 
         parent::mount($model, $search, $params);
     }
+
+    public function render()
+    {
+        $results = $this->performSearch();
+
+        return view($this->getViewName(), [
+            'results' => $results,
+            'hasError' => $this->hasError,
+            'errorMessage' => $this->errorMessage
+        ]);
+    }
 }

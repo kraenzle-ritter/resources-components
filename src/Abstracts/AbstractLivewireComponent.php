@@ -15,6 +15,8 @@ abstract class AbstractLivewireComponent extends Component
     public $provider;
     public $saveMethod = 'updateOrCreateResource';
     public $removeMethod = 'removeResource';
+    public $errorMessage = '';
+    public $hasError = false;
 
     protected $listeners = ['resourcesChanged' => 'render'];
 
@@ -31,6 +33,95 @@ abstract class AbstractLivewireComponent extends Component
         $this->search = trim($search);
         $this->queryOptions = $params['queryOptions'] ?? $this->getDefaultOptions();
         $this->provider = $this->getProviderName();
+        $this->clearError();
+    }
+
+    /**
+     * Clear error state
+     */
+    public function clearError()
+    {
+        $this->hasError = false;
+        $this->errorMessage = '';
+    }
+
+    /**
+     * Set error state with message
+     *
+     * @param string $message
+     * @param \Exception $exception
+     */
+    protected function setError(string $message, \Exception $exception = null)
+    {
+        $this->hasError = true;
+        $this->errorMessage = $message;
+        
+        // Log the actual exception for debugging
+        if ($exception) {
+            \Log::error("Provider {$this->getProviderName()} error: " . $exception->getMessage(), [
+                'search' => $this->search,
+                'params' => $this->queryOptions,
+                'exception' => $exception
+            ]);
+        }
+    }
+
+    /**
+     * Perform search with error handling
+     *
+     * @return array
+     */
+    protected function performSearch(): array
+    {
+        if (!$this->search) {
+            return [];
+        }
+
+        try {
+            $this->clearError();
+            $client = $this->getProviderClient();
+            $resources = $client->search($this->search, $this->queryOptions);
+            return $this->processResults($resources);
+        } catch (\GuzzleHttp\Exception\RequestException $e) {
+            $this->setError(
+                "Network error while searching '{$this->search}'. Please check your internet connection and try again.",
+                $e
+            );
+        } catch (\GuzzleHttp\Exception\ConnectException $e) {
+            $this->setError(
+                "Cannot connect to {$this->getProviderName()} service. The service might be temporarily unavailable.",
+                $e
+            );
+        } catch (\GuzzleHttp\Exception\ClientException $e) {
+            if ($e->getResponse() && $e->getResponse()->getStatusCode() === 400) {
+                $this->setError(
+                    "Invalid search query '{$this->search}'. Please try a different search term.",
+                    $e
+                );
+            } else {
+                $this->setError(
+                    "Error from {$this->getProviderName()} service. Please try again later.",
+                    $e
+                );
+            }
+        } catch (\GuzzleHttp\Exception\ServerException $e) {
+            $this->setError(
+                "{$this->getProviderName()} service is temporarily unavailable. Please try again later.",
+                $e
+            );
+        } catch (\InvalidArgumentException $e) {
+            $this->setError(
+                "Invalid search parameters for '{$this->search}'. Please check your input.",
+                $e
+            );
+        } catch (\Exception $e) {
+            $this->setError(
+                "An unexpected error occurred while searching '{$this->search}'. Please try again.",
+                $e
+            );
+        }
+
+        return [];
     }
 
     /**
@@ -42,21 +133,30 @@ abstract class AbstractLivewireComponent extends Component
      */
     public function saveResource($provider_id, $url, $full_json = null)
     {
-        $data = [
-            'provider' => $this->provider,
-            'provider_id' => $provider_id,
-            'url' => $url,
-            'full_json' => $this->processFullJson($full_json)
-        ];
+        try {
+            $this->clearError();
+            
+            $data = [
+                'provider' => $this->provider,
+                'provider_id' => $provider_id,
+                'url' => $url,
+                'full_json' => $this->processFullJson($full_json)
+            ];
 
-        $resource = $this->model->{$this->saveMethod}($data);
+            $resource = $this->model->{$this->saveMethod}($data);
 
-        if (method_exists($this->model, 'saveMoreResources')) {
-            $this->model->saveMoreResources(strtolower($this->provider));
+            if (method_exists($this->model, 'saveMoreResources')) {
+                $this->model->saveMoreResources(strtolower($this->provider));
+            }
+
+            $this->dispatch('resourcesChanged');
+            event(new ResourceSaved($resource, $this->model->id));
+        } catch (\Exception $e) {
+            $this->setError(
+                "Failed to save resource. Please try again.",
+                $e
+            );
         }
-
-        $this->dispatch('resourcesChanged');
-        event(new ResourceSaved($resource, $this->model->id));
     }
 
     /**
@@ -66,8 +166,50 @@ abstract class AbstractLivewireComponent extends Component
      */
     public function removeResource($url)
     {
-        Resource::where(['url' => $url])->delete();
-        $this->dispatch('resourcesChanged');
+        try {
+            $this->clearError();
+            
+            Resource::where([
+                'url' => $url
+            ])->delete();
+            
+            $this->dispatch('resourcesChanged');
+        } catch (\Exception $e) {
+            $this->setError(
+                "Failed to remove resource. Please try again.",
+                $e
+            );
+        }
+    }
+
+    /**
+     * Set error message and log the exception
+     *
+     * @param string $message
+     * @param \Exception|null $exception
+     */
+    protected function setError(string $message, ?\Exception $exception = null): void
+    {
+        $this->hasError = true;
+        $this->errorMessage = $message;
+        
+        if ($exception) {
+            \Log::error("ResourcesComponents Error in {$this->getProviderName()}: " . $exception->getMessage(), [
+                'search' => $this->search,
+                'provider' => $this->getProviderName(),
+                'exception' => $exception,
+                'trace' => $exception->getTraceAsString()
+            ]);
+        }
+    }
+
+    /**
+     * Clear error state
+     */
+    protected function clearError(): void
+    {
+        $this->hasError = false;
+        $this->errorMessage = '';
     }
 
     /**

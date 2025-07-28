@@ -41,7 +41,63 @@ class AntonLwComponent extends AbstractLivewireComponent
         parent::mount($model, $search, $params);
     }
 
-    public function saveResource($provider_id, $url, $full_json = null)
+    /**
+     * Perform search with error handling (override for endpoint support)
+     *
+     * @return array
+     */
+    protected function performSearch(): array
+    {
+        if (!$this->search) {
+            return [];
+        }
+
+        try {
+            $this->clearError();
+            $client = $this->getProviderClient();
+            $resources = $client->search($this->search, $this->queryOptions, $this->endpoint);
+            return $this->processResults($resources);
+        } catch (\GuzzleHttp\Exception\RequestException $e) {
+            $this->setError(
+                "Network error while searching '{$this->search}'. Please check your internet connection and try again.",
+                $e
+            );
+        } catch (\GuzzleHttp\Exception\ConnectException $e) {
+            $this->setError(
+                "Cannot connect to {$this->getProviderName()} service. The service might be temporarily unavailable.",
+                $e
+            );
+        } catch (\GuzzleHttp\Exception\ClientException $e) {
+            if ($e->getResponse() && $e->getResponse()->getStatusCode() === 400) {
+                $this->setError(
+                    "Invalid search query '{$this->search}'. Please try a different search term.",
+                    $e
+                );
+            } else {
+                $this->setError(
+                    "Error from {$this->getProviderName()} service. Please try again later.",
+                    $e
+                );
+            }
+        } catch (\GuzzleHttp\Exception\ServerException $e) {
+            $this->setError(
+                "{$this->getProviderName()} service is temporarily unavailable. Please try again later.",
+                $e
+            );
+        } catch (\InvalidArgumentException $e) {
+            $this->setError(
+                "Invalid search parameters for '{$this->search}'. Please check your input.",
+                $e
+            );
+        } catch (\Exception $e) {
+            $this->setError(
+                "An unexpected error occurred while searching '{$this->search}'. Please try again.",
+                $e
+            );
+        }
+
+        return [];
+    }    public function saveResource($provider_id, $url, $full_json = null)
     {
         $data = [
             'provider' => config('resources-components.anton.provider-slug'),
@@ -57,16 +113,12 @@ class AntonLwComponent extends AbstractLivewireComponent
 
     public function render()
     {
-        $results = [];
-
-        if ($this->search) {
-            $client = $this->getProviderClient();
-            $resources = $client->search($this->search, $this->queryOptions, $this->endpoint);
-            $results = $this->processResults($resources);
-        }
+        $results = $this->performSearch();
 
         return view($this->getViewName(), [
-            'results' => $results
+            'results' => $results,
+            'hasError' => $this->hasError,
+            'errorMessage' => $this->errorMessage
         ]);
     }
 }
