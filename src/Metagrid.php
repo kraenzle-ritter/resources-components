@@ -2,75 +2,92 @@
 
 namespace KraenzleRitter\ResourcesComponents;
 
-use \GuzzleHttp\Client;
+use KraenzleRitter\ResourcesComponents\Abstracts\AbstractProvider;
 
 /**
  * Metagrid queries
  *
- *  use the Metagrid api
- *  (new Metagrid())->search('Karl Barth');
+ * Use the Metagrid API to search for concordances
+ * (new Metagrid())->search('Karl Barth');
  */
-class Metagrid
+class Metagrid extends AbstractProvider
 {
-    public $client;
-
-    public function __construct()
+    public function getBaseUrl(): string
     {
-
-        $this->client = new Client(['base_uri' => 'https://api.metagrid.ch/']);
+        return 'https://api.metagrid.ch/';
     }
 
-    public function search($search, $params)
+    public function getProviderName(): string
+    {
+        return 'Metagrid';
+    }
+
+    public function search(string $search, array $params = [])
     {
         if (!$search) {
             return [];
         }
 
+        $search = $this->sanitizeSearch($search);
+        $params = $this->mergeParams($params);
+
         $search = str_replace(',', ' ', $search);
-        try {
-            //https://api.metagrid.ch/search?group=1&query=cassirer&skip=0&take=10
-            $response = $this->client->get('/search?query=' . $search . '&group=1&_format=json');
-        } catch (\Exception $e) {
-            \Log::error($e->getMessage());
+        $limit = $params['limit'] ?? 10;
+
+        $queryString = "search?query=" . urlencode($search) . "&group=1&_format=json&take=" . $limit;
+
+        $result = $this->makeRequest('GET', $queryString);
+
+        if (!$result || !isset($result->meta->total) || $result->meta->total == 0) {
             return [];
         }
 
-        $body = json_decode($response->getBody());
-
-        if (!$body || $body->meta->total == 0) {
-            return null;
-        }
-
-        return $body->concordances;
+        return $result->concordances ?? [];
     }
 
-    // https://api.metagrid.ch/concordance/47451.json
-    public function getConcordance($id)
+    /**
+     * Get concordance details by ID
+     * https://api.metagrid.ch/concordance/47451.json
+     *
+     * @param string $id
+     * @return object|null
+     */
+    public function getConcordance(string $id): ?object
     {
-        $response = $this->client->get('/concordance/' . $id . '.json');
-        $this->body = json_decode($response->getBody());
-
-        return $this;
+        $result = $this->makeRequest('GET', "concordance/{$id}.json");
+        return $result;
     }
 
-    private function composeName($resource)
+    /**
+     * Compose a name from resource metadata
+     *
+     * @param object $resource
+     * @return string
+     */
+    public function composeName(object $resource): string
     {
         if (!isset($resource->metadata)) {
             return '';
         }
 
         if (isset($resource->metadata->first_name) && isset($resource->metadata->last_name)) {
-            $name = $resource->metadata->last_name . ', ' . $resource->metadata->first_name;
-        } else {
-            $name = $resource->metadata->name ?? $resource->metadata->last_name ?? null;
+            return $resource->metadata->last_name . ', ' . $resource->metadata->first_name;
         }
 
-        return $name;
+        return $resource->metadata->name ?? $resource->metadata->last_name ?? '';
     }
 
-    private function composeDates($resource, $full = true)
+    /**
+     * Compose date information from resource metadata
+     *
+     * @param object $resource
+     * @param bool $full
+     * @return string
+     */
+    public function composeDates(object $resource, bool $full = true): string
     {
         $date = '';
+
         if (isset($resource->metadata->birth_date)) {
             $date = ' *' . substr($resource->metadata->birth_date, 0, 4);
         }
@@ -78,9 +95,7 @@ class Metagrid
         if (isset($resource->metadata->death_date)) {
             $date .= ' †' . substr($resource->metadata->death_date, 0, 4);
         }
-        if ($date) {
-            return ' ('. $date .')';
-        }
-    }
 
+        return $date ? ' (' . trim($date) . ')' : '';
+    }
 }

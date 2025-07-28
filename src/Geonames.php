@@ -28,10 +28,10 @@ class Geonames extends AbstractProvider
     protected function setDefaultParams(): void
     {
         parent::setDefaultParams();
-        
+
         // https://www.geonames.org/export/geonames-search.html
         $this->username = $this->getConfigValue('username');
-        
+
         $this->query_params['maxRows'] = $this->getConfigValue('limit', 5);
         $this->query_params['continentCode'] = $this->getConfigValue('continent-code', '');
         $this->query_params['countryBias'] = $this->getConfigValue('country-bias', '');
@@ -42,7 +42,7 @@ class Geonames extends AbstractProvider
     {
         $search = $this->sanitizeSearch($search);
         $params = $this->mergeParams($params);
-        
+
         $queryParams = array_merge([
             'q' => $search,
             'username' => $this->username
@@ -75,7 +75,7 @@ class Geonames extends AbstractProvider
     {
         try {
             $response = $this->makeRequest('GET', "get?geonameId={$id}&username={$this->username}");
-            
+
             if ($response) {
                 return simplexml_load_string($response, 'SimpleXMLElement', LIBXML_NOCDATA);
             }

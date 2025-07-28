@@ -29,7 +29,7 @@ class WikidataLwComponent extends AbstractLivewireComponent
         }
 
         $processedResults = [];
-        
+
         foreach ($results as $result) {
             $processedResults[] = [
                 'title' => $result->title ?? $result->label ?? '',
@@ -51,7 +51,7 @@ class WikidataLwComponent extends AbstractLivewireComponent
     public function render()
     {
         $results = [];
-        
+
         if ($this->search) {
             $client = $this->getProviderClient();
             $resources = $client->search($this->search, $this->queryOptions);

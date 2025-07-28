@@ -3,7 +3,6 @@
 namespace KraenzleRitter\ResourcesComponents;
 
 use KraenzleRitter\ResourcesComponents\Abstracts\AbstractProvider;
-use Wikidata\Wikidata as WikidataBase;
 
 /**
  * Wikidata queries
@@ -12,7 +11,7 @@ class Wikidata extends AbstractProvider
 {
     public function getBaseUrl(): string
     {
-        return 'https://www.wikidata.org/';
+        return 'https://www.wikidata.org/w/api.php';
     }
 
     public function getProviderName(): string
@@ -22,28 +21,42 @@ class Wikidata extends AbstractProvider
 
     public function search(string $search, array $params = [])
     {
+        if (!$search) {
+            return [];
+        }
+
         $search = $this->sanitizeSearch($search);
         $params = $this->mergeParams($params);
-        
-        $client = new WikidataBase();
 
         $lang = $params['locale'] ?? $this->getConfigValue('locale', 'de');
         $limit = $params['limit'] ?? $this->getConfigValue('limit', 5);
 
-        $results = $client->search($search, $lang, $limit);
+        $queryParams = [
+            'action' => 'wbsearchentities',
+            'format' => 'json',
+            'language' => $lang,
+            'search' => $search,
+            'limit' => $limit,
+            'type' => 'item'
+        ];
 
-        if (count($results)) {
-            return $results;
-        }
-        
+        $queryString = '?' . http_build_query($queryParams);
+        $result = $this->makeRequest('GET', $queryString);
+
+        $results = $result->search ?? [];
+
         // Try with reversed search terms for names like "Lastname, Firstname"
-        if (str_contains($search, ',')) {
+        if (empty($results) && str_contains($search, ',')) {
             $array = explode(',', $search);
             $array = array_reverse($array);
             $reversedSearch = trim(join(' ', $array));
-            $results = $client->search($reversedSearch, $lang, $limit);
+
+            $queryParams['search'] = $reversedSearch;
+            $queryString = '?' . http_build_query($queryParams);
+            $reversedResult = $this->makeRequest('GET', $queryString);
+            $results = $reversedResult->search ?? [];
         }
 
-        return count($results) ? $results : [];
+        return $results;
     }
 }

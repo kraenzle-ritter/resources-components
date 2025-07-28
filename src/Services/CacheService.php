@@ -63,11 +63,11 @@ class CacheService
     public function flush(): void
     {
         $keys = Cache::get($this->prefix . '_keys', []);
-        
+
         foreach ($keys as $key) {
             Cache::forget($key);
         }
-        
+
         Cache::forget($this->prefix . '_keys');
     }
 
@@ -83,12 +83,12 @@ class CacheService
     {
         $providerName = strtolower($provider->getProviderName());
         $searchHash = md5($search . serialize($params));
-        
+
         $key = "{$this->prefix}:{$providerName}:{$searchHash}";
-        
+
         // Track cache keys for easier cleanup
         $this->trackCacheKey($key);
-        
+
         return $key;
     }
 
@@ -100,7 +100,7 @@ class CacheService
     protected function trackCacheKey(string $key): void
     {
         $keys = Cache::get($this->prefix . '_keys', []);
-        
+
         if (!in_array($key, $keys)) {
             $keys[] = $key;
             Cache::put($this->prefix . '_keys', $keys, $this->ttl);
@@ -116,15 +116,15 @@ class CacheService
     {
         $providerName = strtolower($provider->getProviderName());
         $keys = Cache::get($this->prefix . '_keys', []);
-        
+
         $providerKeys = array_filter($keys, function ($key) use ($providerName) {
             return strpos($key, "{$this->prefix}:{$providerName}:") === 0;
         });
-        
+
         foreach ($providerKeys as $key) {
             Cache::forget($key);
         }
-        
+
         // Update the tracked keys
         $remainingKeys = array_diff($keys, $providerKeys);
         Cache::put($this->prefix . '_keys', $remainingKeys, $this->ttl);

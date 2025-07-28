@@ -6,7 +6,7 @@ use Orchestra\Testbench\TestCase as Orchestra;
 use KraenzleRitter\ResourcesComponents\ResourcesComponentsServiceProvider;
 use Livewire\LivewireServiceProvider;
 
-class TestCase extends Orchestra
+abstract class TestCase extends Orchestra
 {
     protected function setUp(): void
     {

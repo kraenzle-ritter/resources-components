@@ -50,7 +50,7 @@ abstract class AbstractLivewireComponent extends Component
         ];
 
         $resource = $this->model->{$this->saveMethod}($data);
-        
+
         if (method_exists($this->model, 'saveMoreResources')) {
             $this->model->saveMoreResources(strtolower($this->provider));
         }
@@ -99,10 +99,10 @@ abstract class AbstractLivewireComponent extends Component
     {
         $providerName = strtolower($this->getProviderName());
         $componentName = $providerName . '-lw-component';
-        
+
         $customView = "vendor.kraenzle-ritter.livewire.{$componentName}";
         $defaultView = "resources-components::{$componentName}";
-        
+
         return view()->exists($customView) ? $customView : $defaultView;
     }
 

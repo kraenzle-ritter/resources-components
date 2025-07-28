@@ -2,39 +2,43 @@
 
 namespace KraenzleRitter\ResourcesComponents;
 
-use Livewire\Component;
-use KraenzleRitter\Resources\Resource;
-use KraenzleRitter\ResourcesComponents\Events\ResourceSaved;
+use KraenzleRitter\ResourcesComponents\Abstracts\AbstractLivewireComponent;
+use KraenzleRitter\ResourcesComponents\Factories\ProviderFactory;
 
-class AntonLwComponent extends Component
+class AntonLwComponent extends AbstractLivewireComponent
 {
-    public $search;
+    public $endpoint = 'objects';
 
-    public $queryOptions;
+    protected function getProviderName(): string
+    {
+        return 'Anton';
+    }
 
-    public $model;
+    protected function getProviderClient()
+    {
+        return ProviderFactory::create('anton');
+    }
 
-    public $endpoint;
+    protected function getDefaultOptions(): array
+    {
+        return ['limit' => 5];
+    }
 
-    public $resourceable_id;
-
-    public $provider = 'Anton';
-
-    public $saveMethod = 'updateOrCreateResource';
-
-    public $removeMethod = 'removeResource'; // url
-
-    protected $listeners = ['resourcesChanged' => 'render'];
+    protected function processResults($results)
+    {
+        return $results;
+    }
 
     public function mount($model, string $search = '', array $params = [], string $endpoint = 'objects')
     {
-        $this->model = $model;
-
-        $this->search = trim($search) ?: 'Cassirer';
-
         $this->endpoint = $endpoint;
 
-        $this->queryOptions = $params['queryOptions'] ?? ['limit' => 5];
+        // Set default search if empty
+        if (empty(trim($search))) {
+            $search = 'Cassirer';
+        }
+
+        parent::mount($model, $search, $params);
     }
 
     public function saveResource($provider_id, $url, $full_json = null)
@@ -42,40 +46,27 @@ class AntonLwComponent extends Component
         $data = [
             'provider' => config('resources-components.anton.provider-slug'),
             'provider_id' => $provider_id,
-            'url' => config('resources-components.anton.url'). '/' . $this->endpoint . '/' . $provider_id ,
-            'full_json' => json_decode($full_json)
+            'url' => config('resources-components.anton.url'). '/' . $this->endpoint . '/' . $provider_id,
+            'full_json' => $this->processFullJson($full_json)
         ];
+
         $resource = $this->model->{$this->saveMethod}($data);
         $this->dispatch('resourcesChanged');
-        event(new ResourceSaved($resource, $this->model->id));
-    }
-
-    public function removeResource($url)
-    {
-        Resource::where([
-            'url' => $url
-        ])->delete();
-        $this->dispatch('resourcesChanged');
+        event(new \KraenzleRitter\ResourcesComponents\Events\ResourceSaved($resource, $this->model->id));
     }
 
     public function render()
     {
-        $client = new Anton();
+        $results = [];
 
-        $resources = $client->search($this->search, $this->queryOptions, $this->endpoint);
-
-        $view = view()->exists('vendor.kraenzle-ritter.livewire.anton-lw-component')
-              ? 'vendor.kraenzle-ritter.livewire.anton-lw-component'
-              : 'resources-components::anton-lw-component';
-
-        if (!isset($resources) or !count($resources)) {
-            return view($view, [
-                'results' => []
-            ]);
+        if ($this->search) {
+            $client = $this->getProviderClient();
+            $resources = $client->search($this->search, $this->queryOptions, $this->endpoint);
+            $results = $this->processResults($resources);
         }
 
-        return view($view, [
-            'results' => $resources
+        return view($this->getViewName(), [
+            'results' => $results
         ]);
     }
 }

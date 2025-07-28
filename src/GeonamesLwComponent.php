@@ -2,80 +2,38 @@
 
 namespace KraenzleRitter\ResourcesComponents;
 
-use Livewire\Component;
-use KraenzleRitter\Resources\Resource;
-use KraenzleRitter\ResourcesComponents\Geonames;
-use KraenzleRitter\ResourcesComponents\Events\ResourceSaved;
+use KraenzleRitter\ResourcesComponents\Abstracts\AbstractLivewireComponent;
+use KraenzleRitter\ResourcesComponents\Factories\ProviderFactory;
 
-class GeonamesLwComponent extends Component
+class GeonamesLwComponent extends AbstractLivewireComponent
 {
-    public $search;
+    protected function getProviderName(): string
+    {
+        return 'Geonames';
+    }
 
-    public $queryOptions;
+    protected function getProviderClient()
+    {
+        return ProviderFactory::create('geonames');
+    }
 
-    public $model;
+    protected function getDefaultOptions(): array
+    {
+        return ['limit' => 5];
+    }
 
-    public $resourceable_id;
-
-    public $provider = 'Geonames';
-
-    public $saveMethod = 'updateOrCreateResource';
-
-    public $removeMethod = 'removeResource'; // url
-
-    protected $listeners = ['resourcesChanged' => 'render'];
+    protected function processResults($results)
+    {
+        return $results;
+    }
 
     public function mount($model, string $search = '', array $params = [])
     {
-        $this->model = $model;
-
-        $this->search = trim($search) ?: 'Cassirer';
-
-        $this->queryOptions = $params['queryOptions'];
-    }
-
-    public function saveResource($provider_id, $url, $full_json = null)
-    {
-        $data = [
-            'provider' => $this->provider,
-            'provider_id' => $provider_id,
-            'url' => $url,
-            'full_json' => json_decode($full_json)
-        ];
-
-        $resource = $this->model->{$this->saveMethod}($data);
-
-        $this->dispatch('resourcesChanged');
-
-        event(new ResourceSaved($resource, $this->model->id));
-    }
-
-    public function removeResource($url)
-    {
-        Resource::where([
-            'url' => $url
-        ])->delete();
-        $this->dispatch('resourcesChanged');
-    }
-
-    public function render()
-    {
-        $client = new Geonames();
-
-        $resources = $client->search($this->search, $this->queryOptions);
-
-        $view = view()->exists('vendor.kraenzle-ritter.livewire.geonames-lw-component')
-              ? 'vendor.kraenzle-ritter.livewire.geonames-lw-component'
-              : 'resources-components::geonames-lw-component';
-
-        if (!isset($resources) or !count($resources)) {
-            return view($view, [
-                'results' => []
-            ]);
+        // Set default search if empty
+        if (empty(trim($search))) {
+            $search = 'Cassirer';
         }
 
-        return view($view, [
-            'results' => $resources
-        ]);
+        parent::mount($model, $search, $params);
     }
 }

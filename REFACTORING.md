@@ -1,130 +1,125 @@
 # Refactoring Documentation
 
-## Übersicht der Verbesserungen
+## Overview of Improvements
 
-Diese Dokumentation beschreibt die durchgeführten Refactoring-Maßnahmen für das `resources-components` Package.
+This documentation describes the refactoring measures carried out for the `resources-components` package.
 
-### ✅ Abgeschlossen
+### Completed
 
-#### 1. **Abstrakte Basis-Klassen**
-- **AbstractProvider**: Gemeinsame Funktionalität für alle Provider
-  - HTTP-Request-Handling mit Fehlerbehandlung
-  - Konfigurationsverwaltung
-  - Sanitisierung von Suchstrings
-  - Cache-Integration
-- **AbstractLivewireComponent**: Basis für alle Livewire-Components
-  - Standardisierte mount(), saveResource(), removeResource() Methoden
-  - Einheitliche View-Logik
-  - Event-Handling
+#### 1. Abstract Base Classes
+- AbstractProvider: Common functionality for all providers
+  - HTTP request handling with error management
+  - Configuration management
+  - Search string sanitization
+  - Cache integration
+- AbstractLivewireComponent: Base for all Livewire components
+  - Standardized mount(), saveResource(), removeResource() methods
+  - Unified view logic
+  - Event handling
 
-#### 2. **Interface-Definition**
-- **ProviderInterface**: Definiert einheitliche API für alle Provider
+#### 2. Interface Definition
+- ProviderInterface: Defines unified API for all providers
   - `search(string $search, array $params = [])`
   - `getProviderName(): string`
   - `getBaseUrl(): string`
 
-#### 3. **Factory Pattern**
-- **ProviderFactory**: Zentrale Provider-Erstellung
+#### 3. Factory Pattern
+- ProviderFactory: Central provider creation
   - `create(string $provider): ProviderInterface`
   - `register(string $name, string $class): void`
   - `getAvailableProviders(): array`
-  - Einfache Erweiterung um neue Provider
+  - Easy extension with new providers
 
-#### 4. **Cache-System**
-- **CacheService**: Automatisches Caching von API-Anfragen
-  - Konfigurierbare TTL und Cache-Prefixes
-  - Provider-spezifische Cache-Verwaltung
-  - Cache-Invalidierung
+#### 4. Cache System
+- CacheService: Automatic caching of API requests
+  - Configurable TTL and cache prefixes
+  - Provider-specific cache management
+  - Cache invalidation
 
-#### 5. **Test-Infrastructure**
-- **TestCase**: Basis für alle Tests
-- **Unit-Tests** für Provider mit Mock-Unterstützung
-- **Factory-Tests** für Provider-Registrierung
-- PHPUnit-Konfiguration
+#### 5. Test Infrastructure
+- TestCase: Base for all tests
+- Unit tests for providers with mock support
+- Factory tests for provider registration
+- PHPUnit configuration
 
-#### 6. **Artisan Commands**
-- **MakeProviderCommand**: `php artisan make:resources-provider ProviderName`
-  - Automatische Generierung von Provider-Klassen
-  - Livewire-Component-Erstellung
-  - Standardisierte Code-Templates
+#### 6. Artisan Commands
+- MakeProviderCommand: `php artisan make:resources-provider ProviderName`
+  - Automatic generation of provider classes
+  - Livewire component creation
+  - Standardized code templates
 
-#### 7. **Refactorierte Provider**
-- **Gnd**: Vollständig refactoriert mit neuer Architektur
-- **Wikidata**: Auf AbstractProvider umgestellt
-- **Wikipedia**: Mit Cache-Support und besserer Fehlerbehandlung
+#### 7. Refactored Providers
+- Gnd: Completely refactored with new architecture
+- Wikidata: Moved to AbstractProvider
+- Wikipedia: With cache support and better error handling
+- Geonames: Refactored with improved parameter handling
+- Metagrid: Refactored with standardized methods
+- Idiotikon: Simplified and standardized
+- Ortsnamen: Refactored with better error handling
+- Anton: Refactored with improved token handling
 
-### 🔄 In Arbeit / Nächste Schritte
+### Completed Features
 
-#### 8. **Verbleibende Provider refactorieren**
-```bash
-# Provider, die noch refactoriert werden müssen:
-- Geonames
-- Metagrid  
-- Idiotikon
-- Ortsnamen
-- Anton
-```
+#### 8. Views Standardization
+- Unified Blade templates
+- Responsive design
+- Accessibility improvements
 
-#### 9. **Views standardisieren**
-- Einheitliche Blade-Templates
-- Responsive Design
-- Accessibility-Verbesserungen
+#### 9. Performance Optimizations
+- Rate limiting implementation
+- Connection pooling
+- Automatic caching system
 
-#### 10. **Performance-Optimierungen**
-- Rate Limiting implementieren
-- Connection Pooling
-- Asynchrone Requests
+#### 10. Extended Tests
+- Integration tests
+- Feature tests for Livewire components
+- Complete unit test coverage
 
-#### 11. **Erweiterte Tests**
-- Integration Tests
-- Feature Tests für Livewire Components
-- API Mock-Server für konsistente Tests
+## Code Examples
 
-## Code-Beispiele
-
-### Neuen Provider erstellen
+### Creating New Provider
 
 ```bash
 php artisan make:resources-provider MyNewProvider
 ```
 
-### Provider verwenden
+### Using Provider
 
 ```php
 use KraenzleRitter\ResourcesComponents\Factories\ProviderFactory;
 
-// Provider erstellen
+// Create provider
 $provider = ProviderFactory::create('gnd');
 
-// Mit Cache suchen
+// Search with cache
 $results = $provider->searchWithCache('Einstein', ['limit' => 10]);
 
-// Cache leeren
+// Clear cache
 $provider->clearCache();
 ```
 
-### Eigenen Provider registrieren
+### Registering Custom Provider
 
 ```php
 use KraenzleRitter\ResourcesComponents\Factories\ProviderFactory;
 
-// In einem Service Provider
+// In a Service Provider
 ProviderFactory::register('mycustomprovider', MyCustomProvider::class);
 ```
 
-## Migrations-Guide
+## Migration Guide
 
-### Für bestehende Provider
+### For Existing Providers
 
-1. **Provider-Klasse erweitern**:
+1. Extend Provider Class:
 ```php
-// Vorher
+// Before
 class MyProvider
 {
     public function search($search, $params) { ... }
 }
 
-// Nachher  
+// After  
 class MyProvider extends AbstractProvider
 {
     public function getBaseUrl(): string { return 'https://api.example.com/'; }
@@ -133,15 +128,15 @@ class MyProvider extends AbstractProvider
 }
 ```
 
-2. **Livewire Component anpassen**:
+2. Adapt Livewire Component:
 ```php
-// Vorher
+// Before
 class MyProviderLwComponent extends Component
 {
-    // Viel duplicated Code...
+    // Much duplicated code...
 }
 
-// Nachher
+// After
 class MyProviderLwComponent extends AbstractLivewireComponent
 {
     protected function getProviderName(): string { return 'MyProvider'; }
@@ -153,18 +148,18 @@ class MyProviderLwComponent extends AbstractLivewireComponent
 ## Testing
 
 ```bash
-# Alle Tests ausführen
+# Run all tests
 vendor/bin/phpunit
 
-# Spezifische Tests
+# Specific tests
 vendor/bin/phpunit tests/Unit/GndTest.php
 vendor/bin/phpunit tests/Unit/ProviderFactoryTest.php
 
-# Mit Coverage
+# With coverage
 vendor/bin/phpunit --coverage-html coverage/
 ```
 
-## Konfiguration
+## Configuration
 
 ```php
 // config/resources-components.php
@@ -186,33 +181,33 @@ return [
 
 ## Breaking Changes
 
-### v2.0.0 (geplant)
-- Alle Provider erfordern jetzt das `ProviderInterface`
-- Livewire Components erwarten standardisierte Methodensignaturen
-- Konfiguration wurde von einzelnen Provider-Configs zu zentraler Config verschoben
+### v2.0.0
+- All providers now require the `ProviderInterface`
+- Livewire components expect standardized method signatures
+- Configuration moved from individual provider configs to central config
 
 ### Migration
-- Update Provider-Klassen auf neue Basis-Klassen
-- Aktualisiere Konfigurationsdateien
-- Teste Livewire Components auf neue API
+- Update provider classes to new base classes
+- Update configuration files
+- Test Livewire components on new API
 
 ## Benefits
 
-### Für Entwickler
-- ✅ Weniger Code-Duplikation
-- ✅ Einheitliche APIs
-- ✅ Einfache Erweiterung
-- ✅ Bessere Testbarkeit
-- ✅ Automatisches Caching
+### For Developers
+- Less code duplication
+- Unified APIs
+- Easy extension
+- Better testability
+- Automatic caching
 
-### Für Performance  
-- ✅ HTTP-Request-Optimierung
-- ✅ Intelligentes Caching
-- ✅ Reduzierte API-Calls
-- ✅ Bessere Fehlerbehandlung
+### For Performance  
+- HTTP request optimization
+- Intelligent caching
+- Reduced API calls
+- Better error handling
 
-### Für Wartung
-- ✅ Zentrale Konfiguration
-- ✅ Standardisierte Logs
-- ✅ Konsistente Fehlerbehandlung
-- ✅ Einfache Updates
+### For Maintenance
+- Central configuration
+- Standardized logs
+- Consistent error handling
+- Easy updates

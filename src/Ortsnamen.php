@@ -2,38 +2,35 @@
 
 namespace KraenzleRitter\ResourcesComponents;
 
-use GuzzleHttp\Client;
-use KraenzleRitter\ResourcesComponents\Helpers\Params;
+use KraenzleRitter\ResourcesComponents\Abstracts\AbstractProvider;
 
-class Ortsnamen
+class Ortsnamen extends AbstractProvider
 {
-    public $body;
-
-    public $url;
-
-    public function __construct()
+    public function getBaseUrl(): string
     {
-        $this->client = new Client(['base_uri' => 'https://search.ortsnamen.ch/de/api/']);
+        return 'https://search.ortsnamen.ch/de/api/';
     }
 
-    public function search(string $search, $params)
+    public function getProviderName(): string
+    {
+        return 'Ortsnamen';
+    }
+
+    public function search(string $search, array $params = [])
     {
         if (!$search) {
             return [];
         }
 
+        $search = $this->sanitizeSearch($search);
+        $params = $this->mergeParams($params);
+
         $search = str_replace(',', ' ', $search);
-        try {
-            $response = $this->client->get('search?q=' . $search);
-        } catch (\Exception $e) {
-            \Log::error($e->getMessage());
-            return [];
-        }
 
-        $body = json_decode($response->getBody());
+        $queryString = 'search?q=' . urlencode($search);
 
-        return $body->results;
+        $result = $this->makeRequest('GET', $queryString);
 
+        return $result->results ?? [];
     }
-
 }

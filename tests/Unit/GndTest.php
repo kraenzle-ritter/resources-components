@@ -8,24 +8,25 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Response;
+use PHPUnit\Framework\Attributes\Test;
 
 class GndTest extends TestCase
 {
     protected Gnd $gnd;
-    
+
     protected function setUp(): void
     {
         parent::setUp();
         $this->gnd = new Gnd();
     }
 
-    /** @test */
+    #[Test]
     public function it_can_create_gnd_instance()
     {
         $this->assertInstanceOf(Gnd::class, $this->gnd);
     }
 
-    /** @test */
+    #[Test]
     public function it_can_search_with_mocked_response()
     {
         // Mock response
@@ -45,7 +46,7 @@ class GndTest extends TestCase
         ]);
 
         $handlerStack = HandlerStack::create($mock);
-        
+
         // Use reflection to set the protected client property
         $reflection = new \ReflectionClass($this->gnd);
         $clientProperty = $reflection->getProperty('client');
@@ -59,7 +60,7 @@ class GndTest extends TestCase
         $this->assertEquals('Test Person', $result->member[0]->preferredName);
     }
 
-    /** @test */
+    #[Test]
     public function it_builds_filter_correctly()
     {
         // Use reflection to test private method
@@ -73,15 +74,15 @@ class GndTest extends TestCase
         $this->assertStringContainsString('filter=type:Person', $result);
     }
 
-    /** @test */
+    #[Test]
     public function it_sanitizes_search_string()
     {
         $gnd = new Gnd();
-        
+
         // Test that special characters are removed
         $searchString = 'Test[Person]!(Example):';
         $result = $gnd->search($searchString, ['limit' => 1]);
-        
+
         // The search string should be sanitized in the URL
         $this->assertTrue(true); // This test would need to check the actual HTTP request
     }

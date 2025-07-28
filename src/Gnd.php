@@ -45,7 +45,7 @@ class Gnd extends AbstractProvider
     {
         $search = $this->sanitizeSearch($search);
         $params = $this->mergeParams($params);
-        
+
         $searchQuery = 'search?q=' . urlencode($search);
         $filters = $params['filters'] ?? [];
         $size = $params['limit'] ?? $this->getConfigValue('limit', 5);
@@ -53,11 +53,11 @@ class Gnd extends AbstractProvider
         $searchQuery .= $this->buildFilter($filters) . '&size=' . $size . '&format=json';
 
         $result = $this->makeRequest('GET', $searchQuery);
-        
+
         if ($result && isset($result->totalItems) && $result->totalItems > 0) {
             return $result;
         }
-        
+
         return null;
     }
 

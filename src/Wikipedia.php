@@ -32,7 +32,7 @@ class Wikipedia extends AbstractProvider
     {
         $search = $this->sanitizeSearch($search);
         $params = $this->mergeParams($params);
-        
+
         $limit = $params['limit'] ?? 5;
         $locale = $params['locale'] ?? 'de';
 
@@ -42,7 +42,7 @@ class Wikipedia extends AbstractProvider
         ]);
 
         $searchstring = trim(str_replace(' ', '_', $search), '_');
-        
+
         $queryParams = [
             'action' => 'query',
             'format' => 'json',
@@ -53,7 +53,7 @@ class Wikipedia extends AbstractProvider
         ];
 
         $queryString = '?' . http_build_query($queryParams);
-        
+
         $result = $this->makeRequest('GET', $queryString);
 
         if ($result && isset($result->query->searchinfo->totalhits) && $result->query->searchinfo->totalhits > 0) {
@@ -72,7 +72,7 @@ class Wikipedia extends AbstractProvider
     public function getArticle(string $title): ?object
     {
         $title = trim(str_replace(' ', '_', $title), '_');
-        
+
         $queryParams = [
             'action' => 'query',
             'titles' => $title,

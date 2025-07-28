@@ -8,7 +8,7 @@ use Illuminate\Support\Str;
 class MakeProviderCommand extends Command
 {
     protected $signature = 'make:resources-provider {name : The name of the provider}';
-    
+
     protected $description = 'Create a new resources provider';
 
     public function handle()
@@ -19,7 +19,7 @@ class MakeProviderCommand extends Command
 
         $this->createProviderClass($studlyName, $lowerName);
         $this->createLivewireComponent($studlyName, $lowerName);
-        
+
         $this->info("Provider {$studlyName} created successfully!");
         $this->comment("Don't forget to:");
         $this->comment("1. Register the provider in ProviderFactory");
@@ -39,7 +39,7 @@ class MakeProviderCommand extends Command
 
         $path = app_path("../packages/kraenzle-ritter/resources-components/src/{$studlyName}.php");
         file_put_contents($path, $content);
-        
+
         $this->info("Created provider class: {$studlyName}.php");
     }
 
@@ -54,7 +54,7 @@ class MakeProviderCommand extends Command
 
         $path = app_path("../packages/kraenzle-ritter/resources-components/src/{$studlyName}LwComponent.php");
         file_put_contents($path, $content);
-        
+
         $this->info("Created Livewire component: {$studlyName}LwComponent.php");
     }
 
@@ -82,16 +82,16 @@ class {{StudlyName}} extends AbstractProvider
     {
         $search = $this->sanitizeSearch($search);
         $params = $this->mergeParams($params);
-        
+
         // TODO: Implement your search logic here
         $searchQuery = "search?q=" . urlencode($search);
         $limit = $params["limit"] ?? $this->getConfigValue("limit", 5);
-        
+
         // Add any additional query parameters
         $searchQuery .= "&limit=" . $limit;
 
         $result = $this->makeRequest("GET", $searchQuery);
-        
+
         // TODO: Process and return the results
         return $result;
     }
@@ -133,7 +133,7 @@ class {{StudlyName}}LwComponent extends AbstractLivewireComponent
 
         // TODO: Process the raw results into a standardized format
         $processedResults = [];
-        
+
         foreach ($results as $result) {
             $processedResults[] = [
                 "title" => $result->title ?? "",
@@ -149,7 +149,7 @@ class {{StudlyName}}LwComponent extends AbstractLivewireComponent
     public function render()
     {
         $results = [];
-        
+
         if ($this->search) {
             $client = $this->getProviderClient();
             $resources = $client->search($this->search, $this->queryOptions);

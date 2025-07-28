@@ -58,7 +58,7 @@ abstract class AbstractProvider implements ProviderInterface
     {
         try {
             $response = $this->client->request($method, $uri, $options);
-            
+
             if ($response->getStatusCode() === 200) {
                 return json_decode($response->getBody()->getContents());
             }

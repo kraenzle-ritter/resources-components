@@ -2,83 +2,69 @@
 
 namespace KraenzleRitter\ResourcesComponents;
 
-use Livewire\Component;
-use KraenzleRitter\Resources\Resource;
-use KraenzleRitter\ResourcesComponents\Ortsnamen;
-use KraenzleRitter\ResourcesComponents\Events\ResourceSaved;
+use KraenzleRitter\ResourcesComponents\Abstracts\AbstractLivewireComponent;
+use KraenzleRitter\ResourcesComponents\Factories\ProviderFactory;
 
-class OrtsnamenLwComponent extends Component
+class OrtsnamenLwComponent extends AbstractLivewireComponent
 {
-    public $search;
+    protected function getProviderName(): string
+    {
+        return 'Ortsnamen';
+    }
 
-    public $queryOptions;
+    protected function getProviderClient()
+    {
+        return ProviderFactory::create('ortsnamen');
+    }
 
-    public $model;
+    protected function getDefaultOptions(): array
+    {
+        return ['limit' => 5];
+    }
 
-    public $endpoint;
-
-    public $resourceable_id;
-
-    public $provider = 'Ortsnamen';
-
-    public $saveMethod = 'updateOrCreateResource';
-
-    public $removeMethod = 'removeResource'; // url
-
-    protected $listeners = ['resourcesChanged' => 'render'];
+    protected function processResults($results)
+    {
+        return $results;
+    }
 
     public function mount($model, string $search = '', array $params = [])
     {
-        $this->model = $model;
+        // Set default search if empty
+        if (empty(trim($search))) {
+            $search = 'Zürich';
+        }
 
-        $this->search = trim($search) ?: 'Zürich';
-
-        $this->queryOptions = $params['queryOptions'] ?? ['limit' => 5];
+        parent::mount($model, $search, $params);
     }
 
     public function saveResource($provider_id, $url, $full_json = null)
     {
-        $full_json  = preg_replace('/[\x00-\x1F]/','', $full_json);
-        \Log::debug(json_decode(json_last_error()));
+        $full_json = preg_replace('/[\x00-\x1F]/','', $full_json);
 
         $data = [
             'provider' => 'ortsnamen',
             'provider_id' => $provider_id,
             'url' => $url,
-            'full_json' => json_decode($full_json)
+            'full_json' => $this->processFullJson($full_json)
         ];
 
         $resource = $this->model->{$this->saveMethod}($data);
         $this->dispatch('resourcesChanged');
-        event(new ResourceSaved($resource, $this->model->id));
-    }
-
-    public function removeResource($url)
-    {
-        Resource::where([
-            'url' => $url
-        ])->delete();
-        $this->dispatch('resourcesChanged');
+        event(new \KraenzleRitter\ResourcesComponents\Events\ResourceSaved($resource, $this->model->id));
     }
 
     public function render()
     {
-        $client = new Ortsnamen();
+        $results = [];
 
-        $resources = $client->search($this->search, $this->queryOptions, $this->endpoint);
-
-        $view = view()->exists('vendor.kraenzle-ritter.livewire.ortsnamen-lw-component')
-              ? 'vendor.kraenzle-ritter.livewire.ortsnamen-lw-component'
-              : 'resources-components::ortsnamen-lw-component';
-
-        if (!isset($resources) or !count($resources)) {
-            return view($view, [
-                'results' => []
-            ]);
+        if ($this->search) {
+            $client = $this->getProviderClient();
+            $resources = $client->search($this->search, $this->queryOptions);
+            $results = $this->processResults($resources);
         }
 
-        return view($view, [
-            'results' => $resources
+        return view($this->getViewName(), [
+            'results' => $results
         ]);
     }
 }
