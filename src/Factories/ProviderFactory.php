@@ -11,6 +11,8 @@ use KraenzleRitter\ResourcesComponents\Metagrid;
 use KraenzleRitter\ResourcesComponents\Idiotikon;
 use KraenzleRitter\ResourcesComponents\Ortsnamen;
 use KraenzleRitter\ResourcesComponents\Anton;
+use KraenzleRitter\ResourcesComponents\Providers\MultiLanguageWikipediaProvider;
+use KraenzleRitter\ResourcesComponents\Providers\MultiInstanceAntonProvider;
 use InvalidArgumentException;
 
 class ProviderFactory
@@ -29,6 +31,8 @@ class ProviderFactory
         'idiotikon' => Idiotikon::class,
         'ortsnamen' => Ortsnamen::class,
         'anton' => Anton::class,
+        'multilanguage-wikipedia' => MultiLanguageWikipediaProvider::class,
+        'multi-instance-anton' => MultiInstanceAntonProvider::class,
     ];
 
     /**
