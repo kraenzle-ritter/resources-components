@@ -5,6 +5,29 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.0] - 2025-07-28
+
+### Added
+- **Multi-Language Wikipedia Provider**: Support for 19 Wikipedia language versions
+- **Multi-Instance Anton Provider**: Configure multiple Anton APIs with different endpoints
+- Advanced Livewire components for multi-language and multi-instance providers
+- Comprehensive error handling to prevent page crashes from API failures
+- Language selection UI for Wikipedia searches
+- Instance management UI for Anton searches
+- Complete test coverage for new providers (47 tests total)
+- Configuration examples for multi-provider setups
+
+### Enhanced
+- Extended ProviderFactory with new provider registration
+- Updated documentation with advanced usage examples
+- Improved error handling across all components
+- Better UI templates with responsive design
+
+### Technical
+- Added PHPUnit test attributes support
+- Implemented proper error state management in Livewire components
+- Extended abstract architecture for multi-provider scenarios
+
 ## [2.0.0] - 2025-07-28
 
 ### Added

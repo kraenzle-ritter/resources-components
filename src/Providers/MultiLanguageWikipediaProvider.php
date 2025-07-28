@@ -63,6 +63,12 @@ class MultiLanguageWikipediaProvider extends AbstractProvider
     public function search(string $search, array $params = []): array
     {
         $search = $this->sanitizeSearch($search);
+        
+        // Return empty array for empty search terms
+        if (empty(trim($search))) {
+            return [];
+        }
+        
         $params = $this->mergeParams($params);
 
         $languages = $params['languages'] ?? [$params['language'] ?? $this->defaultLanguage];
