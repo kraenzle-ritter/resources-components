@@ -34,22 +34,23 @@ class WikipediaLwComponent extends AbstractLivewireComponent
 
     protected function processResults($results)
     {
-        if (!$results || !is_array($results)) {
+        if (!$results || !is_object($results) || !property_exists($results, 'query') || !property_exists($results->query, 'search')) {
             return [];
         }
 
         $processedResults = [];
 
-        foreach ($results as $result) {
+        foreach ($results->query->search as $result) {
             $processedResults[] = [
-                'title' => $result->title ?? '',
-                'snippet' => strip_tags($result->snippet ?? ''),
-                'url' => $this->base_url . str_replace(' ', '_', $result->title ?? ''),
                 'provider_id' => $result->title ?? '',
+                'preferredName' => $result->title ?? '',
+                'description' => strip_tags($result->snippet ?? ''),
+                'url' => $this->base_url . str_replace(' ', '_', $result->title ?? ''),
                 'pageid' => $result->pageid ?? '',
                 'size' => $result->size ?? 0,
                 'wordcount' => $result->wordcount ?? 0,
-                'timestamp' => $result->timestamp ?? ''
+                'timestamp' => $result->timestamp ?? '',
+                'provider' => 'wikipedia'
             ];
         }
 

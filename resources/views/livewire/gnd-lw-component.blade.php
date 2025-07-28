@@ -10,20 +10,20 @@
             <h5>GND – {{ __('List') }}</h5>
             @foreach($results as $result)
                 <button
-                    wire:click="saveResource('{{ $result->gndIdentifier }}', '{{ $result->id }}', '{{ json_encode($result, JSON_UNESCAPED_UNICODE | JSON_ERROR_SYNTAX) }}')"
+                    wire:click="saveResource('{{ $result['gndIdentifier'] }}', '{{ $result['url'] }}', '{{ json_encode($result, JSON_UNESCAPED_UNICODE | JSON_ERROR_SYNTAX) }}')"
                     type="submit"
                     class="btn btn-success btn-xs float-right"
                     title="{{ __("Save GND ID for Actor") }}">
                     <i class="fa fa-check" aria-hidden="true"></i>
                 </button>
-                <h6>{{ $result->preferredName ?? '' }}
-                    {{ isset($result->dateOfBirth[0]) ? substr($result->dateOfBirth[0],0,4) : '' }}
-                    {{ isset($result->dateOfBirth[0]) || isset($result->dateOfDeath[0]) ? '–' : '' }}
-                    {{ isset($result->dateOfDeath[0]) ? substr($result->dateOfDeath[0],0,4) : '' }}
+                <h6>{{ $result['preferredName'] ?? '' }}
+                    {{ isset($result['dateOfBirth'][0]) ? substr($result['dateOfBirth'][0],0,4) : '' }}
+                    {{ isset($result['dateOfBirth'][0]) || isset($result['dateOfDeath'][0]) ? '–' : '' }}
+                    {{ isset($result['dateOfDeath'][0]) ? substr($result['dateOfDeath'][0],0,4) : '' }}
                 </h6>
                 <small>
-                    <a href="{{ $result->id }}" target="_blank">{{ $result->id }}</a><br>
-                    {{ join('<br>', $result->biographicalOrHistoricalInformation ?? []) }}
+                    <a href="{{ $result['url'] }}" target="_blank">{{ $result['url'] }}</a><br>
+                    {{ join('<br>', $result['biographicalOrHistoricalInformation'] ?? []) }}
                 </small>
                 @if (!$loop->last)
                     <hr>

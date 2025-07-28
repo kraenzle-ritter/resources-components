@@ -4,8 +4,13 @@ namespace KraenzleRitter\ResourcesComponents;
 
 use Illuminate\Support\ServiceProvider;
 
+use KraenzleRitter\ResourcesComponents\AntonLwComponent;
+use KraenzleRitter\ResourcesComponents\GeonamesLwComponent;
 use KraenzleRitter\ResourcesComponents\GndLwComponent;
+use KraenzleRitter\ResourcesComponents\IdiotikonLwComponent;
+use KraenzleRitter\ResourcesComponents\ManualInputLwComponent;
 use KraenzleRitter\ResourcesComponents\MetagridLwComponent;
+use KraenzleRitter\ResourcesComponents\OrtsnamenLwComponent;
 use KraenzleRitter\ResourcesComponents\WikidataLwComponent;
 use KraenzleRitter\ResourcesComponents\WikipediaLwComponent;
 use KraenzleRitter\ResourcesComponents\ProviderSelect;
@@ -53,7 +58,7 @@ class ResourcesComponentsServiceProvider extends ServiceProvider
 
         // Register the service the package provides.
         $this->app->singleton('resources-components', function ($app) {
-            return new ResourcesComponents;
+            return new class {};
         });
     }
 

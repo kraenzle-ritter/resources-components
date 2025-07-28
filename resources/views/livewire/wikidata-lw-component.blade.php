@@ -14,18 +14,18 @@
             <h5>Wikidata – {{ __('List') }}</h5>
             @foreach($results as $result)
                 <button
-                    wire:click="saveResource('{{ $result->id }}', '{{ $base_url . $result->id }}', '{{ json_encode($result, JSON_UNESCAPED_UNICODE) }}')"
+                    wire:click="saveResource('{{ $result['provider_id'] }}', '{{ $base_url . $result['provider_id'] }}', '{{ json_encode($result, JSON_UNESCAPED_UNICODE) }}')"
                     type="submit"
                     class="btn btn-success btn-xs float-right"
                     title="{{ __("Save Wikidata ID for Actor") }}">
                     <i class="fa fa-check" aria-hidden="true"></i>
                 </button>
 
-                <h6>{{ $result->label ?? '' }}</h6>
+                <h6>{{ $result['preferredName'] ?? '' }}</h6>
 
                 <small>
-                    <a href="{{ $base_url . $result->id }}" target="_blank">{{ $result->id }}</a><br>
-                    {{ $result->description }}
+                    <a href="{{ $base_url . $result['provider_id'] }}" target="_blank">{{ $result['provider_id'] }}</a><br>
+                    {{ $result['description'] }}
                 </small>
                 @if (!$loop->last)
                     <hr>

@@ -37,6 +37,9 @@ class GndLwComponent extends AbstractLivewireComponent
                 'type' => is_array($resource->type) ? $resource->type : [$resource->type],
                 'url' => "https://d-nb.info/gnd/{$resource->gndIdentifier}",
                 'provider_id' => $resource->gndIdentifier ?? '',
+                'dateOfBirth' => $resource->dateOfBirth ?? [],
+                'dateOfDeath' => $resource->dateOfDeath ?? [],
+                'biographicalOrHistoricalInformation' => $resource->biographicalOrHistoricalInformation ?? [],
                 'sameAs' => []
             ];
 

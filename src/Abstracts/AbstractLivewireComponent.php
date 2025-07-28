@@ -5,6 +5,7 @@ namespace KraenzleRitter\ResourcesComponents\Abstracts;
 use Livewire\Component;
 use KraenzleRitter\Resources\Resource;
 use KraenzleRitter\ResourcesComponents\Events\ResourceSaved;
+use Illuminate\Support\Facades\Log;
 
 abstract class AbstractLivewireComponent extends Component
 {
@@ -43,27 +44,6 @@ abstract class AbstractLivewireComponent extends Component
     {
         $this->hasError = false;
         $this->errorMessage = '';
-    }
-
-    /**
-     * Set error state with message
-     *
-     * @param string $message
-     * @param \Exception $exception
-     */
-    protected function setError(string $message, \Exception $exception = null)
-    {
-        $this->hasError = true;
-        $this->errorMessage = $message;
-        
-        // Log the actual exception for debugging
-        if ($exception) {
-            \Log::error("Provider {$this->getProviderName()} error: " . $exception->getMessage(), [
-                'search' => $this->search,
-                'params' => $this->queryOptions,
-                'exception' => $exception
-            ]);
-        }
     }
 
     /**
@@ -194,22 +174,13 @@ abstract class AbstractLivewireComponent extends Component
         $this->errorMessage = $message;
         
         if ($exception) {
-            \Log::error("ResourcesComponents Error in {$this->getProviderName()}: " . $exception->getMessage(), [
+            Log::error("ResourcesComponents Error in {$this->getProviderName()}: " . $exception->getMessage(), [
                 'search' => $this->search,
                 'provider' => $this->getProviderName(),
                 'exception' => $exception,
                 'trace' => $exception->getTraceAsString()
             ]);
         }
-    }
-
-    /**
-     * Clear error state
-     */
-    protected function clearError(): void
-    {
-        $this->hasError = false;
-        $this->errorMessage = '';
     }
 
     /**

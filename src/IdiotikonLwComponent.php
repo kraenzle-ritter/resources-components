@@ -24,7 +24,25 @@ class IdiotikonLwComponent extends AbstractLivewireComponent
 
     protected function processResults($results)
     {
-        return $results;
+        if (!$results || !is_array($results)) {
+            return [];
+        }
+
+        $processedResults = [];
+        
+        foreach ($results as $item) {
+            $processedResults[] = [
+                'provider_id' => $item->id ?? '',
+                'preferredName' => $item->lemma ?? '',
+                'definition' => $item->definition ?? '',
+                'volume' => $item->volume ?? '',
+                'column' => $item->column ?? '',
+                'url' => isset($item->id) ? "https://www.idiotikon.ch/wortgeschichten/{$item->id}" : '',
+                'provider' => 'idiotikon',
+            ];
+        }
+
+        return $processedResults;
     }
 
     public function saveResource($provider_id, $url, $full_json = null)

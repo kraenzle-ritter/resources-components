@@ -14,18 +14,21 @@
             <h5 class="card-title">Geonames – {{ __('List') }}</h5>
             @foreach($results as $result)
                 <button
-                    wire:click="saveResource('{{ $result->geonameId }}', '{{ $base_url . $result->geonameId }}', '{{ json_encode($result, JSON_UNESCAPED_UNICODE) }}')"
+                    wire:click="saveResource('{{ $result['provider_id'] }}', '{{ $result['url'] }}', '{{ json_encode($result, JSON_UNESCAPED_UNICODE) }}')"
                     type="submit"
                     class="btn btn-success btn-xs float-right"
                     title="{{ __("Save Geonames ID for Actor") }}">
                     <i class="fa fa-check" aria-hidden="true"></i>
                 </button>
 
-                <h6>{{ $result->toponymName ?? '' }}</h6>
+                <h6>{{ $result['preferredName'] ?? '' }}</h6>
                 <small>
-                    <a href="{{ $base_url . $result->geonameId }}" target="_blank">{{ $base_url . $result->geonameId }}</a><br>
-                    {{ $result->fclName ?? '' }}<br>
-                    {{ $result->countryName ?? '' }}
+                    <a href="{{ $result['url'] }}" target="_blank">{{ $result['url'] }}</a><br>
+                    {{ $result['description'] ?? '' }}<br>
+                    {{ $result['countryName'] ?? '' }}
+                    @if(!empty($result['lat']) && !empty($result['lng']))
+                        <br>Coordinates: {{ $result['lat'] }}, {{ $result['lng'] }}
+                    @endif
                 </small>
                 @if (!$loop->last)
                     <hr>

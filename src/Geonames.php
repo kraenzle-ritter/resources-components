@@ -4,6 +4,7 @@ namespace KraenzleRitter\ResourcesComponents;
 
 use KraenzleRitter\ResourcesComponents\Abstracts\AbstractProvider;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use KraenzleRitter\ResourcesComponents\Helpers\Params;
 
 class Geonames extends AbstractProvider
@@ -53,13 +54,24 @@ class Geonames extends AbstractProvider
         $response = Http::get($this->getBaseUrl() . $queryString);
 
         if ($response->serverError()) {
-            \Log::error(__METHOD__, ['guzzle server error (geonames)']);
+            Log::error(__METHOD__, ['guzzle server error (geonames)']);
             return [];
         }
 
         if ($response->successful()) {
             $result = $response->json();
-            return $result['geonames'] ?? [];
+            
+            // Check for API errors
+            if (isset($result['status'])) {
+                Log::warning('Geonames API Error', [
+                    'message' => $result['status']['message'] ?? 'Unknown error',
+                    'value' => $result['status']['value'] ?? 'No error code'
+                ]);
+                return (object) ['geonames' => []];
+            }
+            
+            // Convert arrays to objects recursively
+            return $this->arrayToObject($result);
         }
 
         return [];
@@ -80,7 +92,7 @@ class Geonames extends AbstractProvider
                 return simplexml_load_string($response, 'SimpleXMLElement', LIBXML_NOCDATA);
             }
         } catch (\Exception $e) {
-            \Log::error("Error fetching Geoname {$id}: " . $e->getMessage());
+            Log::error("Error fetching Geoname {$id}: " . $e->getMessage());
         }
 
         return null;

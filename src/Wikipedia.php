@@ -57,10 +57,12 @@ class Wikipedia extends AbstractProvider
         $result = $this->makeRequest('GET', $queryString);
 
         if ($result && isset($result->query->searchinfo->totalhits) && $result->query->searchinfo->totalhits > 0) {
-            return $result->query->search;
+            // Convert arrays to objects recursively to maintain consistency
+            return $this->arrayToObject($result);
         }
 
-        return [];
+        // Return empty result structure
+        return (object) ['query' => (object) ['search' => []]];
     }
 
     /**

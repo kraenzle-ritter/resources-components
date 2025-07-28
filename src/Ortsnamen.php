@@ -31,6 +31,9 @@ class Ortsnamen extends AbstractProvider
 
         $result = $this->makeRequest('GET', $queryString);
 
-        return $result->results ?? [];
+        $results = $result->results ?? [];
+        
+        // Convert arrays to objects to maintain consistency
+        return $this->arrayToObject($results);
     }
 }

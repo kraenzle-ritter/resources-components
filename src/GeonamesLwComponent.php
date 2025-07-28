@@ -4,6 +4,7 @@ namespace KraenzleRitter\ResourcesComponents;
 
 use KraenzleRitter\ResourcesComponents\Abstracts\AbstractLivewireComponent;
 use KraenzleRitter\ResourcesComponents\Factories\ProviderFactory;
+use Illuminate\Support\Facades\Log;
 
 class GeonamesLwComponent extends AbstractLivewireComponent
 {
@@ -24,7 +25,35 @@ class GeonamesLwComponent extends AbstractLivewireComponent
 
     protected function processResults($results)
     {
-        return $results;
+        if (!$results || !is_object($results) || !property_exists($results, 'geonames')) {
+            return [];
+        }
+
+        $processedResults = [];
+        
+        foreach ($results->geonames as $geoname) {
+            $description = [];
+            if (!empty($geoname->countryName ?? '')) {
+                $description[] = $geoname->countryName;
+            }
+            if (!empty($geoname->adminName1 ?? '')) {
+                $description[] = $geoname->adminName1;
+            }
+            
+            $processedResults[] = [
+                'provider_id' => $geoname->geonameId ?? '',
+                'preferredName' => $geoname->toponymName ?? $geoname->name ?? '',
+                'description' => implode(', ', $description),
+                'countryName' => $geoname->countryName ?? '',
+                'adminName1' => $geoname->adminName1 ?? '',
+                'lat' => $geoname->lat ?? '',
+                'lng' => $geoname->lng ?? '',
+                'url' => isset($geoname->geonameId) ? "https://www.geonames.org/{$geoname->geonameId}" : '',
+                'provider' => 'geonames',
+            ];
+        }
+
+        return $processedResults;
     }
 
     public function mount($model, string $search = '', array $params = [])

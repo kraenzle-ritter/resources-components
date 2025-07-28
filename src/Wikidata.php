@@ -57,6 +57,7 @@ class Wikidata extends AbstractProvider
             $results = $reversedResult->search ?? [];
         }
 
-        return $results;
+        // Convert arrays to objects to maintain consistency
+        return $this->arrayToObject($results);
     }
 }

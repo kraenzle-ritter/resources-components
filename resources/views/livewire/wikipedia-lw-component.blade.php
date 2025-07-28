@@ -10,7 +10,7 @@
             <h5>Wikipedia – {{ __('List') }}</h5>
             @foreach($results as $result)
                 <button
-                    wire:click="saveResource('{{ $result->pageid }}', '{{ $base_url . $result->title }}')"
+                    wire:click="saveResource('{{ $result['pageid'] }}', '{{ $base_url . $result['preferredName'] }}')"
                     type="submit"
                     class="btn btn-success btn-xs float-right"
                     title="{{ __("Save Wikipedia for Actor") }}">
@@ -18,8 +18,8 @@
                 </button>
 
                 <small>
-                    <a href="{{ $base_url . $result->title }}" target="_blank">{{ $result->title }}</a><br>
-                    {{ strip_tags($result->snippet ?? '') }}
+                    <a href="{{ $base_url . $result['preferredName'] }}" target="_blank">{{ $result['preferredName'] }}</a><br>
+                    {{ $result['description'] ?? '' }}
                 </small>
                 @if (!$loop->last)
                     <hr>

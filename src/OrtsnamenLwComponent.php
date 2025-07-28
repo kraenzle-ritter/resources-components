@@ -24,7 +24,51 @@ class OrtsnamenLwComponent extends AbstractLivewireComponent
 
     protected function processResults($results)
     {
-        return $results;
+        if (!$results || (!is_array($results) && !is_object($results))) {
+            return [];
+        }
+
+        // Convert to array if it's an object to handle both cases
+        if (is_object($results)) {
+            $results = (array) $results;
+        }
+
+        $processedResults = [];
+        
+        foreach ($results as $item) {
+            // Handle both array and object formats
+            $getValue = function($item, $key, $default = '') {
+                if (is_array($item)) {
+                    return $item[$key] ?? $default;
+                } elseif (is_object($item)) {
+                    return $item->$key ?? $default;
+                }
+                return $default;
+            };
+
+            $coordinates = $getValue($item, 'coordinates');
+            $id = $getValue($item, 'id');
+            $permalink = $getValue($item, 'permalink');
+            $types = $getValue($item, 'types', []);
+            
+            // Use permalink if available, otherwise construct URL
+            $url = $permalink ?: ($id ? "https://www.ortsnamen.ch/de/{$id}" : '');
+            
+            $processedResults[] = [
+                'provider_id' => $id,
+                'preferredName' => $getValue($item, 'name'),
+                'municipality' => $getValue($item, 'municipality'),
+                'canton' => $getValue($item, 'canton'),
+                'types' => is_array($types) ? $types : [$types],
+                'lat' => is_object($coordinates) ? ($coordinates->lat ?? '') : ($coordinates['lat'] ?? ''),
+                'lng' => is_object($coordinates) ? ($coordinates->lng ?? '') : ($coordinates['lng'] ?? ''),
+                'url' => $url,
+                'permalink' => $permalink,
+                'provider' => 'ortsnamen',
+            ];
+        }
+
+        return $processedResults;
     }
 
     public function mount($model, string $search = '', array $params = [])

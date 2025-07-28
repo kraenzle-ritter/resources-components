@@ -28,9 +28,7 @@ abstract class AbstractProvider implements ProviderInterface
      */
     protected function setDefaultParams(): void
     {
-        $this->defaultParams = [
-            'limit' => $this->getConfigValue('limit', $this->defaultLimit)
-        ];
+        // Override in child classes if needed
     }
 
     /**
@@ -116,6 +114,27 @@ abstract class AbstractProvider implements ProviderInterface
     public function clearCache(string $search = null, array $params = []): void
     {
         $this->cacheService->forget($this, $search, $params);
+    }
+
+    /**
+     * Recursively convert arrays to objects while preserving indexed arrays
+     *
+     * @param mixed $data
+     * @return mixed
+     */
+    protected function arrayToObject($data)
+    {
+        if (is_array($data)) {
+            // Check if it's an associative array
+            if (array_keys($data) !== range(0, count($data) - 1)) {
+                // Associative array - convert to object
+                return (object) array_map([$this, 'arrayToObject'], $data);
+            } else {
+                // Indexed array - keep as array but convert elements
+                return array_map([$this, 'arrayToObject'], $data);
+            }
+        }
+        return $data;
     }
 
     /**
