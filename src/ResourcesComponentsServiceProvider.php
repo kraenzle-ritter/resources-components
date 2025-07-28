@@ -74,14 +74,19 @@ class ResourcesComponentsServiceProvider extends ServiceProvider
      */
     protected function bootForConsole()
     {
+        // Register console commands
+        $this->commands([
+            \KraenzleRitter\ResourcesComponents\Console\MakeProviderCommand::class,
+        ]);
+
         // Publishing the configuration file.
         $this->publishes([
             __DIR__.'/../config/resources-components.php' => config_path('resources-components.php'),
-        ], 'gnd-lw-component.config');
+        ], 'resources-components.config');
 
         // Publishing the views.
         // $this->publishes([
         //     __DIR__.'/../resources/views' => base_path('resources/views/vendor/kraenzle-ritter'),
-        // ], 'gnd-lw-component.views');
+        // ], 'resources-components.views');
     }
 }

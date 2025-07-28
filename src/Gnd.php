@@ -2,7 +2,7 @@
 
 namespace KraenzleRitter\ResourcesComponents;
 
-use GuzzleHttp\Client;
+use KraenzleRitter\ResourcesComponents\Abstracts\AbstractProvider;
 
 /**
  * GND queries
@@ -18,53 +18,47 @@ use GuzzleHttp\Client;
  *      - format (default and only: json) ✔
  *      - formatFields
  */
-class Gnd
+class Gnd extends AbstractProvider
 {
-    public $client;
-
     public $filter_types = [
-            'Person',
-            'CorporateBody',
-            'ConferenceOrEvent',
-            'PlaceOrGeographicName',
-            'Work',
-            'PlaceOrGeographicName',
-            'SubjectHeading',
-            'Family'
-        ];
+        'Person',
+        'CorporateBody',
+        'ConferenceOrEvent',
+        'PlaceOrGeographicName',
+        'Work',
+        'PlaceOrGeographicName',
+        'SubjectHeading',
+        'Family'
+    ];
 
-    public function __construct()
+    public function getBaseUrl(): string
     {
-        $this->client = new Client(['base_uri' => 'https://lobid.org/gnd/']);
+        return 'https://lobid.org/gnd/';
+    }
+
+    public function getProviderName(): string
+    {
+        return 'GND';
     }
 
     public function search(string $search, $params = [])
     {
-        $search = str_replace(['[', ']', '!', '(', ')', ':'], ' ', $search);
-        $search = 'search?q=' . urlencode($search);
-
+        $search = $this->sanitizeSearch($search);
+        $params = $this->mergeParams($params);
+        
+        $searchQuery = 'search?q=' . urlencode($search);
         $filters = $params['filters'] ?? [];
+        $size = $params['limit'] ?? $this->getConfigValue('limit', 5);
 
-        $size = $params['limit'] ?? config('sources-components.gnd.limit') ?? 5;
+        $searchQuery .= $this->buildFilter($filters) . '&size=' . $size . '&format=json';
 
-        $search = $search . $this->buildFilter($filters) . '&size=' . $size  .'&format=json';
-
-        try {
-            $response = $this->client->get($search);
-        } catch (RequestException $e) {
-            \Log::error(Psr7\str($e->getRequest()));
-            if ($e->hasResponse()) {
-                \Log::error(Psr7\str($e->getResponse()));
-            }
-            return '';
+        $result = $this->makeRequest('GET', $searchQuery);
+        
+        if ($result && isset($result->totalItems) && $result->totalItems > 0) {
+            return $result;
         }
-
-        if ($response->getStatusCode() == 200) {
-            $result = json_decode($response->getBody()->getContents());
-            if ($result->totalItems > 0) {
-                return $result;
-            }
-        }
+        
+        return null;
     }
 
     public function buildFilter(array $filters = []) : string

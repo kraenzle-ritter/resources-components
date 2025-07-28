@@ -2,73 +2,64 @@
 
 namespace KraenzleRitter\ResourcesComponents;
 
-use Livewire\Component;
-use KraenzleRitter\ResourcesComponents\Wikidata;
-use KraenzleRitter\ResourcesComponents\Events\ResourceSaved;
+use KraenzleRitter\ResourcesComponents\Abstracts\AbstractLivewireComponent;
+use KraenzleRitter\ResourcesComponents\Factories\ProviderFactory;
 
-class WikidataLwComponent extends Component
+class WikidataLwComponent extends AbstractLivewireComponent
 {
-    public $search;
-
-    public $queryOptions;
-
-    public $model;
-
-    public $resourceable_id;
-
-    public $provider = 'Wikidata';
-
-    public $saveMethod = 'updateOrCreateResource'; // id, resource
-
-    public $removeMethod = 'removeResource'; // url
-
-    protected $listeners = ['resourcesChanged' => 'render'];
-
-    public function mount ($model, string $search = '', array $params = [])
+    protected function getProviderName(): string
     {
-        $this->model = $model;
-
-        $this->search = trim($search) ?: '';
-
-        $this->queryOptions = $params['queryOptions'] ?? ['locale' => 'de', 'limit' => 5];
+        return 'Wikidata';
     }
 
-    public function saveResource($provider_id, $url, $full_json = null)
+    protected function getProviderClient()
     {
-        $data = [
-            'provider' => $this->provider,
-            'provider_id' => $provider_id,
-            'url' => $url,
-            'full_json' => json_encode($full_json, JSON_UNESCAPED_UNICODE)
-        ];
-        $resource = $this->model->{$this->saveMethod}($data);
-        $this->model->saveMoreResources('wikidata');
-
-        $this->dispatch('resourcesChanged');
-        event(new ResourceSaved($resource, $this->model->id));
+        return ProviderFactory::create('wikidata');
     }
 
-    public function removeResource($url)
+    protected function getDefaultOptions(): array
     {
-        \KraenzleRitter\Resources\Resource::where([
-            'url' => $url
-        ])->delete();
-        $this->dispatch('resourcesChanged');
+        return ['locale' => 'de', 'limit' => 5];
+    }
+
+    protected function processResults($results)
+    {
+        if (!$results || !is_array($results)) {
+            return [];
+        }
+
+        $processedResults = [];
+        
+        foreach ($results as $result) {
+            $processedResults[] = [
+                'title' => $result->title ?? $result->label ?? '',
+                'description' => $result->description ?? '',
+                'url' => $result->concepturi ?? "https://www.wikidata.org/wiki/{$result->id}",
+                'provider_id' => $result->id ?? '',
+                'id' => $result->id ?? '',
+                'concepturi' => $result->concepturi ?? '',
+                'pageid' => $result->pageid ?? '',
+                'repository' => $result->repository ?? '',
+                'label' => $result->label ?? '',
+                'match' => $result->match ?? []
+            ];
+        }
+
+        return $processedResults;
     }
 
     public function render()
     {
-        $client = new Wikidata();
+        $results = [];
+        
+        if ($this->search) {
+            $client = $this->getProviderClient();
+            $resources = $client->search($this->search, $this->queryOptions);
+            $results = $this->processResults($resources);
+        }
 
-        $resources = $client->search($this->search, $this->queryOptions);
-
-        $view = view()->exists('vendor.kraenzle-ritter.livewire.wikidata-lw-component')
-              ? 'vendor.kraenzle-ritter.livewire.wikidata-lw-component'
-              : 'resources-components::wikidata-lw-component';
-
-        return view($view, [
-            'results' => $resources ?: null
+        return view($this->getViewName(), [
+            'results' => $results
         ]);
     }
-
 }
