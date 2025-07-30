@@ -19,9 +19,9 @@ class GeonamesLwComponent extends Component
 
     public $provider = 'Geonames';
 
-    public $saveMethod = 'updateOrCreateResource';
+    public $saveMethod = 'updateOrCreateResource'; // Method name for saving resources
 
-    public $removeMethod = 'removeResource'; // url
+    public $removeMethod = 'removeResource'; // Method name for resource removal
 
     protected $listeners = ['resourcesChanged' => 'render'];
 
@@ -31,7 +31,7 @@ class GeonamesLwComponent extends Component
 
         $this->search = trim($search) ?: 'Cassirer';
 
-        $this->queryOptions = $params['queryOptions'];
+        $this->queryOptions = $params['queryOptions'] ?? ['limit' => 5];
     }
 
     public function saveResource($provider_id, $url, $full_json = null)
@@ -66,7 +66,7 @@ class GeonamesLwComponent extends Component
 
         $view = view()->exists('vendor.kraenzle-ritter.livewire.geonames-lw-component')
               ? 'vendor.kraenzle-ritter.livewire.geonames-lw-component'
-              : 'resources-components::geonames-lw-component';
+              : 'resources-components::livewire.geonames-lw-component';
 
         if (!isset($resources) or !count($resources)) {
             return view($view, [

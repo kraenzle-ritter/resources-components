@@ -18,9 +18,9 @@ class WikidataLwComponent extends Component
 
     public $provider = 'Wikidata';
 
-    public $saveMethod = 'updateOrCreateResource'; // id, resource
+    public $saveMethod = 'updateOrCreateResource'; // Method name for saving resources
 
-    public $removeMethod = 'removeResource'; // url
+    public $removeMethod = 'removeResource'; // Method name for resource removal
 
     protected $listeners = ['resourcesChanged' => 'render'];
 
@@ -64,7 +64,7 @@ class WikidataLwComponent extends Component
 
         $view = view()->exists('vendor.kraenzle-ritter.livewire.wikidata-lw-component')
               ? 'vendor.kraenzle-ritter.livewire.wikidata-lw-component'
-              : 'resources-components::wikidata-lw-component';
+              : 'resources-components::livewire.wikidata-lw-component';
 
         return view($view, [
             'results' => $resources ?: null

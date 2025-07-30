@@ -1,39 +1,22 @@
-<div class="p-2">
-    @php
-        $base_url = 'https://www.geonames.org/';
-    @endphp
+@php
+    $base_url = 'https://www.geonames.org/';
+@endphp
 
-    @if(!in_array('geonames', $model->resources->pluck('provider')->toArray()))
-    <div>
-        <form class="form gnd-form" > 
-            <label class="gnd-label pb-2">Geonames {{ __('Search') }}</label>
-            <input wire:model.live="search" class="form-control gnd-input" type="text" placeholder="{{ $placeholder ?? '' }}">
-        </form>
-        <br>
-        @if($results)
-            <h5 class="card-title">Geonames – {{ __('List') }}</h5>
-            @foreach($results as $result)
-                <button
-                    wire:click="saveResource('{{ $result->geonameId }}', '{{ $base_url . $result->geonameId }}', '{{ json_encode($result, JSON_UNESCAPED_UNICODE) }}')"
-                    type="submit"
-                    class="btn btn-success btn-xs float-right"
-                    title="{{ __("Save Geonames ID for Actor") }}">
-                    <i class="fa fa-check" aria-hidden="true"></i>
-                </button>
-
-                <h6>{{ $result->toponymName ?? '' }}</h6>
-                <small>
-                    <a href="{{ $base_url . $result->geonameId }}" target="_blank">{{ $base_url . $result->geonameId }}</a><br>
-                    {{ $result->fclName ?? '' }}<br>
-                    {{ $result->countryName ?? '' }}
-                </small>
-                @if (!$loop->last)
-                    <hr>
-                @endif
-            @endforeach
-        @else
-            {{ __('No matches') }}
-        @endif
-    </div>
-    @endif
-</div>
+@include('resources-components::livewire.partials.results-layout', [
+    'providerKey' => 'geonames',
+    'providerName' => 'Geonames',
+    'model' => $model,
+    'results' => $results,
+    'saveAction' => function($result) use ($base_url) {
+        return "saveResource('{$result->geonameId}', '{$base_url}{$result->geonameId}', '" . json_encode($result, JSON_UNESCAPED_UNICODE) . "')";
+    },
+    'result_heading' => function($result) {
+        return $result->toponymName ?? '';
+    },
+    'result_content' => function($result) use ($base_url) {
+        $output = "<a href=\"{$base_url}{$result->geonameId}\" target=\"_blank\">{$base_url}{$result->geonameId}</a><br>";
+        $output .= ($result->fclName ?? '') . "<br>";
+        $output .= $result->countryName ?? '';
+        return $output;
+    }
+])

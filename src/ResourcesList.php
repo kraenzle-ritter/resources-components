@@ -35,7 +35,7 @@ class ResourcesList extends Component
 
         $view = view()->exists('vendor.kraenzle-ritter.livewire.resources-list')
               ? 'vendor.kraenzle-ritter.livewire.resources-list'
-              : 'resources-components::resources-list';
+              : 'resources-components::livewire.resources-list';
 
         return view($view);
     }

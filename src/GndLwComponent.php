@@ -19,9 +19,9 @@ class GndLwComponent extends Component
 
     public $provider = 'GND';
 
-    public $saveMethod = 'updateOrCreateResource';
+    public $saveMethod = 'updateOrCreateResource'; // Method name for saving resources
 
-    public $removeMethod = 'removeResource'; // url
+    public $removeMethod = 'removeResource'; // Method name for resource removal
 
     protected $listeners = ['resourcesChanged' => 'render'];
 
@@ -67,7 +67,7 @@ class GndLwComponent extends Component
 
         $view = view()->exists('vendor.kraenzle-ritter.livewire.gnd-lw-component')
               ? 'vendor.kraenzle-ritter.livewire.gnd-lw-component'
-              : 'resources-components::gnd-lw-component';
+              : 'resources-components::livewire.gnd-lw-component';
 
         if (!isset($resources) or !isset($resources->member) or !count($resources->member)) {
             return view($view, [

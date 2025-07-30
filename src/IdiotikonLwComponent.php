@@ -21,9 +21,9 @@ class IdiotikonLwComponent extends Component
 
     public $provider = 'Idiotikon';
 
-    public $saveMethod = 'updateOrCreateResource';
+    public $saveMethod = 'updateOrCreateResource'; // Method name for saving resources
 
-    public $removeMethod = 'removeResource'; // url
+    public $removeMethod = 'removeResource'; // Method name for resource removal
 
     protected $listeners = ['resourcesChanged' => 'render'];
 
@@ -65,11 +65,11 @@ class IdiotikonLwComponent extends Component
     {
         $client = new Idiotikon();
 
-        $resources = $client->search($this->search, $this->queryOptions, $this->endpoint);
+        $resources = $client->search($this->search, $this->queryOptions);
 
         $view = view()->exists('vendor.kraenzle-ritter.livewire.idiotikon-lw-component')
               ? 'vendor.kraenzle-ritter.livewire.idiotikon-lw-component'
-              : 'resources-components::idiotikon-lw-component';
+              : 'resources-components::livewire.idiotikon-lw-component';
 
         if (!isset($resources) or !count($resources)) {
             return view($view, [

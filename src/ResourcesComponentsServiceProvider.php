@@ -21,7 +21,10 @@ class ResourcesComponentsServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->loadViewsFrom(__DIR__.'/../resources/views/livewire', 'resources-components');
+        $this->loadViewsFrom(__DIR__.'/../resources/views', 'resources-components');
+
+        // Load translation files
+        $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'resources-components');
 
         Livewire::component('provider-select', ProviderSelect::class);
         Livewire::component('resources-list', ResourcesList::class);
@@ -36,7 +39,7 @@ class ResourcesComponentsServiceProvider extends ServiceProvider
         Livewire::component('wikipedia-lw-component', WikipediaLwComponent::class);
         Livewire::component('manual-input-lw-component', ManualInputLwComponent::class);
 
-        // Publishing is only necessary when using the CLI.
+        // Publishing assets is only necessary when using the CLI.
         if ($this->app->runningInConsole()) {
             $this->bootForConsole();
         }
@@ -51,7 +54,7 @@ class ResourcesComponentsServiceProvider extends ServiceProvider
     {
         $this->mergeConfigFrom(__DIR__.'/../config/resources-components.php', 'resources-components');
 
-        // Register the service the package provides.
+        // Register the service provided by the package.
         $this->app->singleton('resources-components', function ($app) {
             return new ResourcesComponents;
         });
@@ -74,14 +77,19 @@ class ResourcesComponentsServiceProvider extends ServiceProvider
      */
     protected function bootForConsole()
     {
-        // Publishing the configuration file.
+        // Publishing the configuration file to the application.
         $this->publishes([
             __DIR__.'/../config/resources-components.php' => config_path('resources-components.php'),
-        ], 'gnd-lw-component.config');
+        ], 'resources-components.config');
 
         // Publishing the views.
         // $this->publishes([
         //     __DIR__.'/../resources/views' => base_path('resources/views/vendor/kraenzle-ritter'),
-        // ], 'gnd-lw-component.views');
+        // ], 'resources-components.views');
+
+        // Publishing the translation files to the application.
+        $this->publishes([
+            __DIR__.'/../resources/lang' => resource_path('lang/vendor/resources-components'),
+        ], 'resources-components.lang');
     }
 }

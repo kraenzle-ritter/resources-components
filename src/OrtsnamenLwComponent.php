@@ -21,9 +21,9 @@ class OrtsnamenLwComponent extends Component
 
     public $provider = 'Ortsnamen';
 
-    public $saveMethod = 'updateOrCreateResource';
+    public $saveMethod = 'updateOrCreateResource'; // Method name for saving resources
 
-    public $removeMethod = 'removeResource'; // url
+    public $removeMethod = 'removeResource'; // Method name for resource removal
 
     protected $listeners = ['resourcesChanged' => 'render'];
 
@@ -65,11 +65,11 @@ class OrtsnamenLwComponent extends Component
     {
         $client = new Ortsnamen();
 
-        $resources = $client->search($this->search, $this->queryOptions, $this->endpoint);
+        $resources = $client->search($this->search, $this->queryOptions);
 
         $view = view()->exists('vendor.kraenzle-ritter.livewire.ortsnamen-lw-component')
               ? 'vendor.kraenzle-ritter.livewire.ortsnamen-lw-component'
-              : 'resources-components::ortsnamen-lw-component';
+              : 'resources-components::livewire.ortsnamen-lw-component';
 
         if (!isset($resources) or !count($resources)) {
             return view($view, [

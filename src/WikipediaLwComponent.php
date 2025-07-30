@@ -20,9 +20,9 @@ class WikipediaLwComponent extends Component
 
     public $base_url;
 
-    public $saveMethod = 'updateOrCreateResource'; // id, resource
+    public $saveMethod = 'updateOrCreateResource'; // Method name for saving resources
 
-    public $removeMethod = 'removeResource'; // url
+    public $removeMethod = 'removeResource'; // Method name for resource removal
 
     protected $listeners = ['resourcesChanged' => 'render'];
 
@@ -30,13 +30,37 @@ class WikipediaLwComponent extends Component
     {
         $this->model = $model;
 
-        $locale = $params['locale'] ?? 'de';
+        // Determine provider key and locale
+        $providerKey = $params['providerKey'] ?? 'wikipedia-de';
+        $locale = 'de'; // Default value
 
-        $this->base_url = $base_uri = 'https://'.$locale.'.wikipedia.org/wiki/';
+        if (!empty($providerKey) && strpos($providerKey, 'wikipedia-') === 0) {
+            // Extract locale from provider key (e.g., 'wikipedia-en' => 'en')
+            $locale = substr($providerKey, strlen('wikipedia-'));
+            \Log::debug('WikipediaLwComponent: Locale from providerKey: ' . $locale);
+        } elseif (!empty($params['locale'])) {
+            // Fallback to explicit locale parameter
+            $locale = $params['locale'];
+            \Log::debug('WikipediaLwComponent: Locale from params: ' . $locale);
+        } else {
+            \Log::debug('WikipediaLwComponent: Using default locale: ' . $locale);
+        }
+
+        // Read base_url from configuration
+        $apiUrl = config('resources-components.providers.' . $providerKey . '.base_url');
+        $this->base_url = str_replace('/w/api.php', '/wiki/', $apiUrl);
+
+        \Log::debug('WikipediaLwComponent: Set base_url: ' . $this->base_url);
 
         $this->search = trim($search) ?: '';
 
-        $this->queryOptions = $params['queryOptions'] ?? ['locale' => $locale, 'limit' => 5];
+        // Ensure locale is set in queryOptions
+        $this->queryOptions = $params['queryOptions'] ?? [];
+        $this->queryOptions['locale'] = $locale;
+        $this->queryOptions['limit'] = $this->queryOptions['limit'] ?? 5;
+
+        \Log::debug('WikipediaLwComponent: providerKey: ' . $providerKey);
+        \Log::debug('WikipediaLwComponent: QueryOptions: ', $this->queryOptions);
     }
 
     public function saveResource($provider_id, $url)
@@ -64,15 +88,20 @@ class WikipediaLwComponent extends Component
     {
         $client = new Wikipedia();
 
+        // Ensure the correct locale is used
+        \Log::debug('WikipediaLwComponent render: base_url = ' . $this->base_url);
+        \Log::debug('WikipediaLwComponent render: queryOptions = ', $this->queryOptions);
+
+        // Perform the search
         $resources = $client->search($this->search, $this->queryOptions);
 
+        // Choose the appropriate view
         $view = view()->exists('vendor.kraenzle-ritter.livewire.wikipedia-lw-component')
               ? 'vendor.kraenzle-ritter.livewire.wikipedia-lw-component'
-              : 'resources-components::wikipedia-lw-component';
+              : 'resources-components::livewire.wikipedia-lw-component';
 
         return view($view, [
             'results' => $resources
         ]);
-
     }
 }

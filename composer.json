@@ -17,15 +17,14 @@
     "GND"
   ],
   "require": {
-    "laravel/framework": ">=9",
+    "laravel/framework": "^11.0",
     "guzzlehttp/guzzle": "^7.8",
     "livewire/livewire": "^3.4"
   },
   "require-dev": {
-    "phpunit/phpunit": ">=9",
-    "mockery/mockery": "^1.1",
-    "orchestra/testbench": "^9",
-    "sempro/phpunit-pretty-print": "^1.0"
+    "phpunit/phpunit": "^10.5",
+    "orchestra/testbench": "^9.14",
+    "kraenzle-ritter/resources": "dev-main"
   },
   "autoload": {
     "psr-4": {
@@ -43,5 +42,13 @@
         "KraenzleRitter\\ResourcesComponents\\ResourcesComponentsServiceProvider"
       ]
     }
-  }
+  },
+  "scripts": {
+    "testbench:copy-views": "bash ./copy-views-testbench.sh",
+    "test": [
+      "@testbench:copy-views",
+      "phpunit --configuration phpunit.xml"
+    ]
+  },
+  "minimum-stability": "dev"
 }

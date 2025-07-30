@@ -22,9 +22,9 @@ class MetagridLwComponent extends Component
 
     public $provider = 'Metagrid';
 
-    public $saveMethod = 'updateOrCreateResource'; // (id, url, full_json)
+    public $saveMethod = 'updateOrCreateResource'; // Method name for saving resources (id, url, full_json)
 
-    public $removeMethod = 'removeResource'; // url
+    public $removeMethod = 'removeResource'; // Method name for resource removal
 
     protected $listeners = ['resourcesChanged' => 'render'];
 
@@ -83,7 +83,7 @@ class MetagridLwComponent extends Component
 
         $view = view()->exists('vendor.kraenzle-ritter.livewire.metagrid-lw-component')
               ? 'vendor.kraenzle-ritter.livewire.metagrid-lw-component'
-              : 'resources-components::metagrid-lw-component';
+              : 'resources-components::livewire.metagrid-lw-component';
 
         return view($view, [
             'results' => $resources

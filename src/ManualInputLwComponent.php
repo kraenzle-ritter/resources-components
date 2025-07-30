@@ -58,7 +58,7 @@ class ManualInputLwComponent extends Component
         logger(__METHOD__);
         $view = view()->exists('vendor.kraenzle-ritter.livewire.manual-input-lw-component')
               ? 'vendor.kraenzle-ritter.livewire.manual-input-lw-component'
-              : 'resources-components::manual-input-lw-component';
+              : 'resources-components::livewire.manual-input-lw-component';
 
         return view($view);
     }
