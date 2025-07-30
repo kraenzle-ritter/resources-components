@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'Search' => 'Suche in :provider',
+    'Search' => 'Suche',
     'List' => 'Liste',
     'No matches' => 'Keine Treffer',
     'Remove Resource' => 'Ressource entfernen',
@@ -13,4 +13,8 @@ return [
     'Provider ID' => 'Anbieter-ID',
     'URL' => 'URL',
     'Save' => 'Speichern',
+    'API Limit Reached' => 'API-Limit erreicht',
+    'API Limit Message' => 'Das tägliche Limit für den Demo-Account wurde überschritten.',
+    'Register for a free account' => 'Registrieren Sie sich für einen kostenlosen Account',
+    'and set the username in your .env file' => 'und setzen Sie den Benutzernamen in Ihrer .env-Datei',
 ];

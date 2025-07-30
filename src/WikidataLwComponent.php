@@ -62,12 +62,26 @@ class WikidataLwComponent extends Component
 
         $resources = $client->search($this->search, $this->queryOptions);
 
+        // Get base_url from config
+        $base_url = config('resources-components.providers.wikidata.base_url', 'https://www.wikidata.org/w/api.php');
+
+        // For Wikidata, the web URL is different from the API URL
+        if (strpos($base_url, '/w/api.php') !== false) {
+            $base_url = str_replace('/w/api.php', '/wiki/', $base_url);
+        }
+
+        // Debug logging
+        if (class_exists('\Log')) {
+            \Log::debug('WikidataLwComponent: Using base_url: ' . $base_url);
+        }
+
         $view = view()->exists('vendor.kraenzle-ritter.livewire.wikidata-lw-component')
               ? 'vendor.kraenzle-ritter.livewire.wikidata-lw-component'
               : 'resources-components::livewire.wikidata-lw-component';
 
         return view($view, [
-            'results' => $resources ?: null
+            'results' => $resources ?: null,
+            'base_url' => $base_url
         ]);
     }
 

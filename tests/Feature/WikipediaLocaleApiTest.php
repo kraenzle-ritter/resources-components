@@ -36,8 +36,8 @@ class WikipediaLocaleApiTest extends TestCase
         // Suche nach dem gleichen Begriff in verschiedenen Sprachen
         $searchTerm = 'Einstein';
 
-        $deResults = $wikipedia->search($searchTerm, ['locale' => 'de', 'limit' => 1]);
-        $enResults = $wikipedia->search($searchTerm, ['locale' => 'en', 'limit' => 1]);
+        $deResults = $wikipedia->search($searchTerm, ['providerKey' => 'wikipedia-de', 'limit' => 1]);
+        $enResults = $wikipedia->search($searchTerm, ['providerKey' => 'wikipedia-en', 'limit' => 1]);
 
         // Beide sollten Ergebnisse liefern
         $this->assertNotEmpty($deResults, 'Deutsche Suche sollte Ergebnisse liefern');
@@ -61,10 +61,10 @@ class WikipediaLocaleApiTest extends TestCase
         $title = 'Albert Einstein';
 
         // Artikel in deutscher Sprache abrufen
-        $deArticle = $wikipedia->getArticle($title, ['locale' => 'de']);
+        $deArticle = $wikipedia->getArticle($title, ['providerKey' => 'wikipedia-de']);
 
         // Artikel in englischer Sprache abrufen
-        $enArticle = $wikipedia->getArticle($title, ['locale' => 'en']);
+        $enArticle = $wikipedia->getArticle($title, ['providerKey' => 'wikipedia-en']);
 
         // Beide sollten Artikel zurückgeben
         $this->assertNotNull($deArticle, 'Deutscher Artikel sollte gefunden werden');

@@ -10,8 +10,19 @@
         return $result->fullname ?? '';
     },
     'result_content' => function($result) {
-        $output = "kba-" . ($endpoint ?? 'persons') . "-{$result->id}<br>";
-        $output .= $result->description ?? '';
+        $output = "<a href=\"{$result->links[0]->url}\" target=\"_blank\">{$result->links[0]->url}</a>";
+
+        // Beschreibung, falls vorhanden
+        if (!empty($result->description)) {
+            // Ersten Satz extrahieren
+            $firstSentence = preg_split('/[.!?]/', $result->description, 2);
+            if (!empty($firstSentence[0])) {
+                $output .= "<br>" . trim($firstSentence[0]) . ".";
+            } else {
+                $output .= "<br>" . $result->description;
+            }
+        }
+
         return $output;
     }
 ])

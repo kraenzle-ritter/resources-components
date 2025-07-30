@@ -6,9 +6,11 @@ use Livewire\Component;
 use KraenzleRitter\Resources\Resource;
 use KraenzleRitter\ResourcesComponents\Idiotikon;
 use KraenzleRitter\ResourcesComponents\Events\ResourceSaved;
+use KraenzleRitter\ResourcesComponents\Traits\ProviderComponentTrait;
 
 class IdiotikonLwComponent extends Component
 {
+    use ProviderComponentTrait;
     public $search;
 
     public $queryOptions;
@@ -66,6 +68,18 @@ class IdiotikonLwComponent extends Component
         $client = new Idiotikon();
 
         $resources = $client->search($this->search, $this->queryOptions);
+
+        // Verarbeite die Ergebnisse mit dem ProviderComponentTrait
+        if (!empty($resources)) {
+            foreach ($resources as $key => $result) {
+                // Verarbeite Beschreibungen, falls vorhanden
+                if (!empty($result->description) && !empty($result->description[0])) {
+                    $result->processedDescription = $this->extractFirstSentence($result->description[0]);
+                } else {
+                    $result->processedDescription = "ID: idiotikon-{$result->lemmaID}";
+                }
+            }
+        }
 
         $view = view()->exists('vendor.kraenzle-ritter.livewire.idiotikon-lw-component')
               ? 'vendor.kraenzle-ritter.livewire.idiotikon-lw-component'

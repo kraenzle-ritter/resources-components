@@ -5,6 +5,7 @@ namespace KraenzleRitter\ResourcesComponents;
 use Livewire\Component;
 use KraenzleRitter\ResourcesComponents\Metagrid;
 use KraenzleRitter\ResourcesComponents\Events\ResourceSaved;
+use KraenzleRitter\ResourcesComponents\Traits\ProviderComponentTrait;
 
 /**
  * https://source.dodis.ch/metagrid-go/metagrid-go/-/wikis/Breaking-changes
@@ -12,6 +13,7 @@ use KraenzleRitter\ResourcesComponents\Events\ResourceSaved;
 
 class MetagridLwComponent extends Component
 {
+    use ProviderComponentTrait;
     public $search;
 
     public $queryOptions;
@@ -80,6 +82,18 @@ class MetagridLwComponent extends Component
         $client = new Metagrid();
 
         $resources = $client->search($this->search, $this->queryOptions);
+
+        // Verarbeite die Ergebnisse mit dem ProviderComponentTrait
+        if (!empty($resources)) {
+            foreach ($resources as $key => $result) {
+                // Formatiere die Provider-Information als Beschreibung
+                if (!empty($result->provider)) {
+                    $result->processedDescription = "Quelle: " . $result->provider;
+                } else {
+                    $result->processedDescription = '';
+                }
+            }
+        }
 
         $view = view()->exists('vendor.kraenzle-ritter.livewire.metagrid-lw-component')
               ? 'vendor.kraenzle-ritter.livewire.metagrid-lw-component'

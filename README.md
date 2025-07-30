@@ -1,42 +1,159 @@
-# Resources components (Livewire, Laravel)
+# Resources Components for Laravel
 
-[![Latest Stable Version](https://poser.pugx.org/kraenzle-ritter/resources-components/v)](//packagist.org/packages/kraenzle-ritter/resources-components) [![Total Downloads](https://poser.pugx.org/kraenzle-ritter/resources-components/downloads)](//packagist.org/packages/kraenzle-ritter/resources-components) [![Latest Unstable Version](https://poser.pugx.org/kraenzle-ritter/resources-components/v/unstable)](//packagist.org/packages/kraenzle-ritter/resources-components) [![License](https://poser.pugx.org/kraenzle-ritter/resources-components/license)](//packagist.org/packages/kraenzle-ritter/resources-components)
+[![Latest Stable Version](https://poser.pugx.org/kraenzle-ritter/resources-components/v)](//packagist.org/packages/kraenzle-ritter/resources-components) 
+[![Total Downloads](https://poser.pugx.org/kraenzle-ritter/resources-components/downloads)](//packagist.org/packages/kraenzle-ritter/resources-components) 
+[![License](https://poser.pugx.org/kraenzle-ritter/resources-components/license)](//packagist.org/packages/kraenzle-ritter/resources-components) 
+[![Tests](https://github.com/kraenzle-ritter/resources-components/actions/workflows/php-tests.yml/badge.svg)](https://github.com/kraenzle-ritter/resources-components/actions/workflows/php-tests.yml) 
+[![codecov](https://codecov.io/gh/kraenzle-ritter/resources-components/branch/master/graph/badge.svg)](https://codecov.io/gh/kraenzle-ritter/resources-components)
 
-Search for entities in authority databases and link them with your local data.
+Search for entities in authority databases and link them with your local data using Livewire components. This package provides a seamless integration with various data providers to enhance your Laravel application with external resources.
 
-- Anton
-- Geonames
-- GND
-- Idiotikon
-- Metagrid
-- ortsnamen.ch
-- Wikidata
-- Wikipedia
+## Supported Providers
+
+- [GND](https://lobid.org/gnd) (Gemeinsame Normdatei)
+- [Geonames](http://www.geonames.org/) (Geographical database)
+- [Wikipedia](https://www.wikipedia.org/) (Multiple languages: DE, EN, FR, IT)
+- [Wikidata](https://www.wikidata.org/) (Structured data)
+- [Idiotikon](https://www.idiotikon.ch/) (Swiss German dictionary)
+- [Ortsnamen.ch](https://ortsnamen.ch/) (Swiss place names)
+- [Metagrid](https://metagrid.ch/) (Swiss humanities database network)
+- [Anton API](https://anton.ch/) (Archives and collections)
+- Manual Input (Custom links)
+
+## Requirements
+
+- PHP 8.1 or higher
+- Laravel 10.x or 11.x
+- Livewire 3.4+
+- [kraenzle-ritter/resources](https://github.com/kraenzle-ritter/resources) package
 
 ## Installation
 
-Via Composer
+Via Composer:
 
-``` bash
-$ composer require kraenzle-ritter/resources-component
+```bash
+composer require kraenzle-ritter/resources-components
 ```
 
-To use this package install also `kraenzle-ritter/resources`.
+After installation, publish the configuration file:
 
-In your views you can use the package then like this:
-
+```bash
+php artisan vendor:publish --provider="KraenzleRitter\ResourcesComponents\ResourcesComponentsServiceProvider"
 ```
+
+## Basic Usage
+
+In your views, use the components like this:
+
+```blade
 @livewire('resources-list', [$model, 'deleteButton' => true])
-@livewire('provider-select', [$model, $providers', 'actors'])
+@livewire('provider-select', [$model, $providers, 'actors'])
 ```
 
-The `$model` is the model which should become resourceable.
+Where:
 
-`$providers` is a list (array) of actually used resource providers. You can pass them by the controller or via a config file. Actual available are any anton installation (see below), geonames, gnd, metagrid, wikipedia, wikidata.
+- `$model` is the model that should become resourceable (must use the `HasResources` trait)
+- `$providers` is an array of provider keys to enable (e.g., `['gnd', 'geonames', 'wikipedia-de', 'manual-input']`)
+- The third parameter (`'actors'`) is the endpoint entity type (only required for Anton API providers)
 
-The last parameter for the `provider-select` is the endpoint, that is the entity. You only need this at this time if you use anton as a provider.
+## Configuration
 
-The components fire an event (`ResourceSaved`) when saving a resource. So you can define and register a listener in your app:
+The package comes with a configuration file where you can customize the behavior of the components and configure the providers:
+
+```php
+// config/resources-components.php
+return [
+    'limit' => 5, // Default search results limit
+    'providers' => [
+        'gnd' => [
+            'label' => 'GND',
+            'api-type' => 'Gnd',
+            'base_url' => 'https://lobid.org/gnd/',
+        ],
+        'wikipedia-de' => [
+            'label' => 'Wikipedia (DE)',
+            'api-type' => 'Wikipedia',
+            'base_url' => 'https://de.wikipedia.org/w/api.php',
+        ],
+        // Add more providers here
+    ],
+];
+```
+
+## Creating Custom Providers
+
+You can create your own provider by implementing the `ProviderInterface` or extending the `AbstractProvider` class:
+
+1. Create a provider class:
+
+```php
+namespace App\Providers;
+
+use KraenzleRitter\ResourcesComponents\Providers\AbstractProvider;
+
+class MyCustomProvider extends AbstractProvider
+{
+    public function search(string $search, array $params = [])
+    {
+        // Implement search logic
+    }
+    
+    public function processResult($results): array
+    {
+        // Process results into standard format
+        return [
+            [
+                'title' => 'Result title',
+                'description' => 'Result description',
+                'url' => 'https://example.com/resource',
+                'raw_data' => json_encode($data)
+            ],
+            // More results...
+        ];
+    }
+}
+```
+
+2. Register your provider in the configuration:
+
+```php
+'my-provider' => [
+    'label' => 'My Provider',
+    'api-type' => 'MyCustom',
+    'base_url' => 'https://api.example.com/',
+    'provider_class' => App\Providers\MyCustomProvider::class,
+],
+```
+
+## Customizing Views
+
+You can publish and customize the views:
+
+```bash
+php artisan vendor:publish --provider="KraenzleRitter\ResourcesComponents\ResourcesComponentsServiceProvider" --tag=resources-components.views
+```
+
+## Changelog
+
+Please see [changelog.md](changelog.md) for more information on recent changes.
+
+## Testing
+
+```bash
+composer test
+```
+
+## Contributing
+
+Please see [contributing.md](contributing.md) for details.
+
+## License
+
+MIT License. Please see the [license file](LICENSE.md) for more information.
+
+### Handling Resource Events
+
+The components fire an event (`ResourceSaved`) when saving a resource. You can define and register a listener in your app:
 
 ```php
 <?php
@@ -47,19 +164,28 @@ use KraenzleRitter\ResourcesComponents\Events\ResourceSaved;
 
 class UpdateLocationWithGeonamesCoordinates
 {
-
     public function handle(ResourceSaved $event)
     {
-        if ($this->resource->provider == 'geonames') {
+        if ($event->resource->provider == 'geonames') {
+            // Access resource data
             \Log::debug($event->resource);
+            
+            // Access the model that the resource is attached to
             \Log::debug($event->model);
+            
+            // Example: Update location coordinates from Geonames data
+            if (isset($event->resource->data['lat']) && isset($event->resource->data['lng'])) {
+                $event->model->update([
+                    'latitude' => $event->resource->data['lat'],
+                    'longitude' => $event->resource->data['lng']
+                ]);
+            }
         }
-
     }
 }
 ```
 
-In your EventServiceProvider:
+Register your listener in `EventServiceProvider.php`:
 
 ```php
 <?php
@@ -72,42 +198,90 @@ use App\Listeners\UpdateLocationWithGeonamesCoordinates;
 
 class EventServiceProvider extends ServiceProvider
 {
-
-    /**
-     * The event listener mappings for the application.
-     *
-     * @var array
-     */
     protected $listen = [
         ResourceSaved::class => [
             UpdateLocationWithGeonamesCoordinates::class
         ]
     ];
+}
 ```
 
-## .env Variables
+## Configuration
 
-For some providers you need set some variables in your .env file:
+### Environment Variables
 
-```
-ANTON_PROVIDER_SLUG=kr
-ANTON_URL=https://kr.anton.ch
-ANTON_API_URL=http://kkr.anton.test/api
-ANTON_API_TOKEN=secret
-
-GEONAMES_USERNAME=demo
-```
-
-## Models
-
-The model should have a resources_search attribute or a name attribute.
-
-## Usage
-Just put the component in your view:
+Some providers require additional configuration in your `.env` file:
 
 ```
-@livewire('gnd-lw-component', ['params' => ['queryOptions' => ['size' => 5]]])
+# For Geonames
+GEONAMES_USERNAME=your_username
+
+# For Georgfischer (optional)
+GEORGFISCHER_API_TOKEN=your_token 
+
+# For Gosteli (optional)
+Gosteli_API_TOKEN=your_token 
+
+# For KBA (optional)
+KBA_API_TOKEN=your_token 
 ```
+
+### Provider Configuration
+
+You can customize providers in the `config/resources-components.php` file:
+
+```php
+return [
+    'limit' => 5, // Default search results limit
+    
+    'providers' => [
+        'gnd' => [
+            'label' => 'GND',
+            'api-type' => 'Gnd',
+            'base_url' => 'https://lobid.org/gnd/',
+        ],
+        'wikipedia-de' => [
+            'label' => 'Wikipedia (DE)',
+            'api-type' => 'Wikipedia',
+            'base_url' => 'https://de.wikipedia.org/w/api.php',
+        ],
+        // Additional providers...
+    ]
+];
+```
+
+## Model Requirements
+
+Your models must:
+
+1. Use the `HasResources` trait from the `kraenzle-ritter/resources` package
+2. Have either a `resource_search` attribute or a `name` attribute (used as default search term)
+
+```php
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use KraenzleRitter\Resources\HasResources;
+
+class Person extends Model
+{
+    use HasResources;
+    
+    // The rest of your model...
+}
+```
+
+## Creating Custom Providers
+
+To create a new provider, you need:
+
+1. A provider class that implements the search functionality
+2. A Livewire component class for the UI interaction
+3. Configuration in the `resources-components.php` file
+
+See the documentation or existing providers for implementation details.
 
 ## License
 

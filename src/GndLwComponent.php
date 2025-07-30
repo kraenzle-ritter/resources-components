@@ -6,9 +6,11 @@ use Livewire\Component;
 use KraenzleRitter\Resources\Resource;
 use KraenzleRitter\ResourcesComponents\Gnd;
 use KraenzleRitter\ResourcesComponents\Events\ResourceSaved;
+use KraenzleRitter\ResourcesComponents\Traits\ProviderComponentTrait;
 
 class GndLwComponent extends Component
 {
+    use ProviderComponentTrait;
     public $search;
 
     public $queryOptions;
@@ -70,35 +72,42 @@ class GndLwComponent extends Component
               : 'resources-components::livewire.gnd-lw-component';
 
         if (!isset($resources) or !isset($resources->member) or !count($resources->member)) {
+            // Get base_url from config
+            $base_url = config('resources-components.providers.gnd.base_url', 'https://lobid.org/gnd/');
+
+            // Debug logging
+            if (class_exists('\Log')) {
+                \Log::debug('GndLwComponent: Using base_url: ' . $base_url);
+            }
+
             return view($view, [
-                'results' => []
+                'results' => [],
+                'base_url' => $base_url
             ]);
         }
-        // members : array of matches
-        foreach ($resources->member as $resource) {
-            $date_start = isset($resource->dateOfBirth) ? $resource->dateOfBirth[0] : '';
-            $date_end = isset($resource->dateOfDeath) ? $resource->dateOfDeath[0] : '';
 
-            if ($date_start || $date_end) {
-                $dateLine = $date_start . ' – ' . $date_end;
-            }
-
-            // other resources
-            if (isset($resource->sameAs)) {
-                foreach ($resource->sameAs as $sameAs) {
-                    $name = $sameAs->collection->abbr ?? $sameAs->collection->name ?? '';
-                    $name = strpos($sameAs->id, 'isni.org') > 0 ? 'ISNI' : $name;
-                    // isni as name
-                    if ($name !== 'DNB') {
-                        $result['sameAs'][$name] = $sameAs->id;
-                    }
+        // Verarbeite die Ergebnisse mit dem ProviderComponentTrait
+        foreach ($resources->member as $key => $resource) {
+            // Verarbeite biographische Informationen mit TextHelper
+            if (isset($resource->biographicalOrHistoricalInformation)) {
+                $bioInfo = $resource->biographicalOrHistoricalInformation;
+                if (is_array($bioInfo) && count($bioInfo) > 0) {
+                    $resource->processedDescription = $this->extractFirstSentence($bioInfo[0]);
                 }
             }
-            $results[] = $result ?? [];
+        }
+
+        // Get base_url from config
+        $base_url = config('resources-components.providers.gnd.base_url', 'https://lobid.org/gnd/');
+
+        // Debug logging
+        if (class_exists('\Log')) {
+            \Log::debug('GndLwComponent: Using base_url: ' . $base_url);
         }
 
         return view($view, [
-            'results' => $resources->member
+            'results' => $resources->member,
+            'base_url' => $base_url
         ]);
     }
 }

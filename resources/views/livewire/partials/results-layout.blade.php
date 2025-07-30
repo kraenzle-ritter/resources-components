@@ -6,16 +6,16 @@
             ])
 
             @if($results && count($results))
-                <h5 class="mb-3">{{ $providerName ?? $providerKey }} – {{ __('resources-components::messages.List') }}</h5>
+                <h5 class="mb-3">{{ __('resources-components::messages.List') }}</h5>
                 <div class="results-list">
                     @foreach($results as $result)
                         <div class="result-item mb-3">
-                            <div class="d-flex justify-content-between align-items-start mb-2">
+                            <div class="d-flex justify-content-between align-items-start">
                                 @if(isset($result_heading) && $result_heading($result))
-                                    <h6 class="mb-1">{!! $result_heading($result) !!}</h6>
+                                    <h6 class="mb-0 fw-bold">{!! $result_heading($result) !!}</h6>
                                 @endif
-                                
-                                <div class="ms-auto">
+
+                                <div class="ms-2">
                                     @include('resources-components::livewire.partials.save-button', [
                                         'saveAction' => $saveAction($result),
                                         'providerName' => $providerName ?? $providerKey
@@ -23,7 +23,7 @@
                                 </div>
                             </div>
 
-                            <div class="small">
+                            <div class="mt-1 small">
                                 {!! $result_content($result) !!}
                             </div>
 
@@ -34,8 +34,14 @@
                     @endforeach
                 </div>
             @else
-                <div class="alert alert-info mt-3">
-                    {{ __('resources-components::messages.No matches') }}
+                <div class="alert {{ isset($apiLimitReached) && $apiLimitReached ? 'alert-warning' : 'alert-info' }} mt-3">
+                    @if(isset($apiLimitReached) && $apiLimitReached)
+                        <strong>{{ __('resources-components::messages.API Limit Reached') }}:</strong> {{ __('resources-components::messages.API Limit Message') }}
+                        <a href="https://www.geonames.org/login" target="_blank">{{ __('Register for a free account') }}</a>
+                        {{ __('and set the username in your .env file') }}: <code>GEONAMES_USERNAME=your_username</code>
+                    @else
+                        {{ __('resources-components::messages.No matches') }}
+                    @endif
                 </div>
             @endif
         </div>

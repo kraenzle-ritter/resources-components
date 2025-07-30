@@ -19,24 +19,20 @@ class WikipediaLocaleTest extends TestCase
         $component = Livewire::test(WikipediaLwComponent::class, [
             'model' => $model,
             'search' => 'Berlin',
-            'params' => [
-                'providerKey' => 'wikipedia-de'
-            ]
+            'providerKey' => 'wikipedia-de' // Direkter Parameter statt innerhalb von params
         ])->instance();
 
-        $this->assertEquals('de', $component->queryOptions['locale']);
+        $this->assertEquals('wikipedia-de', $component->queryOptions['providerKey']);
         $this->assertEquals('https://de.wikipedia.org/wiki/', $component->base_url);
 
         // Testen der englischen Wikipedia
         $component = Livewire::test(WikipediaLwComponent::class, [
             'model' => $model,
             'search' => 'Berlin',
-            'params' => [
-                'providerKey' => 'wikipedia-en'
-            ]
+            'providerKey' => 'wikipedia-en' // Direkter Parameter statt innerhalb von params
         ])->instance();
 
-        $this->assertEquals('en', $component->queryOptions['locale']);
+        $this->assertEquals('wikipedia-en', $component->queryOptions['providerKey']);
         $this->assertEquals('https://en.wikipedia.org/wiki/', $component->base_url);
     }
 
@@ -46,17 +42,14 @@ class WikipediaLocaleTest extends TestCase
         $model = new DummyModel();
         $model->name = 'Test';
 
-        // Testen mit explizitem locale-Parameter und providerKey
+        // Testen mit explizitem providerKey
         $component = Livewire::test(WikipediaLwComponent::class, [
             'model' => $model,
             'search' => 'Berlin',
-            'params' => [
-                'locale' => 'fr',
-                'providerKey' => 'wikipedia-fr' // Dies ist wichtig für die neue Implementation
-            ]
+            'providerKey' => 'wikipedia-fr' // Direkter Parameter statt innerhalb von params
         ])->instance();
 
-        $this->assertEquals('fr', $component->queryOptions['locale']);
+        $this->assertEquals('wikipedia-fr', $component->queryOptions['providerKey']);
         $this->assertEquals('https://fr.wikipedia.org/wiki/', $component->base_url);
     }
 
@@ -66,14 +59,14 @@ class WikipediaLocaleTest extends TestCase
         $model = new DummyModel();
         $model->name = 'Test';
 
-        // Testen ohne locale-Parameter
+        // Testen ohne providerKey-Parameter (Fallback auf Deutsch)
         $component = Livewire::test(WikipediaLwComponent::class, [
             'model' => $model,
-            'search' => 'Berlin',
-            'params' => []
+            'search' => 'Berlin'
+            // providerKey wird weggelassen, sollte auf 'wikipedia-de' zurückfallen
         ])->instance();
 
-        $this->assertEquals('de', $component->queryOptions['locale']);
+        $this->assertEquals('wikipedia-de', $component->queryOptions['providerKey']);
         $this->assertEquals('https://de.wikipedia.org/wiki/', $component->base_url);
     }
 }

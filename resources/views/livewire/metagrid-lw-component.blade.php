@@ -7,13 +7,20 @@
         return "saveResource('{$result->id}', '{$result->uri}', '" . json_encode($result, JSON_UNESCAPED_UNICODE) . "')";
     },
     'result_heading' => function($result) {
-        return $result->provider ?? '';
-    },
-    'result_content' => function($result) {
+        // Name als Hauptüberschrift verwenden
         $name = $result->name;
         $name = preg_replace('/^([^0-9]+)(\d{4}).*(\d{4}?).*$/', '${1} ($2-$3)', $name);
         $name = preg_replace('/^([^0-9]+)(\d{4})-\d{2}-\d{2}$/', '${1} ($2)', $name);
-        
-        return "<a href=\"{$result->uri}\" target=\"_blank\">{$name}</a>";
+        return $name;
+    },
+    'result_content' => function($result) {
+        $output = "<a href=\"{$result->uri}\" target=\"_blank\">{$result->uri}</a>";
+
+        // Verwende die vorbereitete Beschreibung
+        if (!empty($result->processedDescription)) {
+            $output .= "<br>" . $result->processedDescription;
+        }
+
+        return $output;
     }
 ])

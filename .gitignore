@@ -4,3 +4,4 @@ composer.lock
 vendor
 vendor/composer/*
 .qodo
+.phpunit.cache

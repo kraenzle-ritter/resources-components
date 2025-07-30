@@ -12,9 +12,10 @@ return [
             'label' => 'Geonames',
             'api-type' => 'Geonames',
             'base_url' => 'http://api.geonames.org/',
-            'user_name' => env('GEONAMES_USERNAME', 'demo')
-            // 'continent-code' => 'EU', // Restricts the search for toponym of the given continent
-            // 'countryBias' => 'CH',    // Records from the countryBias are listed first
+            'user_name' => env('GEONAMES_USERNAME', 'demo'),
+            // Standardisierte Konfigurationsschlüssel mit Unterstrichen:
+            'continent_code' => null, // Restricts the search for toponym of the given continent
+            'country_bias' => null    // Records from the countryBias are listed first
         ],
         'georgfischer' => [
             'label' => 'Konzernarchiv der Georg Fischer AG',

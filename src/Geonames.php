@@ -24,46 +24,87 @@ class Geonames
     public function __construct()
     {
         // https://www.geonames.org/export/geonames-search.html
-        $this->username = config('resources-components.geonames.username');
+        $this->username = config('resources-components.providers.geonames.user_name');
 
-        $this->query_params['maxRows'] = config('resources-components.geonames.limit') ?? 5; // Default is 100, the maximal allowed value is 1000.
-        $this->query_params['continentCode'] =  config('resources-components.geonames.continent-code') ?? '';
-        $this->query_params['countryBias'] = config('resources-components.geonames.country-bias') ?? '';
+        $this->query_params['maxRows'] = config('resources-components.limit') ?? 5; // Default is 100, the maximal allowed value is 1000.
+        $this->query_params['continentCode'] = config('resources-components.providers.geonames.continent_code');
+        $this->query_params['countryBias'] = config('resources-components.providers.geonames.country_bias');
         $this->query_params = array_filter($this->query_params);
 
         $this->base_uri = 'http://api.geonames.org/';
     }
 
+    /**
+     * Sucht nach Orten in der Geonames-Datenbank.
+     *
+     * Verfügbare Parameter:
+     * - maxRows: Maximale Anzahl der Ergebnisse (Default: 5, Max: 1000)
+     * - continentCode: Beschränkt die Suche auf Toponyme des angegebenen Kontinents (z.B. 'EU')
+     * - countryBias: Datensätze aus diesem Land werden zuerst aufgelistet (z.B. 'CH')
+     *
+     * @param string $string Der Suchbegriff
+     * @param array $params Zusätzliche Parameter für die API-Anfrage
+     * @return array Gefundene Orte
+     */
     public function search($string, $params = [])
     {
-        $this->query_params =  $params ?: $this->query_params;
+        // Übernehme die übergebenen Parameter oder verwende die Standardwerte
+        $this->query_params = $params ?: $this->query_params;
         $this->query_params = array_merge(['q' => $string, 'username' => $this->username], $this->query_params);
 
         $query_string = Params::toQueryString($this->query_params);
         $search = 'searchJSON?' . $query_string;
 
+        \Log::info('Geonames API request', [
+            'url' => $this->base_uri.$search,
+            'params' => $this->query_params
+        ]);
+
         $response = HTTP::get($this->base_uri.$search);
 
         if ($response->serverError()) {
-            \Log::error(__METHOD__, ['guzzle server error (geonames)']);
+            \Log::error(__METHOD__, ['guzzle server error (geonames)', 'response' => $response->body()]);
+            return [];
+        }
+
+        if ($response->clientError()) {
+            \Log::error('Geonames client error', ['status' => $response->status(), 'body' => $response->body()]);
             return [];
         }
 
         if ($response->getStatusCode() == 200) {
             $result = json_decode($response->getBody());
+            \Log::debug('Geonames response', ['result' => json_encode($result)]);
+
+            // Prüfe auf Fehler in der Antwort, auch wenn der Status 200 ist
+            if (isset($result->status) && isset($result->status->value) && $result->status->value > 0) {
+                \Log::error('Geonames API error', [
+                    'status' => $result->status->value,
+                    'message' => $result->status->message ?? 'Unknown error'
+                ]);
+
+                // Falls es ein Limit-Problem mit dem Demo-Account ist, geben wir einen hilfreichen Hinweis
+                if (isset($result->status->message) && strpos($result->status->message, 'limit') !== false) {
+                    \Log::warning('Geonames API daily limit reached. Register for a free account at https://www.geonames.org/login');
+                }
+
+                return [];
+            }
+
+            return $result->geonames ?? [];
         }
 
-        return $result->geonames ?? [];
+        return [];
     }
 
-    // http://api.geonames.org/get?geonameId=2658434&username=antonatgeonames
+    // http://api.geonames.org/get?geonameId=2658434&username=demo
     public function getPlaceByGeonameId(string $id): \SimpleXMLElement
     {
-        $response = $this->client->get('get?geonameId=' . $id . '&username=antonatgeonames');
+        $response = $this->client->get('get?geonameId=' . $id . '&username=' . $this->username);
         $xml = simplexml_load_string($response->getBody(), 'SimpleXMLElement', LIBXML_NOCDATA);
 
         // this also works but has slightly other format therefore i dont change this (ak/2019-11-25)
-        //$response2 = $this->client->get('getJSON?geonameId=' . $id . '&username=antonatgeonames');
+        //$response2 = $this->client->get('getJSON?geonameId=' . $id . '&username=' . $this->username);
         //$body =  $response2->getBody();
 
         return $xml;

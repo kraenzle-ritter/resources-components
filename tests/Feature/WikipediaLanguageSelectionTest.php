@@ -22,14 +22,12 @@ class WikipediaLanguageSelectionTest extends TestCase
         $component = Livewire::test(WikipediaLwComponent::class, [
             'model' => $model,
             'search' => 'Ernst Cassirer',
-            'params' => [
-                'providerKey' => 'wikipedia-en'
-            ]
+            'providerKey' => 'wikipedia-en' // Direkter Parameter statt innerhalb von 'params'
         ])->instance();
 
-        // Assert - Prüfen, ob die Locale richtig gesetzt ist
-        $this->assertEquals('en', $component->queryOptions['locale'],
-            'Die Locale sollte auf "en" gesetzt sein, wenn wikipedia-en ausgewählt ist');
+        // Assert - Prüfen, ob der Provider-Key richtig gesetzt ist
+        $this->assertEquals('wikipedia-en', $component->queryOptions['providerKey'],
+            'Der providerKey sollte auf "wikipedia-en" gesetzt sein');
 
         // Assert - Prüfen, ob die Base-URL korrekt ist
         $this->assertEquals('https://en.wikipedia.org/wiki/', $component->base_url,
@@ -56,10 +54,10 @@ class WikipediaLanguageSelectionTest extends TestCase
         $wikipedia = new Wikipedia();
 
         // Suche nach "Ernst Cassirer" in der deutschen Wikipedia
-        $deResults = $wikipedia->search('Ernst Cassirer', ['locale' => 'de', 'limit' => 1]);
+        $deResults = $wikipedia->search('Ernst Cassirer', ['providerKey' => 'wikipedia-de', 'limit' => 1]);
 
         // Suche nach "Ernst Cassirer" in der englischen Wikipedia
-        $enResults = $wikipedia->search('Ernst Cassirer', ['locale' => 'en', 'limit' => 1]);
+        $enResults = $wikipedia->search('Ernst Cassirer', ['providerKey' => 'wikipedia-en', 'limit' => 1]);
 
         // Prüfen, ob die Ergebnisse unterschiedlich sind (was sie sein sollten, da Artikel in verschiedenen Sprachen)
         if (!empty($deResults) && !empty($enResults)) {
@@ -81,11 +79,11 @@ class WikipediaLanguageSelectionTest extends TestCase
         $component = new WikipediaLwComponent();
 
         // Manuelles Setup der Komponente mit englischer Locale
-        $component->mount($model, 'Ernst Cassirer', ['providerKey' => 'wikipedia-en']);
+        $component->mount($model, 'Ernst Cassirer', 'wikipedia-en'); // String statt Array
 
         // Überprüfen der gesetzten Werte
-        $this->assertEquals('en', $component->queryOptions['locale'],
-            'queryOptions sollte die Locale "en" enthalten');
+        $this->assertEquals('wikipedia-en', $component->queryOptions['providerKey'],
+            'queryOptions sollte den providerKey "wikipedia-en" enthalten');
         $this->assertEquals('https://en.wikipedia.org/wiki/', $component->base_url,
             'base_url sollte auf die englische Wikipedia zeigen');
 

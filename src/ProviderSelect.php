@@ -19,8 +19,20 @@ class ProviderSelect extends Component
     {
         $this->model = $model;
         $this->endpoint = $endpoint;
+
+        // Debug-Ausgabe für die übergebenen Provider
+        if (class_exists('\Log')) {
+            \Log::debug('ProviderSelect mount: Received providers: ', $providers);
+        }
+
         $this->providers_all = array_map('strtolower', $providers);
         $this->filterAvailableProviders();
+
+        // Debug-Ausgabe für die verfügbaren Provider nach Filterung
+        if (class_exists('\Log')) {
+            \Log::debug('ProviderSelect mount: Available providers after filtering: ', $this->providers);
+        }
+
         $this->updateActiveProvider($this->providers[0] ?? null);
     }
 
@@ -37,12 +49,25 @@ class ProviderSelect extends Component
             return;
         }
 
+        // Debug: Was ist der ursprüngliche providerKey?
+        if (class_exists('\Log')) {
+            \Log::debug('ProviderSelect updateActiveProvider: Original providerKey: ' . $providerKey);
+        }
+
         // Legacy compatibility: 'wikipedia' => 'wikipedia-de'
         if ($providerKey === 'wikipedia') {
             $providerKey = 'wikipedia-de';
+            if (class_exists('\Log')) {
+                \Log::debug('ProviderSelect updateActiveProvider: Changed generic wikipedia to wikipedia-de');
+            }
         }
 
         $this->providerKey = $providerKey;
+
+        // Debug: Was ist der endgültige providerKey?
+        if (class_exists('\Log')) {
+            \Log::debug('ProviderSelect updateActiveProvider: Final providerKey: ' . $this->providerKey);
+        }
 
         $apiType = config('resources-components.providers.' . $providerKey . '.api-type');
 
@@ -57,16 +82,39 @@ class ProviderSelect extends Component
             $this->componentToRender = 'manual-input-lw-component';
         }
 
-        // Prepares the parameters for the child component
-        $this->componentParams = [
-            'model' => $this->model,
-            'search' => $this->model->resource_search ?? $this->model->name,
-            'providerKey' => $providerKey, // Important: Passes the specific provider key
-        ];
+        // Grundlegende Suchparameter
+        $search = $this->model->resource_search ?? $this->model->name;
 
-        // Anton components require the additional 'endpoint' parameter
-        if ($apiType === 'Anton') {
-            $this->componentParams['endpoint'] = $this->endpoint;
+        // Spezielle Behandlung je nach Komponententyp
+        if ($apiType === 'Wikipedia') {
+            // Für Wikipedia-Komponenten: mount($model, string $search = '', string $providerKey = 'wikipedia-de')
+            $this->componentParams = [
+                'model' => $this->model,
+                'search' => $search,
+                'providerKey' => $providerKey,
+            ];
+        } else if ($apiType === 'Anton') {
+            // Anton-Komponenten benötigen den zusätzlichen 'endpoint'-Parameter
+            // mount($model, string $search = '', string $providerKey, string $endpoint, array $params = [])
+            $this->componentParams = [
+                'model' => $this->model,
+                'search' => $search,
+                'providerKey' => $providerKey,
+                'endpoint' => $this->endpoint
+            ];
+        } else {
+            // Standardparameter für andere Komponenten
+            // Die meisten anderen Komponenten verwenden noch: mount($model, string $search = '', array $params = [])
+            $this->componentParams = [
+                'model' => $this->model,
+                'search' => $search,
+                'params' => ['providerKey' => $providerKey]
+            ];
+        }
+
+        // Debug-Ausgabe für die vorbereiteten Parameter
+        if (class_exists('\Log')) {
+            \Log::debug('ProviderSelect updateActiveProvider: Component params for ' . $this->componentToRender . ': ', $this->componentParams);
         }
     }
 

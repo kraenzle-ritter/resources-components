@@ -38,31 +38,47 @@ class Wikipedia
     /**
      * Get a Wikipedia article list
      * @param  string $searchstring
-     * @param  array $params possible keys: limit, locale
+     * @param  array $params possible keys: limit, providerKey
      * @return array|null Array of objects with $entry->title, strip_tags($entry->snippet) or null on error
      */
     public function search($searchstring, $params)
     {
         $limit = $params['limit'] ?? 5;
-        $locale = $params['locale'] ?? 'de';
+        $providerKey = $params['providerKey'] ?? 'wikipedia-de';
 
-        // Debug output to see which locale is actually being used
-        \Log::debug('Wikipedia search called with locale: ' . $locale . ', search: ' . $searchstring);
-        \Log::debug('Params: ', $params);
+        // Debug output - only use if Log facade is available
+        if (class_exists('\Log')) {
+            \Log::debug('Wikipedia search called with providerKey: ' . $providerKey . ', search: ' . $searchstring);
+            \Log::debug('Params: ', $params);
+        }
 
-        // Check if we have a providerKey and can read the API URL from the configuration
-        $providerKey = 'wikipedia-' . $locale;
+        // Stelle sicher, dass der Provider-Schlüssel gültig ist
+        if (empty($providerKey) || !is_string($providerKey) || strpos($providerKey, 'wikipedia-') !== 0) {
+            $providerKey = 'wikipedia-de'; // Fallback auf Deutsch
+            if (class_exists('\Log')) {
+                \Log::warning('Invalid providerKey provided, falling back to default: wikipedia-de');
+            }
+        }
+
+        // Verwende die API-URL aus der Konfiguration
         $apiUrl = config('resources-components.providers.' . $providerKey . '.base_url');
 
         if ($apiUrl) {
-            \Log::debug('Using API URL from config: ' . $apiUrl);
+            if (class_exists('\Log')) {
+                \Log::debug('Using API URL from config: ' . $apiUrl);
+            }
             // Create client directly with the configured URL
             $this->client = new Client(['base_uri' => $apiUrl]);
         } else {
-            // Fallback: Create client with URL determined by locale
-            \Log::debug('No config found for provider ' . $providerKey . ', using locale to build URL');
+            // Fallback: Extract locale from providerKey and create URL
+            $locale = substr($providerKey, strlen('wikipedia-'));
+            if (class_exists('\Log')) {
+                \Log::debug('No config found for provider ' . $providerKey . ', extracting locale: ' . $locale);
+            }
             $this->setClientForLocale($locale);
-        }        $searchstring = trim(str_replace(' ', '_', $searchstring), '_');
+        }
+
+        $searchstring = trim(str_replace(' ', '_', $searchstring), '_');
         $query = [];
         $query[] = 'action=query';
         $query[] = 'format=json';
@@ -92,27 +108,41 @@ class Wikipedia
     /**
      * Get an article extract from Wikipedia
      * @param  string $title Title of the article
-     * @param  array $params Possible keys: locale
+     * @param  array $params Possible keys: providerKey
      * @return object|null   Object with ->title, ->extract or null on error
      */
     public function getArticle($title, $params = [])
     {
-        $locale = $params['locale'] ?? 'de';
+        $providerKey = $params['providerKey'] ?? 'wikipedia-de';
+
+        // Stelle sicher, dass der Provider-Schlüssel gültig ist
+        if (empty($providerKey) || !is_string($providerKey) || strpos($providerKey, 'wikipedia-') !== 0) {
+            $providerKey = 'wikipedia-de'; // Fallback auf Deutsch
+            if (class_exists('\Log')) {
+                \Log::warning('Invalid providerKey provided for getArticle, falling back to default: wikipedia-de');
+            }
+        }
 
         // Debug output
-        \Log::debug('Wikipedia getArticle called with locale: ' . $locale . ', title: ' . $title);
+        if (class_exists('\Log')) {
+            \Log::debug('Wikipedia getArticle called with providerKey: ' . $providerKey . ', title: ' . $title);
+        }
 
-        // Check if we have a providerKey and can read the API URL from the configuration
-        $providerKey = 'wikipedia-' . $locale;
+        // API URL aus der Konfiguration lesen
         $apiUrl = config('resources-components.providers.' . $providerKey . '.base_url');
 
         if ($apiUrl) {
-            \Log::debug('Using API URL from config: ' . $apiUrl);
+            if (class_exists('\Log')) {
+                \Log::debug('Using API URL from config: ' . $apiUrl);
+            }
             // Create client directly with the configured URL
             $this->client = new Client(['base_uri' => $apiUrl]);
         } else {
-            // Fallback: Create client with URL determined by locale
-            \Log::debug('No config found for provider ' . $providerKey . ', using locale to build URL');
+            // Fallback: Extract locale from providerKey and create URL
+            $locale = substr($providerKey, strlen('wikipedia-'));
+            if (class_exists('\Log')) {
+                \Log::debug('No config found for provider ' . $providerKey . ', extracting locale: ' . $locale);
+            }
             $this->setClientForLocale($locale);
         }
 

@@ -10,9 +10,13 @@
         return $result->lemmaText ?? '';
     },
     'result_content' => function($result) {
-        $output = "<a href=\"{$result->url}\" target=\"_blank\">{$result->url}</a><br>";
-        $output .= "idiotikon-{$result->lemmaID}<br>";
-        $output .= $result->description[0] ?? '';
+        $output = "<a href=\"{$result->url}\" target=\"_blank\">{$result->url}</a>";
+
+        // Verwende die vorbereitete Beschreibung
+        if (!empty($result->processedDescription)) {
+            $output .= "<br>" . $result->processedDescription;
+        }
+
         return $output;
     }
 ])

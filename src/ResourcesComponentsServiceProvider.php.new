@@ -1,0 +1,142 @@
+<?php
+
+namespace KraenzleRitter\ResourcesComponents;
+
+use Illuminate\Support\ServiceProvider;
+use Livewire\Livewire;
+
+// Legacy components
+use KraenzleRitter\ResourcesComponents\GndLwComponent;
+use KraenzleRitter\ResourcesComponents\MetagridLwComponent;
+use KraenzleRitter\ResourcesComponents\WikidataLwComponent;
+use KraenzleRitter\ResourcesComponents\WikipediaLwComponent;
+use KraenzleRitter\ResourcesComponents\AntonLwComponent;
+use KraenzleRitter\ResourcesComponents\GeonamesLwComponent;
+use KraenzleRitter\ResourcesComponents\IdiotikonLwComponent;
+use KraenzleRitter\ResourcesComponents\OrtsnamenLwComponent;
+use KraenzleRitter\ResourcesComponents\ManualInputLwComponent;
+use KraenzleRitter\ResourcesComponents\ProviderSelect;
+use KraenzleRitter\ResourcesComponents\ResourcesList;
+
+// New components
+use KraenzleRitter\ResourcesComponents\Components\ProviderSelect as NewProviderSelect;
+use KraenzleRitter\ResourcesComponents\Components\ResourcesList as NewResourcesList;
+use KraenzleRitter\ResourcesComponents\Components\WikipediaLivewireComponent;
+
+class ResourcesComponentsServiceProvider extends ServiceProvider
+{
+    /**
+     * Perform post-registration booting of services.
+     *
+     * @return void
+     */
+    public function boot()
+    {
+        // Load views
+        $this->loadViewsFrom(__DIR__.'/../resources/views', 'resources-components');
+
+        // Load translation files
+        $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'resources-components');
+
+        // Register legacy components (maintaining backward compatibility)
+        Livewire::component('provider-select', ProviderSelect::class);
+        Livewire::component('resources-list', ResourcesList::class);
+
+        Livewire::component('anton-lw-component', AntonLwComponent::class);
+        Livewire::component('geonames-lw-component', GeonamesLwComponent::class);
+        Livewire::component('gnd-lw-component', GndLwComponent::class);
+        Livewire::component('idiotikon-lw-component', IdiotikonLwComponent::class);
+        Livewire::component('metagrid-lw-component', MetagridLwComponent::class);
+        Livewire::component('ortsnamen-lw-component', OrtsnamenLwComponent::class);
+        Livewire::component('wikidata-lw-component', WikidataLwComponent::class);
+        Livewire::component('wikipedia-lw-component', WikipediaLwComponent::class);
+        Livewire::component('manual-input-lw-component', ManualInputLwComponent::class);
+
+        // Register new components with v2 suffix to avoid conflicts during transition
+        Livewire::component('provider-select-v2', NewProviderSelect::class);
+        Livewire::component('resources-list-v2', NewResourcesList::class);
+        Livewire::component('wikipedia-lw-component-v2', WikipediaLivewireComponent::class);
+
+        // Console-specific booting
+        if ($this->app->runningInConsole()) {
+            $this->bootForConsole();
+        }
+    }
+
+    /**
+     * Register package services.
+     *
+     * @return void
+     */
+    public function register()
+    {
+        $this->mergeConfigFrom(__DIR__.'/../config/resources-components.php', 'resources-components');
+
+        // Register the service provided by the package
+        $this->app->singleton('resources-components', function ($app) {
+            return new ResourcesComponents;
+        });
+
+        // Register provider factory
+        $this->app->singleton('resources-components.provider-factory', function ($app) {
+            return new ProviderFactory($app);
+        });
+    }
+
+    /**
+     * Get the services provided by the provider.
+     *
+     * @return array
+     */
+    public function provides()
+    {
+        return [
+            'resources-components',
+            'resources-components.provider-factory',
+            'provider-select',
+            'resources-list',
+            'anton-lw-component',
+            'geonames-lw-component',
+            'gnd-lw-component',
+            'idiotikon-lw-component',
+            'metagrid-lw-component',
+            'ortsnamen-lw-component',
+            'wikidata-lw-component',
+            'wikipedia-lw-component',
+            'manual-input-lw-component',
+            'provider-select-v2',
+            'resources-list-v2',
+            'wikipedia-lw-component-v2'
+        ];
+    }
+
+    /**
+     * Console-specific booting.
+     *
+     * @return void
+     */
+    protected function bootForConsole()
+    {
+        // Publishing the configuration file
+        $this->publishes([
+            __DIR__.'/../config/resources-components.php' => config_path('resources-components.php'),
+        ], 'resources-components.config');
+
+        // Publishing the views
+        $this->publishes([
+            __DIR__.'/../resources/views' => resource_path('views/vendor/kraenzle-ritter/resources-components'),
+        ], 'resources-components.views');
+
+        // Publishing the translation files
+        $this->publishes([
+            __DIR__.'/../resources/lang' => resource_path('lang/vendor/resources-components'),
+        ], 'resources-components.lang');
+
+        // Publishing migrations
+        if (!class_exists('CreateResourcesComponentsTables')) {
+            $this->publishes([
+                __DIR__.'/../database/migrations/create_resources_components_tables.php.stub' => database_path('migrations/'.date('Y_m_d_His', time()).'_create_resources_components_tables.php'),
+            ], 'resources-components.migrations');
+        }
+    }
+}

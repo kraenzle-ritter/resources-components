@@ -6,9 +6,11 @@ use Livewire\Component;
 use KraenzleRitter\Resources\Resource;
 use KraenzleRitter\ResourcesComponents\Ortsnamen;
 use KraenzleRitter\ResourcesComponents\Events\ResourceSaved;
+use KraenzleRitter\ResourcesComponents\Traits\ProviderComponentTrait;
 
 class OrtsnamenLwComponent extends Component
 {
+    use ProviderComponentTrait;
     public $search;
 
     public $queryOptions;
@@ -66,6 +68,18 @@ class OrtsnamenLwComponent extends Component
         $client = new Ortsnamen();
 
         $resources = $client->search($this->search, $this->queryOptions);
+
+        // Verarbeite die Ergebnisse mit dem ProviderComponentTrait
+        if (!empty($resources)) {
+            foreach ($resources as $key => $result) {
+                // Verarbeite Beschreibungen, falls vorhanden
+                if (!empty($result->description) && !empty($result->description[0])) {
+                    $result->processedDescription = $this->extractFirstSentence($result->description[0]);
+                } else {
+                    $result->processedDescription = '';
+                }
+            }
+        }
 
         $view = view()->exists('vendor.kraenzle-ritter.livewire.ortsnamen-lw-component')
               ? 'vendor.kraenzle-ritter.livewire.ortsnamen-lw-component'

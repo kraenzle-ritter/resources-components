@@ -1,3 +1,13 @@
+@php
+    // $base_url wird jetzt von der Komponente bereitgestellt
+    $base_url = $base_url ?? 'https://lobid.org/gnd/'; // Fallback, falls die Komponente keinen Wert liefert
+
+    // Debug-Ausgabe
+    if (class_exists('\Log')) {
+        \Log::debug('GND view using base_url: ' . $base_url);
+    }
+@endphp
+
 @include('resources-components::livewire.partials.results-layout', [
     'providerKey' => 'gnd',
     'providerName' => 'GND',
@@ -14,11 +24,15 @@
 
         return "{$heading} {$birthYear} {$separator} {$deathYear}";
     },
-    'result_content' => function($result) {
-        $output = "<a href=\"{$result->id}\" target=\"_blank\">{$result->id}</a><br>";
+    'result_content' => function($result) use ($base_url) {
+        $url = $result->id; // Die GND-URL ist bereits im Ergebnis enthalten
+        $output = "<a href=\"{$url}\" target=\"_blank\">{$url}</a>";
 
-        if(isset($result->biographicalOrHistoricalInformation)) {
-            $output .= join('<br>', $result->biographicalOrHistoricalInformation);
+        // Verwende die vorbereitete Beschreibung oder erste biografische Information
+        if(!empty($result->processedDescription)) {
+            $output .= "<br>" . $result->processedDescription;
+        } elseif(isset($result->biographicalOrHistoricalInformation)) {
+            $output .= "<br>" . $result->biographicalOrHistoricalInformation[0];
         }
 
         return $output;

@@ -1,5 +1,12 @@
 @php
-    $base_url = 'https://www.geonames.org/';
+    // $base_url wird jetzt von der Komponente bereitgestellt
+    $base_url = $base_url ?? 'https://www.geonames.org/'; // Fallback, falls die Komponente keinen Wert liefert
+    $apiLimitReached = empty($results) && $search && config('resources-components.providers.geonames.user_name') === 'demo';
+
+    // Debug-Ausgabe
+    if (class_exists('\Log')) {
+        \Log::debug('Geonames view using base_url: ' . $base_url);
+    }
 @endphp
 
 @include('resources-components::livewire.partials.results-layout', [
@@ -7,6 +14,7 @@
     'providerName' => 'Geonames',
     'model' => $model,
     'results' => $results,
+    'apiLimitReached' => $apiLimitReached,
     'saveAction' => function($result) use ($base_url) {
         return "saveResource('{$result->geonameId}', '{$base_url}{$result->geonameId}', '" . json_encode($result, JSON_UNESCAPED_UNICODE) . "')";
     },
@@ -14,9 +22,13 @@
         return $result->toponymName ?? '';
     },
     'result_content' => function($result) use ($base_url) {
-        $output = "<a href=\"{$base_url}{$result->geonameId}\" target=\"_blank\">{$base_url}{$result->geonameId}</a><br>";
-        $output .= ($result->fclName ?? '') . "<br>";
-        $output .= $result->countryName ?? '';
+        $output = "<a href=\"{$base_url}{$result->geonameId}\" target=\"_blank\">{$base_url}{$result->geonameId}</a>";
+
+        // Verwende die vorbereitete kombinierte Beschreibung
+        if (!empty($result->combinedDescription)) {
+            $output .= "<br>" . $result->combinedDescription;
+        }
+
         return $output;
     }
 ])

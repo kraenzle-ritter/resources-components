@@ -6,9 +6,11 @@ use Livewire\Component;
 use KraenzleRitter\Resources\Resource;
 use KraenzleRitter\ResourcesComponents\Geonames;
 use KraenzleRitter\ResourcesComponents\Events\ResourceSaved;
+use KraenzleRitter\ResourcesComponents\Traits\ProviderComponentTrait;
 
 class GeonamesLwComponent extends Component
 {
+    use ProviderComponentTrait;
     public $search;
 
     public $queryOptions;
@@ -62,7 +64,54 @@ class GeonamesLwComponent extends Component
     {
         $client = new Geonames();
 
-        $resources = $client->search($this->search, $this->queryOptions);
+        // Ensure we have proper query options with a default limit
+        $queryOptions = is_array($this->queryOptions) ? $this->queryOptions : [];
+        if (empty($queryOptions['limit'])) {
+            $queryOptions['limit'] = config('resources-components.limit', 5);
+        }
+
+        $resources = $client->search($this->search, $queryOptions);
+
+        // Verarbeite die Ergebnisse mit dem ProviderComponentTrait
+        if (!empty($resources)) {
+            foreach ($resources as $key => $result) {
+                // Sammle beschreibende Elemente
+                $description = [];
+                if (!empty($result->fclName)) {
+                    $description[] = $result->fclName;
+                }
+                if (!empty($result->countryName)) {
+                    $description[] = $result->countryName;
+                }
+
+                // Erstelle die kombinierte Beschreibung
+                $combinedText = !empty($description) ? implode(', ', $description) : '';
+
+                // Optional: Füge weitere Beschreibungen hinzu, falls vorhanden
+                if (!empty($result->summary)) {
+                    $combinedText .= (!empty($combinedText) ? '. ' : '') . $result->summary;
+                }
+
+                // Speichere die verarbeitete Beschreibung im Ergebnisobjekt
+                $resources[$key]->combinedDescription = $combinedText;
+            }
+        }
+
+        // Get base_url from config
+        $apiUrl = config('resources-components.providers.geonames.base_url', 'http://api.geonames.org/');
+
+        // For Geonames, we need to adjust the URL for web links vs API
+        $base_url = 'https://www.geonames.org/'; // Default frontend URL
+
+        // If base_url configuration contains API URL, make sure we send the correct frontend URL to the view
+        if (strpos($apiUrl, 'api.geonames.org') !== false) {
+            $base_url = 'https://www.geonames.org/';
+        }
+
+        // Debug logging
+        if (class_exists('\Log')) {
+            \Log::debug('GeonamesLwComponent: Using base_url: ' . $base_url);
+        }
 
         $view = view()->exists('vendor.kraenzle-ritter.livewire.geonames-lw-component')
               ? 'vendor.kraenzle-ritter.livewire.geonames-lw-component'
@@ -70,12 +119,14 @@ class GeonamesLwComponent extends Component
 
         if (!isset($resources) or !count($resources)) {
             return view($view, [
-                'results' => []
+                'results' => [],
+                'base_url' => $base_url
             ]);
         }
 
         return view($view, [
-            'results' => $resources
+            'results' => $resources,
+            'base_url' => $base_url
         ]);
     }
 }
