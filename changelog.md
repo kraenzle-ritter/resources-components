@@ -4,6 +4,10 @@ All notable changes to `resources-components` will be documented in this file.
 
 ## 2.2.0 - 2025-07-31
 
+### Changed
+
+- Replaced external Wikidata dependency with direct API implementation using GuzzleHttp
+
 ### Added
 
 - Enhanced test suite with comprehensive provider integration tests
