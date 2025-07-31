@@ -17,21 +17,15 @@ use Illuminate\Support\Facades\Schema;
 
 class ResourcesCheckController
 {
-    protected $testQueries = [
-        'wikidata' => 'Albert Einstein',
-        'wikipedia-de' => 'Albert Einstein',
-        'wikipedia-en' => 'Albert Einstein',
-        'wikipedia-fr' => 'Albert Einstein',
-        'wikipedia-it' => 'Albert Einstein',
-        'gnd' => 'Albert Einstein',
-        'geonames' => 'Zürich',
-        'idiotikon' => 'Allmend',
-        'metagrid' => 'Albert Einstein',
-        'ortsnamen' => 'Zürich',
-        'georgfischer' => 'Archiv',
-        'kba' => 'Barth',
-        'gosteli' => 'Archiv'
-    ];
+    /**
+     * Get test query for a provider from configuration
+     * Falls back to a default if not configured
+     */
+    protected function getTestQuery($providerKey)
+    {
+        $providers = Config::get('resources-components.providers');
+        return $providers[$providerKey]['test_search'] ?? 'test';
+    }
 
     /**
      * Zeigt die Übersichtsseite mit Status aller Provider
@@ -77,7 +71,7 @@ class ResourcesCheckController
                 ->with('error', "Provider {$provider} ist nicht konfiguriert.");
         }
 
-        $searchTerm = $request->get('search', $this->testQueries[$provider] ?? 'test');
+        $searchTerm = $request->get('search', $this->getTestQuery($provider));
         $showAll = $request->has('show_all');
         
         // Wenn 'show_all' aktiviert ist, heben wir das Limit auf oder setzen es hoch
@@ -103,7 +97,7 @@ class ResourcesCheckController
      */
     protected function checkProvider($key, $config, $includeResults = false, $ignoreLimit = false)
     {
-        $searchTerm = $this->testQueries[$key] ?? 'test';
+        $searchTerm = $this->getTestQuery($key);
         $status = 'error';
         $message = 'Nicht getestet';
         $apiResults = [];

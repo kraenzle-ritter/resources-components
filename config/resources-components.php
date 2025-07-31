@@ -8,7 +8,7 @@ return [
             'api-type' => 'Gnd',
             'base_url' => 'https://lobid.org/gnd/',
             'target_url' => 'https://d-nb.info/gnd/{provider_id}', // For saved links
-            'test_search' => 'Ernst Cassirer',
+            'test_search' => 'Hannah Arendt',
         ],
         'geonames' => [
             'label' => 'Geonames',
@@ -62,44 +62,50 @@ return [
             'label' => 'Metagrid',
             'api-type' => 'Metagrid',
             'base_url' => 'https://metagrid.ch/api/',
-            'target_url' => 'https://metagrid.ch/{provider_id}',
-            'test_search' => 'Albert Einstein',
+            'target_url' => 'https://api.metagrid.ch/concordance/{provider_id}.json', // since metagrid has no Gui for these entries
+            'test_search' => 'Anna Tumarkin',
         ],
         'ortsnamen' => [
             'label' => 'Ortsnamen',
             'api-type' => 'Ortsnamen',
             'base_url' => 'https://search.ortsnamen.ch/de/api/',
-            'target_url' => 'https://search.ortsnamen.ch/de/record/{provider_id}'
+            'target_url' => 'https://search.ortsnamen.ch/de/record/{provider_id}',
+            'test_search' => 'Wiedikon'
         ],
         'wikidata' => [
             'label' => 'Wikidata',
             'api-type' => 'Wikidata',
             'base_url' => 'https://www.wikidata.org/w/api.php',
             'target_url' => 'https://www.wikidata.org/wiki/{provider_id}',
+            'test_search' => 'Lucretia Marinella',
         ],
         'wikipedia-de' => [
             'label' => 'Wikipedia (de)',
             'api-type' => 'Wikipedia',
             'base_url' => 'https://de.wikipedia.org/w/api.php',
-            'target_url' => 'https://de.wikipedia.org/wiki/{underscored_name}'
+            'target_url' => 'https://de.wikipedia.org/wiki/{underscored_name}',
+            'test_search' => 'Bertha von Suttner',
         ],
         'wikipedia-en' => [
             'label' => 'Wikipedia (en)',
             'api-type' => 'Wikipedia',
             'base_url' => 'https://en.wikipedia.org/w/api.php',
-            'target_url' => 'https://en.wikipedia.org/wiki/{underscored_name}'
+            'target_url' => 'https://en.wikipedia.org/wiki/{underscored_name}',
+            'test_search' => 'Mary Astell',
         ],
         'wikipedia-fr' => [
             'label' => 'Wikipedia (fr)',
             'api-type' => 'Wikipedia',
             'base_url' => 'https://fr.wikipedia.org/w/api.php',
-            'target_url' => 'https://fr.wikipedia.org/wiki/{underscored_name}'
+            'target_url' => 'https://fr.wikipedia.org/wiki/{underscored_name}',
+            'test_search' => 'Marie de Gournay',
         ],
         'wikipedia-it' => [
             'label' => 'Wikipedia (it)',
             'api-type' => 'Wikipedia',
             'base_url' => 'https://it.wikipedia.org/w/api.php',
-            'target_url' => 'https://it.wikipedia.org/wiki/{underscored_name}'
+            'target_url' => 'https://it.wikipedia.org/wiki/{underscored_name}',
+            'test_search' => 'Laura Bassi',
         ],
     ]
 ];

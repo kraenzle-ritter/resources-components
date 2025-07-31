@@ -102,16 +102,33 @@ return [
             'label' => 'GND',
             'api-type' => 'Gnd',
             'base_url' => 'https://lobid.org/gnd/',
+            'target_url' => 'https://d-nb.info/gnd/{provider_id}',
+            'test_search' => 'Hannah Arendt', // Test query for provider check page
         ],
         'wikipedia-de' => [
             'label' => 'Wikipedia (DE)',
             'api-type' => 'Wikipedia',
             'base_url' => 'https://de.wikipedia.org/w/api.php',
+            'target_url' => 'https://de.wikipedia.org/wiki/{underscored_name}',
+            'test_search' => 'Bertha von Suttner',
         ],
         // Add more providers here
     ],
 ];
 ```
+
+### Provider Configuration Options
+
+Each provider supports the following configuration options:
+
+- **`label`** (string): Display name for the provider
+- **`api-type`** (string): Provider class name (e.g., 'Gnd', 'Wikipedia', 'Wikidata')
+- **`base_url`** (string): Base URL for API requests
+- **`target_url`** (string): URL template for saved resources (supports placeholders like `{provider_id}`)
+- **`test_search`** (string): Test query used by the provider check page to verify functionality
+- **`limit`** (integer, optional): Provider-specific result limit (overrides global limit)
+
+Additional provider-specific options may apply (e.g., `user_name` for Geonames, `api_token` for Anton providers).
 
 ## Creating Custom Providers
 
