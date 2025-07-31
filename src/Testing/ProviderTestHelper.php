@@ -221,12 +221,22 @@ class ProviderTestHelper
         if (!empty($results)) {
             $firstResult = $results[0] ?? null;
             if ($firstResult) {
+                // Build description from available Anton fields
+                $descParts = [];
+                if (isset($firstResult->signature)) $descParts[] = $firstResult->signature;
+                if (isset($firstResult->birth_year)) $descParts[] = 'geb. ' . $firstResult->birth_year;
+                if (isset($firstResult->death_year)) $descParts[] = 'gest. ' . $firstResult->death_year;
+                if (isset($firstResult->occupation)) $descParts[] = $firstResult->occupation;
+                if (isset($firstResult->description)) $descParts[] = $firstResult->description;
+                $description = implode(', ', $descParts);
+
                 return [
                     'success' => true,
                     'title' => $firstResult->fullname ?? $firstResult->title ?? 'Unknown',
                     'provider_id' => $firstResult->id ?? '',
                     'provider' => $providerKey,
-                    'data' => $firstResult
+                    'data' => $firstResult,
+                    'description' => $description ?: ''
                 ];
             }
         }

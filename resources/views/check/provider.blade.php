@@ -65,6 +65,20 @@
                                 <i class="fas fa-search me-2"></i> Testen
                             </button>
                         </div>
+                        
+                        @if(!empty($availableEndpoints))
+                            <div class="mb-3">
+                                <label for="endpoint" class="form-label">Endpoint:</label>
+                                <select name="endpoint" id="endpoint" class="form-select">
+                                    @foreach($availableEndpoints as $availableEndpoint)
+                                        <option value="{{ $availableEndpoint }}" 
+                                            {{ $endpoint === $availableEndpoint ? 'selected' : '' }}>
+                                            {{ ucfirst($availableEndpoint) }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        @endif
                     </form>
                 </div>
             </div>
@@ -113,15 +127,23 @@
                     @php
                         // Create the provider API URL based on the configuration
                         $apiUrl = $config['base_url'] ?? '#';
-                        if (isset($config['endpoint'])) {
+                        
+                        // Handle Anton providers with endpoint
+                        if (($config['api-type'] ?? '') === 'Anton') {
+                            $currentEndpoint = $endpoint ?? 'actors';
+                            $apiUrl = rtrim($apiUrl, '/') . '/' . $currentEndpoint;
+                        } elseif (isset($config['endpoint'])) {
                             $apiUrl = rtrim($apiUrl, '/') . '/' . ltrim($config['endpoint'], '/');
                         }
+                        
                         // Add parameters
                         $params = [];
                         if ($searchTerm) {
-                            $searchParam = $config['search_param'] ?? 'q';
+                            // Use 'search' parameter for Anton providers, 'q' for others
+                            $searchParam = ($config['api-type'] ?? '') === 'Anton' ? 'search' : ($config['search_param'] ?? 'q');
                             $params[$searchParam] = $searchTerm;
                         }
+                        
                         if (!empty($params)) {
                             $apiUrl .= '?' . http_build_query($params);
                         }
@@ -214,6 +236,20 @@
                                                     if (isset($item->fclName)) $descParts[] = $item->fclName;
                                                     $desc = implode(', ', $descParts) ?: '-';
                                                 }
+                                                // Anton-specific fields (Georgfischer, Gosteli, KBA)
+                                                elseif (isset($item->fullname) || (isset($item->name) && isset($item->signature))) {
+                                                    $provider_id = $item->id ?? '-';
+                                                    $name = $item->fullname ?? $item->name ?? $item->title ?? '-';
+                                                    $desc = '';
+                                                    // Build description from available Anton fields
+                                                    $descParts = [];
+                                                    if (isset($item->signature)) $descParts[] = $item->signature;
+                                                    if (isset($item->birth_year)) $descParts[] = 'geb. ' . $item->birth_year;
+                                                    if (isset($item->death_year)) $descParts[] = 'gest. ' . $item->death_year;
+                                                    if (isset($item->occupation)) $descParts[] = $item->occupation;
+                                                    if (isset($item->description)) $descParts[] = $item->description;
+                                                    $desc = implode(', ', $descParts) ?: '-';
+                                                }
                                                 // Other providers
                                                 else {
                                                     $provider_id = $item->gndIdentifier ?? $item->id ?? $item->lemmaID ?? $item->provider_id ?? '-';
@@ -246,6 +282,20 @@
                                                     if (!empty($item['fclName'])) $descParts[] = $item['fclName'];
                                                     $desc = implode(', ', $descParts) ?: '-';
                                                 }
+                                                // Anton-specific fields (Georgfischer, Gosteli, KBA)
+                                                elseif (isset($item['fullname']) || (isset($item['name']) && isset($item['signature']))) {
+                                                    $provider_id = $item['id'] ?? '-';
+                                                    $name = $item['fullname'] ?? $item['name'] ?? $item['title'] ?? '-';
+                                                    $desc = '';
+                                                    // Build description from available Anton fields
+                                                    $descParts = [];
+                                                    if (!empty($item['signature'])) $descParts[] = $item['signature'];
+                                                    if (!empty($item['birth_year'])) $descParts[] = 'geb. ' . $item['birth_year'];
+                                                    if (!empty($item['death_year'])) $descParts[] = 'gest. ' . $item['death_year'];
+                                                    if (!empty($item['occupation'])) $descParts[] = $item['occupation'];
+                                                    if (!empty($item['description'])) $descParts[] = $item['description'];
+                                                    $desc = implode(', ', $descParts) ?: '-';
+                                                }
                                                 // Other providers
                                                 else {
                                                     $provider_id = $item['gndIdentifier'] ?? $item['id'] ?? $item['lemmaID'] ?? $item['provider_id'] ?? '-';
@@ -267,6 +317,11 @@
                                                 if (str_contains($targetUrlTemplate, '{underscored_name}') && $name !== '-') {
                                                     // For Wikipedia URLs that use underscored names
                                                     $url = str_replace('{underscored_name}', str_replace(' ', '_', $name), $targetUrlTemplate);
+                                                } elseif (str_contains($targetUrlTemplate, '{endpoint}') || str_contains($targetUrlTemplate, '{short_provider_id}')) {
+                                                    // For Anton URLs that use endpoint and short_provider_id
+                                                    $endpoint = request()->get('endpoint', 'actors'); // Default to 'actors'
+                                                    $shortProviderId = $provider_id; // Use the ID as short provider ID
+                                                    $url = str_replace(['{endpoint}', '{short_provider_id}'], [$endpoint, $shortProviderId], $targetUrlTemplate);
                                                 } else {
                                                     // For URLs that use provider_id
                                                     $url = str_replace('{provider_id}', $provider_id, $targetUrlTemplate);

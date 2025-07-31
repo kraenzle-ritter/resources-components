@@ -27,7 +27,7 @@ class Anton
     public function search(
         string $search,
         array $params = [],
-        string $endpoint = 'objects')
+        string $endpoint = 'actors')
     {
         // Make sure URL ends with a slash
         $baseUrl = rtrim($this->url, '/') . '/';

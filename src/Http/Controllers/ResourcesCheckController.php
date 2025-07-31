@@ -73,16 +73,25 @@ class ResourcesCheckController
 
         $searchTerm = $request->get('search', $this->getTestQuery($provider));
         $showAll = $request->has('show_all');
+        $endpoint = $request->get('endpoint', 'actors'); // Default endpoint for Anton providers
         
         // Wenn 'show_all' aktiviert ist, heben wir das Limit auf oder setzen es hoch
-        $result = $this->testProviderWithSearch($provider, $providers[$provider], $searchTerm, $showAll);
+        $result = $this->testProviderWithSearch($provider, $providers[$provider], $searchTerm, $showAll, $endpoint);
+
+        // Available endpoints for Anton providers
+        $availableEndpoints = [];
+        if (($providers[$provider]['api-type'] ?? '') === 'Anton') {
+            $availableEndpoints = ['actors', 'places', 'keywords', 'objects'];
+        }
 
         return view('resources-components::check.provider', [
             'provider' => $provider,
             'config' => $providers[$provider],
             'result' => $result,
             'searchTerm' => $searchTerm,
-            'showAll' => $showAll
+            'showAll' => $showAll,
+            'endpoint' => $endpoint,
+            'availableEndpoints' => $availableEndpoints
         ]);
     }
 
@@ -145,7 +154,7 @@ class ResourcesCheckController
                 case 'Anton':
                     // Anton braucht einen spezifischen Provider-Key
                     $client = new Anton($key);
-                    $results = $client->search($searchTerm, ['limit' => $limit], 'actors');
+                    $results = $client->search($searchTerm, ['limit' => $limit], 'actors'); // Default endpoint for overview
                     break;
                     
                 case 'ManualInput':
@@ -199,7 +208,7 @@ class ResourcesCheckController
     /**
      * Führt einen Test für einen Provider mit einem spezifischen Suchterm aus
      */
-    protected function testProviderWithSearch($key, $config, $searchTerm, $ignoreLimit = false)
+    protected function testProviderWithSearch($key, $config, $searchTerm, $ignoreLimit = false, $endpoint = 'actors')
     {
         $status = 'error';
         $message = 'Nicht getestet';
@@ -247,7 +256,7 @@ class ResourcesCheckController
                     
                 case 'Anton':
                     $client = new Anton($key);
-                    $results = $client->search($searchTerm, ['limit' => $limit]);
+                    $results = $client->search($searchTerm, ['limit' => $limit], $endpoint);
                     break;
                     
                 default:
