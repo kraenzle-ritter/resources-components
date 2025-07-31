@@ -71,6 +71,12 @@ class ResourcesCheckController
                 ->with('error', "Provider {$provider} ist nicht konfiguriert.");
         }
 
+        // Redirect ManualInput to index with info message
+        if (($providers[$provider]['api-type'] ?? '') === 'ManualInput') {
+            return redirect()->route('resources.check.index')
+                ->with('info', "Manual Input Provider benötigt keine API-Tests.");
+        }
+
         $searchTerm = $request->get('search', $this->getTestQuery($provider));
         $showAll = $request->has('show_all');
         $endpoint = $request->get('endpoint', 'actors'); // Default endpoint for Anton providers
@@ -159,7 +165,9 @@ class ResourcesCheckController
                     
                 case 'ManualInput':
                     // Manual Input braucht keinen API-Test
-                    $results = [['id' => 'manual', 'title' => 'Manual Input Test']];
+                    $status = 'success';
+                    $message = 'Manual Input - kein API-Test erforderlich';
+                    $results = [];
                     break;
                     
                 default:
@@ -168,29 +176,34 @@ class ResourcesCheckController
                     $results = [];
             }
 
-            // Check the results
-            if (!empty($results)) {
-                $status = 'success';
-                
-                // Handle arrays and objects correctly for count()
-                if (is_array($results) || $results instanceof \Countable) {
-                    $resultsCount = count($results);
-                    $message = $resultsCount . ' Ergebnisse gefunden';
-                } else if (is_object($results)) {
-                    // Convert object to array if possible
-                    $resultsArray = json_decode(json_encode($results), true);
-                    $resultsCount = is_array($resultsArray) ? count($resultsArray) : 1;
-                    $message = $resultsCount . ' Ergebnisse gefunden';
-                    // Ensure that $results is correctly formatted for display
-                    $results = $resultsArray;
+            // Check the results (but skip for ManualInput which already has status and message set)
+            if (($config['api-type'] ?? '') !== 'ManualInput') {
+                if (!empty($results)) {
+                    $status = 'success';
+                    
+                    // Handle arrays and objects correctly for count()
+                    if (is_array($results) || $results instanceof \Countable) {
+                        $resultsCount = count($results);
+                        $message = $resultsCount . ' Ergebnisse gefunden';
+                    } else if (is_object($results)) {
+                        // Convert object to array if possible
+                        $resultsArray = json_decode(json_encode($results), true);
+                        $resultsCount = is_array($resultsArray) ? count($resultsArray) : 1;
+                        $message = $resultsCount . ' Ergebnisse gefunden';
+                        // Ensure that $results is correctly formatted for display
+                        $results = $resultsArray;
+                    } else {
+                        $message = 'Ergebnisse gefunden';
+                    }
+                    
+                    $apiResults = $includeResults ? $results : [];
                 } else {
-                    $message = 'Ergebnisse gefunden';
+                    $status = 'warning';
+                    $message = 'Keine Ergebnisse gefunden';
                 }
-                
-                $apiResults = $includeResults ? $results : [];
             } else {
-                $status = 'warning';
-                $message = 'Keine Ergebnisse gefunden';
+                // For ManualInput, don't include any results
+                $apiResults = [];
             }
         } catch (\Exception $e) {
             $status = 'error';
@@ -258,6 +271,17 @@ class ResourcesCheckController
                     $client = new Anton($key);
                     $results = $client->search($searchTerm, ['limit' => $limit], $endpoint);
                     break;
+                    
+                case 'ManualInput':
+                    // Manual Input Provider has no API to test
+                    $status = 'success';
+                    $message = 'Manual Input - kein API-Test erforderlich';
+                    $apiResults = [];
+                    return [
+                        'status' => $status,
+                        'message' => $message,
+                        'results' => $apiResults
+                    ];
                     
                 default:
                     throw new \Exception("Unbekannter API-Typ: " . ($config['api-type'] ?? 'nicht gesetzt'));
