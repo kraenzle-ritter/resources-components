@@ -67,24 +67,6 @@ trait ProviderComponentTrait
     }
     
     /**
-     * Debug-Methode für die Komponente (nur im Debug-Modus)
-     */
-    public function debugComponent()
-    {
-        if (!class_exists('\Log')) {
-            return;
-        }
-        
-        \Log::debug('Component Debug', [
-            'class' => get_class($this),
-            'search' => $this->search ?? null,
-            'showAll' => $this->showAll ?? false,
-            'queryOptions' => $this->queryOptions ?? [],
-            'model' => $this->model ? get_class($this->model) : null,
-        ]);
-    }
-
-    /**
      * Save a resource to the associated model
      *
      * @param mixed $model The model to associate the resource with

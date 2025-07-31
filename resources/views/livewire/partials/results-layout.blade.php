@@ -1,18 +1,4 @@
 <div class="px-3 py-2">
-    @if(config('app.debug'))
-        <div class="debug-info small text-muted mb-2">
-            Provider: {{ $providerKey }}, 
-            Results: {{ is_countable($results) ? count($results) : '0' }}, 
-            Limit: {{ config("resources-components.providers.{$providerKey}.limit") ?? config('resources-components.limit') ?? 5 }}, 
-            ShowAll: {{ empty($showAll) ? 'false' : 'true' }}
-            <button wire:click="debugComponent" class="btn btn-sm btn-link p-0 ms-2">Debug</button>
-            
-            @if(is_countable($results) && count($results) >= (config("resources-components.providers.{$providerKey}.limit") ?? config('resources-components.limit') ?? 5))
-                <button wire:click="showAllResults" class="btn btn-sm btn-link p-0 ms-2">Force Show All</button>
-            @endif
-        </div>
-    @endif
-    
     @if(!in_array($providerKey, $model->resources->pluck('provider')->toArray()))
         <div>
             @include('resources-components::livewire.partials.search-form', [
