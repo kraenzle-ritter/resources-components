@@ -113,12 +113,20 @@ class ProviderTestHelper
         if (!empty($results)) {
             $firstResult = $results[0] ?? null;
             if ($firstResult) {
+                // Build description from available Geonames fields
+                $descParts = [];
+                if (isset($firstResult->adminName1)) $descParts[] = $firstResult->adminName1;
+                if (isset($firstResult->countryName)) $descParts[] = $firstResult->countryName;
+                if (isset($firstResult->fclName)) $descParts[] = $firstResult->fclName;
+                $description = implode(', ', $descParts);
+
                 return [
                     'success' => true,
                     'title' => $firstResult->name ?? 'Unknown',
                     'provider_id' => $firstResult->geonameId ?? '',
                     'provider' => 'geonames',
-                    'data' => $firstResult
+                    'data' => $firstResult,
+                    'description' => $description ?: ''
                 ];
             }
         }

@@ -202,6 +202,18 @@
                                                     $name = $item->title ?? '-';
                                                     $desc = strip_tags($item->snippet ?? '-');
                                                 }
+                                                // Geonames-specific fields
+                                                elseif (isset($item->geonameId)) {
+                                                    $provider_id = $item->geonameId;
+                                                    $name = $item->name ?? '-';
+                                                    $desc = '';
+                                                    // Build description from available Geonames fields
+                                                    $descParts = [];
+                                                    if (isset($item->adminName1)) $descParts[] = $item->adminName1;
+                                                    if (isset($item->countryName)) $descParts[] = $item->countryName;
+                                                    if (isset($item->fclName)) $descParts[] = $item->fclName;
+                                                    $desc = implode(', ', $descParts) ?: '-';
+                                                }
                                                 // Other providers
                                                 else {
                                                     $provider_id = $item->gndIdentifier ?? $item->id ?? $item->lemmaID ?? $item->provider_id ?? '-';
@@ -221,6 +233,18 @@
                                                     $provider_id = $item['pageid'];
                                                     $name = $item['title'] ?? '-';
                                                     $desc = strip_tags($item['snippet'] ?? '-');
+                                                }
+                                                // Geonames-specific fields
+                                                elseif (isset($item['geonameId'])) {
+                                                    $provider_id = $item['geonameId'];
+                                                    $name = $item['name'] ?? '-';
+                                                    $desc = '';
+                                                    // Build description from available Geonames fields
+                                                    $descParts = [];
+                                                    if (!empty($item['adminName1'])) $descParts[] = $item['adminName1'];
+                                                    if (!empty($item['countryName'])) $descParts[] = $item['countryName'];
+                                                    if (!empty($item['fclName'])) $descParts[] = $item['fclName'];
+                                                    $desc = implode(', ', $descParts) ?: '-';
                                                 }
                                                 // Other providers
                                                 else {
