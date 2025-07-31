@@ -143,6 +143,26 @@ Please see [changelog.md](changelog.md) for more information on recent changes.
 composer test
 ```
 
+### Testing Provider Integrations
+
+You can test all providers or individual providers using the included command:
+
+```bash
+# Test all providers
+php artisan resources-components:test-resources
+
+# List all available providers
+php artisan resources-components:test-resources --list
+
+# Test a specific provider
+php artisan resources-components:test-resources --provider=wikipedia-de
+
+# Keep created resources (don't clean up after testing)
+php artisan resources-components:test-resources --no-cleanup
+```
+
+This is useful for verifying that all your providers are properly configured and working.
+
 ## Contributing
 
 Please see [contributing.md](contributing.md) for details.
@@ -216,14 +236,8 @@ Some providers require additional configuration in your `.env` file:
 # For Geonames
 GEONAMES_USERNAME=your_username
 
-# For Georgfischer (optional)
-GEORGFISCHER_API_TOKEN=your_token 
-
-# For Gosteli (optional)
-Gosteli_API_TOKEN=your_token 
-
-# For KBA (optional)
-KBA_API_TOKEN=your_token 
+# Anton API Providers (georgfischer, kba, gosteli)
+# No API tokens required for these providers
 ```
 
 ### Provider Configuration

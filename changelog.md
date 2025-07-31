@@ -2,6 +2,22 @@
 
 All notable changes to `resources-components` will be documented in this file.
 
+## 2.1.0 - 2023-08-02
+
+### Added
+
+- Added `TestResourcesCommand` for testing provider integrations
+- Implemented configurable target URLs with placeholders for all providers
+- Enhanced URL generation with support for `{provider_id}`, `{underscored_name}`, and other dynamic parameters
+- Support for complex provider IDs in Anton API format (`slug-endpoint-id`)
+- Added documentation for testing providers with the new command
+
+### Changed
+
+- Improved error handling in provider components
+- Updated README with more comprehensive documentation
+- Enhanced configuration structure with standardized keys
+
 ## 2.0.0 - 2023-07-01
 
 ### Added

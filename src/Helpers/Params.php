@@ -26,7 +26,7 @@ class Params
             }
             if (is_array($value)) {
                 // recursion case
-                $result_string = static::paramsToQueryString($value);
+                $result_string = static::toQueryString($value);
                 if (!empty($result_string)) {
                     $query_string[] = $result_string;
                 }

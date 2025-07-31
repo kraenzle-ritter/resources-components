@@ -91,5 +91,10 @@ class ResourcesComponentsServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'/../resources/lang' => resource_path('lang/vendor/resources-components'),
         ], 'resources-components.lang');
+        
+        // Register commands
+        $this->commands([
+            \KraenzleRitter\ResourcesComponents\Commands\TestResourcesCommand::class
+        ]);
     }
 }
