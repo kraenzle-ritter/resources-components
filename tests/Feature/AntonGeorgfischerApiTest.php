@@ -47,18 +47,7 @@ class AntonGeorgfischerApiTest extends TestCase
         if (!empty($results)) {
             $firstResult = $results[0];
             $this->assertTrue(property_exists($firstResult, 'id'), 'Result should have an id');
-
-            // Überprüfe typische Anton API-Eigenschaften
-            // Die genauen Eigenschaften können je nach API variieren
-            $expectedProperties = ['id', 'name', 'signature'];
-            $hasExpectedProperties = false;
-            foreach ($expectedProperties as $property) {
-                if (property_exists($firstResult, $property)) {
-                    $hasExpectedProperties = true;
-                    break;
-                }
-            }
-            $this->assertTrue($hasExpectedProperties, 'Result should have at least one of the expected properties');
+            $this->assertTrue(property_exists($firstResult, 'name'), 'Result should have a name');
         }
     }
 

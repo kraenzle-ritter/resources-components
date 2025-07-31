@@ -23,29 +23,6 @@ trait ProviderComponentTrait
     }
 
     /**
-     * Format a URL for display and linking
-     *
-     * @param string $url The URL to format
-     * @return string Formatted URL display
-     */
-    public function formatUrl($url)
-    {
-        return $url;
-    }
-
-    /**
-     * Prepare search results for display
-     *
-     * @param array|object $results The raw results from the provider
-     * @return array Prepared results
-     */
-    public function prepareResultsForDisplay($results)
-    {
-        // Can be overridden in derived components
-        return $results;
-    }
-
-    /**
      * Show all search results by updating the query options
      *
      * @return void
@@ -55,10 +32,6 @@ trait ProviderComponentTrait
         // Increase the limit for displaying all results
         $this->queryOptions['limit'] = 50;
         $this->showAll = true;
-
-        if (class_exists('\Log')) {
-            \Log::debug('ShowAllResults called: setting limit to 50 and showAll=true');
-        }
 
         // If a search is active, we execute it again
         if (!empty($this->search)) {

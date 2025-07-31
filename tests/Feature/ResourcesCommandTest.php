@@ -15,8 +15,8 @@ class ResourcesCommandTest extends TestCase
      */
     public function testResourcesCommand()
     {
-        // This will run the command in a testing environment
-        $this->artisan('resources-components:test-resources')
+        // This will run the command in a testing environment with no-cleanup to keep resources for testing
+        $this->artisan('resources-components:test-resources', ['--no-cleanup' => true])
              ->assertExitCode(0);
 
         // Check that resources were actually created
