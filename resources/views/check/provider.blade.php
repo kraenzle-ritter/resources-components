@@ -196,32 +196,57 @@
                                             $url = '-';
                                             
                                             if (is_object($item)) {
-                                                $provider_id = $item->gndIdentifier ?? $item->id ?? $item->lemmaID ?? $item->provider_id ?? '-';
-                                                $name = $item->preferredName ?? $item->title ?? $item->lemmaText ?? $item->name ?? '-';
-                                                if (isset($item->processedDescription) && $item->processedDescription) {
-                                                    $desc = $item->processedDescription;
-                                                } elseif (isset($item->biographicalOrHistoricalInformation) && is_array($item->biographicalOrHistoricalInformation) && count($item->biographicalOrHistoricalInformation)) {
-                                                    $desc = $item->biographicalOrHistoricalInformation[0];
-                                                } elseif (isset($item->description)) {
-                                                    $desc = $item->description;
+                                                // Wikipedia-specific fields
+                                                if (isset($item->pageid)) {
+                                                    $provider_id = $item->pageid;
+                                                    $name = $item->title ?? '-';
+                                                    $desc = strip_tags($item->snippet ?? '-');
+                                                }
+                                                // Other providers
+                                                else {
+                                                    $provider_id = $item->gndIdentifier ?? $item->id ?? $item->lemmaID ?? $item->provider_id ?? '-';
+                                                    $name = $item->preferredName ?? $item->title ?? $item->lemmaText ?? $item->name ?? '-';
+                                                    if (isset($item->processedDescription) && $item->processedDescription) {
+                                                        $desc = $item->processedDescription;
+                                                    } elseif (isset($item->biographicalOrHistoricalInformation) && is_array($item->biographicalOrHistoricalInformation) && count($item->biographicalOrHistoricalInformation)) {
+                                                        $desc = $item->biographicalOrHistoricalInformation[0];
+                                                    } elseif (isset($item->description)) {
+                                                        $desc = $item->description;
+                                                    }
                                                 }
                                                 $url = $item->url ?? $item->id ?? '-';
                                             } elseif (is_array($item)) {
-                                                $provider_id = $item['gndIdentifier'] ?? $item['id'] ?? $item['lemmaID'] ?? $item['provider_id'] ?? '-';
-                                                $name = $item['preferredName'] ?? $item['title'] ?? $item['lemmaText'] ?? $item['name'] ?? '-';
-                                                if (!empty($item['processedDescription'])) {
-                                                    $desc = $item['processedDescription'];
-                                                } elseif (!empty($item['biographicalOrHistoricalInformation'][0])) {
-                                                    $desc = $item['biographicalOrHistoricalInformation'][0];
-                                                } elseif (!empty($item['description'])) {
-                                                    $desc = $item['description'];
+                                                // Wikipedia-specific fields
+                                                if (isset($item['pageid'])) {
+                                                    $provider_id = $item['pageid'];
+                                                    $name = $item['title'] ?? '-';
+                                                    $desc = strip_tags($item['snippet'] ?? '-');
+                                                }
+                                                // Other providers
+                                                else {
+                                                    $provider_id = $item['gndIdentifier'] ?? $item['id'] ?? $item['lemmaID'] ?? $item['provider_id'] ?? '-';
+                                                    $name = $item['preferredName'] ?? $item['title'] ?? $item['lemmaText'] ?? $item['name'] ?? '-';
+                                                    if (!empty($item['processedDescription'])) {
+                                                        $desc = $item['processedDescription'];
+                                                    } elseif (!empty($item['biographicalOrHistoricalInformation'][0])) {
+                                                        $desc = $item['biographicalOrHistoricalInformation'][0];
+                                                    } elseif (!empty($item['description'])) {
+                                                        $desc = $item['description'];
+                                                    }
                                                 }
                                                 $url = $item['url'] ?? $item['id'] ?? '-';
                                             }
                                             
+                                            // Generate target URL from configuration
                                             $targetUrlTemplate = $config['target_url'] ?? null;
                                             if ($targetUrlTemplate && $provider_id && $provider_id !== '-') {
-                                                $url = str_replace('{provider_id}', $provider_id, $targetUrlTemplate);
+                                                if (str_contains($targetUrlTemplate, '{underscored_name}') && $name !== '-') {
+                                                    // For Wikipedia URLs that use underscored names
+                                                    $url = str_replace('{underscored_name}', str_replace(' ', '_', $name), $targetUrlTemplate);
+                                                } else {
+                                                    // For URLs that use provider_id
+                                                    $url = str_replace('{provider_id}', $provider_id, $targetUrlTemplate);
+                                                }
                                             }
                                         @endphp
                                         <td>{{ $provider_id }}</td>

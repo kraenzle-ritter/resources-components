@@ -39,7 +39,8 @@ class ProviderTestHelper
                 'title' => $firstResult->title ?? 'Unknown',
                 'provider_id' => $firstResult->pageid ?? '',
                 'provider' => strtolower($providerKey),
-                'data' => $firstResult
+                'data' => $firstResult,
+                'description' => isset($firstResult->snippet) ? strip_tags($firstResult->snippet) : ''
             ];
         }
         
