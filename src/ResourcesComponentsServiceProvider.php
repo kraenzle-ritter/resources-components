@@ -32,7 +32,7 @@ class ResourcesComponentsServiceProvider extends ServiceProvider
 
         // Load translation files
         $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'resources-components');
-        
+
         // Load routes
         $this->loadRoutesFrom(__DIR__.'/../routes/web.php');
 
@@ -68,7 +68,7 @@ class ResourcesComponentsServiceProvider extends ServiceProvider
         $this->app->singleton('resources-components', function ($app) {
             return new ResourcesComponents;
         });
-        
+
         // Register Provider classes for dependency injection
         $this->app->bind(Wikidata::class);
         $this->app->bind(Wikipedia::class);

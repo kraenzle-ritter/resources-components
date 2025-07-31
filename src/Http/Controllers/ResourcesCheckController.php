@@ -43,8 +43,8 @@ class ResourcesCheckController
         // Check the database table
         $dbStatus = [
             'exists' => Schema::hasTable('resources'),
-            'message' => Schema::hasTable('resources') ? 
-                'Resources-Tabelle ist vorhanden' : 
+            'message' => Schema::hasTable('resources') ?
+                'Resources-Tabelle ist vorhanden' :
                 'Resources-Tabelle fehlt - bitte Migration ausführen'
         ];
 
@@ -65,7 +65,7 @@ class ResourcesCheckController
     public function showProvider($provider, Request $request)
     {
         $providers = Config::get('resources-components.providers');
-        
+
         if (!isset($providers[$provider])) {
             return redirect()->route('resources.check.index')
                 ->with('error', "Provider {$provider} ist nicht konfiguriert.");
@@ -80,7 +80,7 @@ class ResourcesCheckController
         $searchTerm = $request->get('search', $this->getTestQuery($provider));
         $showAll = $request->has('show_all');
         $endpoint = $request->get('endpoint', 'actors'); // Default endpoint for Anton providers
-        
+
         // Wenn 'show_all' aktiviert ist, heben wir das Limit auf oder setzen es hoch
         $result = $this->testProviderWithSearch($provider, $providers[$provider], $searchTerm, $showAll, $endpoint);
 
@@ -116,7 +116,7 @@ class ResourcesCheckController
         $status = 'error';
         $message = 'Nicht getestet';
         $apiResults = [];
-        
+
         // Determine the limit from provider configuration, global limit or set default
         $limit = $ignoreLimit ? 50 : ($config['limit'] ?? config('resources-components.limit') ?? 5);
 
@@ -126,50 +126,50 @@ class ResourcesCheckController
                     $client = new Wikidata();
                     $results = $client->search($searchTerm, ['locale' => 'de', 'limit' => $limit]);
                     break;
-                    
+
                 case 'Wikipedia':
                     $client = new Wikipedia();
                     $results = $client->search($searchTerm, ['locale' => explode('-', $key)[1] ?? 'de', 'limit' => $limit]);
                     break;
-                    
+
                 case 'Gnd':
                     $client = new Gnd();
                     $results = $client->search($searchTerm, ['limit' => $limit]);
                     break;
-                    
+
                 case 'Geonames':
                     $client = new Geonames();
                     $results = $client->search($searchTerm, ['limit' => $limit]);
                     break;
-                    
+
                 case 'Idiotikon':
                     $client = new Idiotikon();
                     $results = $client->search($searchTerm, ['limit' => $limit]);
                     break;
-                    
+
                 case 'Metagrid':
                     $client = new Metagrid();
                     $results = $client->search($searchTerm, ['limit' => $limit]);
                     break;
-                    
+
                 case 'Ortsnamen':
                     $client = new Ortsnamen();
                     $results = $client->search($searchTerm, ['limit' => $limit]);
                     break;
-                    
+
                 case 'Anton':
                     // Anton braucht einen spezifischen Provider-Key
                     $client = new Anton($key);
                     $results = $client->search($searchTerm, ['limit' => $limit], 'actors'); // Default endpoint for overview
                     break;
-                    
+
                 case 'ManualInput':
                     // Manual Input braucht keinen API-Test
                     $status = 'success';
                     $message = 'Manual Input - kein API-Test erforderlich';
                     $results = [];
                     break;
-                    
+
                 default:
                     $status = 'warning';
                     $message = 'Unbekannter Provider-Typ: ' . ($config['api-type'] ?? 'nicht definiert');
@@ -180,7 +180,7 @@ class ResourcesCheckController
             if (($config['api-type'] ?? '') !== 'ManualInput') {
                 if (!empty($results)) {
                     $status = 'success';
-                    
+
                     // Handle arrays and objects correctly for count()
                     if (is_array($results) || $results instanceof \Countable) {
                         $resultsCount = count($results);
@@ -195,7 +195,7 @@ class ResourcesCheckController
                     } else {
                         $message = 'Ergebnisse gefunden';
                     }
-                    
+
                     $apiResults = $includeResults ? $results : [];
                 } else {
                     $status = 'warning';
@@ -217,7 +217,7 @@ class ResourcesCheckController
             'results' => $apiResults
         ];
     }
-    
+
     /**
      * Führt einen Test für einen Provider mit einem spezifischen Suchterm aus
      */
@@ -226,7 +226,7 @@ class ResourcesCheckController
         $status = 'error';
         $message = 'Nicht getestet';
         $apiResults = [];
-        
+
         // Determine the limit from provider configuration, global limit or set default
         $limit = $ignoreLimit ? 50 : ($config['limit'] ?? config('resources-components.limit') ?? 5);
 
@@ -236,42 +236,42 @@ class ResourcesCheckController
                     $client = new Wikidata();
                     $results = $client->search($searchTerm, ['locale' => 'de', 'limit' => $limit]);
                     break;
-                    
+
                 case 'Wikipedia':
                     $client = new Wikipedia();
                     $results = $client->search($searchTerm, ['locale' => explode('-', $key)[1] ?? 'de', 'limit' => $limit]);
                     break;
-                    
+
                 case 'Gnd':
                     $client = new Gnd();
                     $results = $client->search($searchTerm, ['limit' => $limit]);
                     break;
-                    
+
                 case 'Geonames':
                     $client = new Geonames();
                     $results = $client->search($searchTerm, ['limit' => $limit]);
                     break;
-                    
+
                 case 'Idiotikon':
                     $client = new Idiotikon();
                     $results = $client->search($searchTerm, ['limit' => $limit]);
                     break;
-                    
+
                 case 'Metagrid':
                     $client = new Metagrid();
                     $results = $client->search($searchTerm, ['limit' => $limit]);
                     break;
-                    
+
                 case 'Ortsnamen':
                     $client = new Ortsnamen();
                     $results = $client->search($searchTerm, ['limit' => $limit]);
                     break;
-                    
+
                 case 'Anton':
                     $client = new Anton($key);
                     $results = $client->search($searchTerm, ['limit' => $limit], $endpoint);
                     break;
-                    
+
                 case 'ManualInput':
                     // Manual Input Provider has no API to test
                     $status = 'success';
@@ -282,7 +282,7 @@ class ResourcesCheckController
                         'message' => $message,
                         'results' => $apiResults
                     ];
-                    
+
                 default:
                     throw new \Exception("Unbekannter API-Typ: " . ($config['api-type'] ?? 'nicht gesetzt'));
             }
@@ -312,7 +312,7 @@ class ResourcesCheckController
             'results' => $apiResults
         ];
     }
-    
+
     /**
      * Shows the complete configuration
      */
@@ -321,7 +321,7 @@ class ResourcesCheckController
         // Tries to load the published configuration
         $configPath = config_path('resources-components.php');
         $fullConfig = file_exists($configPath) ? include($configPath) : null;
-        
+
         // If no published configuration exists, load the package configuration
         if (!$fullConfig) {
             $fullConfig = Config::get('resources-components');

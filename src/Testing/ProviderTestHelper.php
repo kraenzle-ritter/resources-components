@@ -23,7 +23,7 @@ class ProviderTestHelper
     {
         $client = new Wikipedia();
         $providerKey = "wikipedia-{$locale}";
-        
+
         $queryOptions = [
             'providerKey' => $providerKey,
             'locale' => $locale,
@@ -31,7 +31,7 @@ class ProviderTestHelper
         ];
 
         $results = $client->search($searchTerm, $queryOptions);
-        
+
         if (!empty($results)) {
             $firstResult = $results[0];
             return [
@@ -43,7 +43,7 @@ class ProviderTestHelper
                 'description' => isset($firstResult->snippet) ? strip_tags($firstResult->snippet) : ''
             ];
         }
-        
+
         return ['success' => false, 'error' => 'No results found'];
     }
 
@@ -67,7 +67,7 @@ class ProviderTestHelper
                 ];
             }
         }
-        
+
         return ['success' => false, 'error' => 'No results found'];
     }
 
@@ -92,7 +92,7 @@ class ProviderTestHelper
                 ];
             }
         }
-        
+
         return ['success' => false, 'error' => 'No results found'];
     }
 
@@ -130,7 +130,7 @@ class ProviderTestHelper
                 ];
             }
         }
-        
+
         return ['success' => false, 'error' => 'No results found'];
     }
 
@@ -154,7 +154,7 @@ class ProviderTestHelper
                 ];
             }
         }
-        
+
         return ['success' => false, 'error' => 'No results found'];
     }
 
@@ -172,7 +172,7 @@ class ProviderTestHelper
                 // Try to extract ID from different possible properties
                 $id = $firstResult->id ?? $firstResult->lemmaId ?? $firstResult->lemma_id ?? $firstResult->lemmaID ?? '';
                 $title = $firstResult->lemma ?? $firstResult->lemmaText ?? $firstResult->title ?? $firstResult->name ?? 'Unknown';
-                
+
                 return [
                     'success' => true,
                     'title' => $title,
@@ -182,7 +182,7 @@ class ProviderTestHelper
                 ];
             }
         }
-        
+
         return ['success' => false, 'error' => 'No results found'];
     }
 
@@ -206,7 +206,7 @@ class ProviderTestHelper
                 ];
             }
         }
-        
+
         return ['success' => false, 'error' => 'No results found'];
     }
 
@@ -240,7 +240,7 @@ class ProviderTestHelper
                 ];
             }
         }
-        
+
         return ['success' => false, 'error' => 'No results found'];
     }
 
@@ -250,11 +250,11 @@ class ProviderTestHelper
     public static function getProviderUrl($provider, $providerId)
     {
         $targetUrlTemplate = config("resources-components.providers.{$provider}.target_url");
-        
+
         if ($targetUrlTemplate) {
             return str_replace('{provider_id}', $providerId, $targetUrlTemplate);
         }
-        
+
         return null;
     }
 }

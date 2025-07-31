@@ -27,10 +27,10 @@ class Metagrid
         }
 
         $search = str_replace(',', ' ', $search);
-        
+
         // Determine limit from parameters or configuration
         $limit = $params['limit'] ?? config('resources-components.limit') ?? 5;
-        
+
         try {
             // https://api.metagrid.ch/search?group=1&query=cassirer&skip=0&take=10
             $response = $this->client->get('/search?query=' . $search . '&group=1&take=' . $limit . '&_format=json');

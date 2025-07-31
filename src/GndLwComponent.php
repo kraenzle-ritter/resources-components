@@ -20,7 +20,7 @@ class GndLwComponent extends Component
     public $resourceable_id;
 
     public $provider = 'GND';
-    
+
     public $showAll = false; // Flag for displaying all results
 
     public $saveMethod = 'updateOrCreateResource'; // Method name for saving resources
@@ -37,11 +37,11 @@ class GndLwComponent extends Component
 
         $this->queryOptions = $params['queryOptions'] ?? ['limit' => 5];
     }
-    
+
     /**
      * Handler für Änderungen an der Sucheingabe
      * Diese Methode wird von Livewire automatisch aufgerufen, wenn sich der Wert von $search ändert
-     * 
+     *
      * @param string $value Der neue Suchwert
      * @return void
      */

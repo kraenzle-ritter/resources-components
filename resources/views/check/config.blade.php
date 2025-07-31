@@ -15,7 +15,7 @@
         </div>
         <div class="card-body">
             <p>
-                <strong>Konfigurationsquelle:</strong> 
+                <strong>Konfigurationsquelle:</strong>
                 @if(file_exists(config_path('resources-components.php')))
                     <span class="badge bg-success">Veröffentlicht</span>
                     <small class="ms-2 text-muted">{{ config_path('resources-components.php') }}</small>
@@ -63,14 +63,14 @@
                 @foreach($config['providers'] ?? [] as $providerKey => $provider)
                     <div class="accordion-item">
                         <h2 class="accordion-header" id="heading{{ $providerKey }}">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
-                                   data-bs-target="#collapse{{ $providerKey }}" aria-expanded="false" 
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                   data-bs-target="#collapse{{ $providerKey }}" aria-expanded="false"
                                    aria-controls="collapse{{ $providerKey }}">
-                                {{ $providerKey }} 
+                                {{ $providerKey }}
                                 <span class="ms-2 badge bg-secondary">{{ $provider['api-type'] ?? 'Unbekannt' }}</span>
                             </button>
                         </h2>
-                        <div id="collapse{{ $providerKey }}" class="accordion-collapse collapse" 
+                        <div id="collapse{{ $providerKey }}" class="accordion-collapse collapse"
                              aria-labelledby="heading{{ $providerKey }}" data-bs-parent="#providerAccordion">
                             <div class="accordion-body">
                                 <table class="table table-sm table-bordered">
@@ -91,7 +91,7 @@
                                         @endforeach
                                     </tbody>
                                 </table>
-                                
+
                                 <div class="mt-2">
                                     <a href="{{ route('resources.check.provider', ['provider' => $providerKey]) }}" class="btn btn-sm btn-outline-primary">
                                         <i class="fas fa-search me-1"></i> Provider testen

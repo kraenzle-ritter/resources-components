@@ -45,7 +45,7 @@
                 </div>
                 <div class="card-body">
                     <p>
-                        <strong>Status:</strong> 
+                        <strong>Status:</strong>
                         @if($result['status'] === 'success')
                             <span class="badge bg-success">Erfolg</span>
                         @elseif($result['status'] === 'warning')
@@ -65,13 +65,13 @@
                                 <i class="fas fa-search me-2"></i> Testen
                             </button>
                         </div>
-                        
+
                         @if(!empty($availableEndpoints))
                             <div class="mb-3">
                                 <label for="endpoint" class="form-label">Endpoint:</label>
                                 <select name="endpoint" id="endpoint" class="form-select">
                                     @foreach($availableEndpoints as $availableEndpoint)
-                                        <option value="{{ $availableEndpoint }}" 
+                                        <option value="{{ $availableEndpoint }}"
                                             {{ $endpoint === $availableEndpoint ? 'selected' : '' }}>
                                             {{ ucfirst($availableEndpoint) }}
                                         </option>
@@ -92,7 +92,6 @@
             </div>
             <div class="card-body">
                 @php
-                    // Ermittle die korrekte Anzahl der Ergebnisse
                     $resultCount = 0;
                     if (isset($result['results'])) {
                         if (is_array($result['results'])) {
@@ -107,27 +106,27 @@
                             $resultCount = count((array) $result['results']);
                         }
                     }
-                    
+
                     $configLimit = $config['limit'] ?? config('resources-components.limit') ?? 5;
                     $hasMore = $resultCount >= $configLimit && !$showAll;
                 @endphp
-                
+
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h5 class="mb-0">Gefundene Treffer: {{ $resultCount }}</h5>
                     @if($hasMore)
-                        <a href="{{ route('resources.check.provider', ['provider' => $provider, 'search' => $searchTerm, 'show_all' => true]) }}" 
+                        <a href="{{ route('resources.check.provider', ['provider' => $provider, 'search' => $searchTerm, 'show_all' => true]) }}"
                            class="btn btn-outline-primary">
                             <i class="fas fa-list me-1"></i> Alle Ergebnisse anzeigen
                         </a>
                     @endif
                 </div>
-                
+
                 <div class="mb-3">
                     <strong>Provider API Request:</strong>
                     @php
                         // Create the provider API URL based on the configuration
                         $apiUrl = $config['base_url'] ?? '#';
-                        
+
                         // Handle Anton providers with endpoint
                         if (($config['api-type'] ?? '') === 'Anton') {
                             $currentEndpoint = $endpoint ?? 'actors';
@@ -135,7 +134,7 @@
                         } elseif (isset($config['endpoint'])) {
                             $apiUrl = rtrim($apiUrl, '/') . '/' . ltrim($config['endpoint'], '/');
                         }
-                        
+
                         // Add parameters
                         $params = [];
                         if ($searchTerm) {
@@ -143,14 +142,14 @@
                             $searchParam = ($config['api-type'] ?? '') === 'Anton' ? 'search' : ($config['search_param'] ?? 'q');
                             $params[$searchParam] = $searchTerm;
                         }
-                        
+
                         if (!empty($params)) {
                             $apiUrl .= '?' . http_build_query($params);
                         }
                     @endphp
                     <pre class="bg-light p-2 border rounded small mb-0">{{ $apiUrl }}</pre>
                 </div>
-                
+
                 @php
                     // Determine the correct array for iteration - use the proven logic
                     $items = [];
@@ -168,9 +167,9 @@
                             $items = (array) $result['results'];
                         }
                     }
-                    
+
                 @endphp
-                
+
                 @if(config('app.debug'))
                     <div class="alert alert-warning mb-3">
                         <strong>Debug Information:</strong><br>
@@ -196,7 +195,7 @@
                         @endif
                     </div>
                 @endif
-                
+
                 @if(count($items) > 0)
                     <div class="table-responsive">
                         <table class="table table-hover">
@@ -216,7 +215,7 @@
                                             $name = '-';
                                             $desc = '-';
                                             $url = '-';
-                                            
+
                                             if (is_object($item)) {
                                                 // Wikipedia-specific fields
                                                 if (isset($item->pageid)) {
@@ -310,7 +309,7 @@
                                                 }
                                                 $url = $item['url'] ?? $item['id'] ?? '-';
                                             }
-                                            
+
                                             // Generate target URL from configuration
                                             $targetUrlTemplate = $config['target_url'] ?? null;
                                             if ($targetUrlTemplate && $provider_id && $provider_id !== '-') {
@@ -352,19 +351,10 @@
                         @endif
                     </div>
                 @endif
-                
-                @if(config('app.debug'))
-                    <div class="mt-3 alert alert-info small">
-                        <strong>Debug-Info:</strong> Limit: {{ $configLimit }}, 
-                        Treffer: {{ $resultCount }}, 
-                        Show All: {{ $showAll ? 'Ja' : 'Nein' }}, 
-                        Zeige Button: {{ $hasMore ? 'Ja' : 'Nein' }}
-                    </div>
-                @endif
-                
+
                 @if($hasMore)
                     <div class="mt-3 text-center">
-                        <a href="{{ route('resources.check.provider', ['provider' => $provider, 'search' => $searchTerm, 'show_all' => true]) }}" 
+                        <a href="{{ route('resources.check.provider', ['provider' => $provider, 'search' => $searchTerm, 'show_all' => true]) }}"
                             class="btn btn-outline-primary">
                             <i class="fas fa-list me-2"></i> Alle Ergebnisse anzeigen
                         </a>

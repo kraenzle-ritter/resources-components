@@ -18,89 +18,120 @@ class TextHelper
         }
 
         // Normalize text: remove multiple spaces and strip HTML tags
+        $text = static::stripWikiAndMarkdown($text);
         $text = strip_tags($text);
         $text = preg_replace('/\s+/', ' ', $text);
+        $text = preg_replace('/\[[^\]]*\]/', '', $text); // Remove [references], [citation needed], etc.
+        $text = preg_replace('/\(.*?\)/', '', $text);    // Optional: remove parentheses
         $text = trim($text);
 
-        // Known abbreviations and patterns that end with a period but don't mark the end of a sentence
-        $exceptions = [
-            // Date formats with day
-            '/\b\d{1,2}\.\s*\d{1,2}\.\s*\d{2,4}\b/',  // 28.04.1945
-            '/\b\d{1,2}\.\s+(Jan|Feb|Mär|Apr|Mai|Jun|Jul|Aug|Sep|Okt|Nov|Dez)\.?\s+\d{2,4}\b/i', // 28. Apr. 1945
-            '/\b\d{1,2}\.\s+(Januar|Februar|März|April|Mai|Juni|Juli|August|September|Oktober|November|Dezember)\.?\s+\d{2,4}\b/i', // 28. April 1945
-            '/\b\d{1,2}\.\s+(Jan|Feb|Mär|Apr|Mai|Jun|Jul|Aug|Sep|Okt|Nov|Dez|Januar|Februar|März|April|Juni|Juli|August|September|Oktober|November|Dezember)\b/i', // 28. April (without year)
-            // Birth and death dates with asterisk or cross (complete dates)
-            '/\(\*\s*\d{1,2}\.\s*\d{1,2}\.\s*\d{2,4}\b/',  // (* 28.04.1945
-            '/\(\*\s*\d{1,2}\.\s+(Jan|Feb|Mär|Apr|Mai|Jun|Jul|Aug|Sep|Okt|Nov|Dez)\.?\s+\d{2,4}\b/i', // (* 28. Apr. 1945
-            '/\(\*\s*\d{1,2}\.\s+(Januar|Februar|März|April|Mai|Juni|Juli|August|September|Oktober|November|Dezember)\.?\s+\d{2,4}\b/i', // (* 28. April 1945
-            '/\(†\s*\d{1,2}\.\s*\d{1,2}\.\s*\d{2,4}\b/',  // († 28.04.1945
-            '/\(†\s*\d{1,2}\.\s+(Jan|Feb|Mär|Apr|Mai|Jun|Jul|Aug|Sep|Okt|Nov|Dez)\.?\s+\d{2,4}\b/i', // († 28. Apr. 1945
-            '/\(†\s*\d{1,2}\.\s+(Januar|Februar|März|April|Mai|Juni|Juli|August|September|Oktober|November|Dezember)\.?\s+\d{2,4}\b/i', // († 28. April 1945
-            // Birth and death dates with asterisk or cross (incomplete dates)
-            '/\(\*\s*\d{1,2}\.\b/',  // (* 28.
-            '/\(†\s*\d{1,2}\.\b/',   // († 28.
-            // General abbreviations
-            '/\b[A-Za-z]\.\s+[A-Za-z]\.\s+[A-Za-z]\./',  // F. K. L.
-            '/\b[A-Za-z]\.\s+[A-Za-z]\./',             // F. K.
-            '/\b(ca|bzw|ggf|usw|etc|inkl|exkl|z\.B|d\.h|u\.a|o\.ä|m\.E)\.\s+/i', // Common German abbreviations
-            '/\b(Dr|Prof|Hr|Fr|St|Bd|Nr)\.\s+/i',      // Titles and other common abbreviations
+        $abbreviations = [
+            // German
+            'z\. ?B\.',
+            'u\. ?a\.',
+            'd\. ?h\.',
+            'etc\.',
+            'usw\.',
+            'bspw\.',
+            'sog\.',
+            'bzw\.',
+            'Dr\.',
+            'Prof\.',
+            'Dipl\.',
+            'Nr\.',
+            'Hr\.',
+            'Fr\.',
+            // English
+            'Mr\.',
+            'Mrs\.',
+            'Ms\.',
+            'Dr\.',
+            'Prof\.',
+            'Inc\.',
+            'Ltd\.',
+            'St\.',
+            'e\.g\.',
+            'i\.e\.',
+            // French
+            'M\.',
+            'Mme\.',
+            'Dr\.',
+            'p\. ex\.',
+            'etc\.',
+            'n°\.',
+            'env\.',
+            'cf\.',
+            'v\.',
+            'St\.',
+            // Italian
+            'Sig\.',
+            'Sig\.ra',
+            'Dott\.',
+            'Dr\.',
+            'ecc\.',
+            'p\.es\.',
+            'es\.',
+            'S\.r\.l\.',
+            'n\.',
+
+            // Years or date suffixes
+            '\d{1,2}\.\s?(Jan|Feb|Mär|Apr|Mai|Jun|Jul|Aug|Sep|Okt|Nov|Dez|Januar|Februar|März|April|Juni|Juli|August|September|Oktober|November|Dezember)\.?',
+            '\d{1,2}\s?(janv|févr|mars|avr|mai|juin|juil|août|sept|oct|nov|déc|janvier|février|mars|avril|mai|juin|juillet|août|septembre|octobre|novembre|décembre)\.?',
+            '\d{1,2}\s?(gen|feb|mar|apr|mag|giu|lug|ago|set|ott|nov|dic|gennaio|febbraio|marzo|aprile|maggio|giugno|luglio|agosto|settembre|ottobre|novembre|dicembre)\.?'
         ];
 
-        // Replace all exceptions temporarily with placeholders
-        $placeholders = [];
-        foreach ($exceptions as $index => $pattern) {
-            $placeholder = "##PLACEHOLDER{$index}##";
-            $matches = [];
-            if (preg_match_all($pattern, $text, $matches)) {
-                foreach ($matches[0] as $match) {
-                    $placeholders[$placeholder . count($placeholders)] = $match;
-                    $text = preg_replace('/' . preg_quote($match, '/') . '/', $placeholder . (count($placeholders) - 1), $text, 1);
-                }
-            }
+        // Combine into one lookbehind-safe group
+        $exclusionPattern = implode('|', $abbreviations);
+
+        // Regex: Find first sentence-ending punctuation not preceded by an abbreviation or date
+        $pattern = '/^.*?(?<!' . $exclusionPattern . ')[.!?](?=\s|$)/iu';
+
+        if (preg_match($pattern, $text, $matches)) {
+            return trim($matches[0]);
         }
 
-        // Special handling for birth date information with (* 28. July ...)
-        // If the text starts with a name and contains a birth date, we extract the complete biographical sentence
-        if (preg_match('/^([A-Z][a-zA-Zäöüß\s-]+)\s+\(\*\s+\d{1,2}\.\s+[A-Za-zäöüß]+\s+\d{4}/', $text)) {
-            // In this case, we assume we have a biographical entry
-            // and extract everything up to the first actual sentence end
-            $sentences = preg_split('/\.(?=\s+[A-Z])/', $text, 2);
-            $firstSentence = $sentences[0];
-        } else {
-            // Normal sentence extraction for other cases
-            $sentences = preg_split('/[.!?](?=\s+[A-Z])/', $text, 2);
-            $firstSentence = $sentences[0];
-        }
+        // Fallback: return whole text if no sentence-ending punctuation found
+        return trim($text);
+    }
 
-        // Now replace the placeholders with their original texts
-        foreach ($placeholders as $placeholder => $original) {
-            $firstSentence = str_replace($placeholder, $original, $firstSentence);
-        }
+    public static function stripWikiAndMarkdown(string $input): string
+    {
+        // Remove Wikipedia-style links: [[Link]] or [[Link|Text]]
+        $input = preg_replace('/\[\[(?:[^|\]]*\|)?([^\]]+)\]\]/', '$1', $input);
 
-        // Remove remaining HTML artifacts and unwanted patterns
-        $cleanupPatterns = [
-            '/\} \]\)/' => '', // Removes patterns like "} ])"
-            '/\[\[.*?\]\]/' => '', // Removes Wiki syntax [[...]]
-            '/<.*?>/' => '', // Removes remaining HTML tags
-            '/\{\{.*?\}\}/' => '', // Removes template syntax {{...}}
-            '/&lt;.*?&gt;/' => '', // Removes encoded HTML tags
-            '/\{\|.*?\|\}/' => '', // Removes table markup
-        ];
+        // Remove Markdown-style links: [Text](URL)
+        $input = preg_replace('/\[(.*?)\]\((.*?)\)/', '$1', $input);
 
-        foreach ($cleanupPatterns as $pattern => $replacement) {
-            $firstSentence = preg_replace($pattern, $replacement, $firstSentence);
-        }
+        // Remove bold and italic formatting (**bold**, *italic*, __bold__, _italic_)
+        $input = preg_replace('/(\*\*|__)(.*?)\1/', '$2', $input); // bold
+        $input = preg_replace('/(\*|_)(.*?)\1/', '$2', $input);    // italic
 
-        // Add a period at the end if none exists
-        if (!preg_match('/[.!?]$/', $firstSentence)) {
-            $firstSentence .= '.';
-        }
+        // Remove inline code: `code`
+        $input = preg_replace('/`([^`]+)`/', '$1', $input);
 
-        // Trim to max length if needed
-        if ($maxLength > 0 && mb_strlen($firstSentence) > $maxLength) {
-            $firstSentence = mb_substr($firstSentence, 0, $maxLength - 3) . '...';
-        }
+        // Remove code blocks: ```...``` or indented blocks
+        $input = preg_replace('/```.*?```/s', '', $input);
+        $input = preg_replace('/^\s{4}.*$/m', '', $input);
 
-        return trim($firstSentence);
+        // Remove HTML tags
+        $input = strip_tags($input);
+
+        // Remove Markdown headers: # Header
+        $input = preg_replace('/^#{1,6}\s*/m', '', $input);
+
+        // Remove list markers: -, *, +, 1., etc.
+        $input = preg_replace('/^\s*([-*+]|\d+\.)\s+/m', '', $input);
+
+        // Remove Markdown table rows and separators
+        $input = preg_replace('/^\s*\|.*\|\s*$/m', '', $input);
+
+        // Decode HTML entities
+        $input = html_entity_decode($input, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+
+        // Normalize whitespace (multiple spaces, newlines)
+        $input = preg_replace('/\s+/', ' ', $input);
+        $input = trim($input);
+
+        return $input;
     }
 }

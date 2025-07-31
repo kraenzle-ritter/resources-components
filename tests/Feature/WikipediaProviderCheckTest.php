@@ -31,13 +31,13 @@ class WikipediaProviderCheckTest extends TestCase
 
         $this->assertNotEmpty($results, 'Wikipedia should return results');
         $this->assertIsArray($results, 'Wikipedia should return an array');
-        
+
         if (!empty($results)) {
             $firstResult = $results[0];
             $this->assertIsObject($firstResult, 'First result should be an object');
             $this->assertObjectHasProperty('title', $firstResult, 'Result should have title property');
             $this->assertObjectHasProperty('pageid', $firstResult, 'Result should have pageid property');
-            
+
             // Optional properties that should exist for proper display
             if (property_exists($firstResult, 'snippet')) {
                 $this->assertIsString($firstResult->snippet, 'Snippet should be a string');
@@ -68,7 +68,7 @@ class WikipediaProviderCheckTest extends TestCase
         // Test URL generation
         $targetUrlTemplate = 'https://de.wikipedia.org/wiki/{underscored_name}';
         $expectedUrl = str_replace('{underscored_name}', str_replace(' ', '_', $name), $targetUrlTemplate);
-        
+
         $this->assertEquals('https://de.wikipedia.org/wiki/Albert_Einstein', $expectedUrl);
     }
 

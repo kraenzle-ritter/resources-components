@@ -31,7 +31,7 @@ class Ortsnamen
         }
 
         $body = json_decode($response->getBody());
-        
+
         // Limit anwenden, falls angegeben
         $limit = $params['limit'] ?? config('resources-components.limit') ?? 5;
         if ($limit && is_array($body->results)) {

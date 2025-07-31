@@ -101,7 +101,7 @@ class WikidataProviderIntegrationTest extends TestCase
             'searchinfo' => ['search' => 'Einstein, Albert'],
             'search' => []
         ]);
-        
+
         // Mock für zweite Anfrage (mit Ergebnissen)
         $successResponse = json_encode([
             'searchinfo' => ['search' => 'Albert Einstein'],

@@ -81,7 +81,7 @@
             });
         });
     </script>
-    
+
     <!-- Fügt die Debug-Info in ein floatendes Element ein, wenn der Debug-Modus aktiv ist -->
     @if(config('app.debug'))
     <style>

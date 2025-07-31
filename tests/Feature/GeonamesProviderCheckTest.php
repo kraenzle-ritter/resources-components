@@ -24,7 +24,7 @@ class GeonamesProviderCheckTest extends TestCase
         // Test the logic that would be used in the view
         $provider_id = $mockGeonamesResult->geonameId;
         $name = $mockGeonamesResult->name;
-        
+
         // Build description from available Geonames fields
         $descParts = [];
         if (isset($mockGeonamesResult->adminName1)) $descParts[] = $mockGeonamesResult->adminName1;
@@ -39,7 +39,7 @@ class GeonamesProviderCheckTest extends TestCase
         // Test URL generation
         $targetUrlTemplate = 'https://www.geonames.org/{provider_id}';
         $expectedUrl = str_replace('{provider_id}', $provider_id, $targetUrlTemplate);
-        
+
         $this->assertEquals('https://www.geonames.org/2657896', $expectedUrl);
     }
 
@@ -59,7 +59,7 @@ class GeonamesProviderCheckTest extends TestCase
         // Test array-based logic
         $provider_id = $mockGeonamesResultArray['geonameId'];
         $name = $mockGeonamesResultArray['name'];
-        
+
         $descParts = [];
         if (!empty($mockGeonamesResultArray['adminName1'])) $descParts[] = $mockGeonamesResultArray['adminName1'];
         if (!empty($mockGeonamesResultArray['countryName'])) $descParts[] = $mockGeonamesResultArray['countryName'];
@@ -84,7 +84,7 @@ class GeonamesProviderCheckTest extends TestCase
 
         $provider_id = $mockMinimalResult->geonameId;
         $name = $mockMinimalResult->name;
-        
+
         $descParts = [];
         if (isset($mockMinimalResult->adminName1)) $descParts[] = $mockMinimalResult->adminName1;
         if (isset($mockMinimalResult->countryName)) $descParts[] = $mockMinimalResult->countryName;

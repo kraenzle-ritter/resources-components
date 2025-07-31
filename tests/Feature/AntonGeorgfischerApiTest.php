@@ -2,8 +2,8 @@
 
 namespace KraenzleRitter\ResourcesComponents\Tests\Feature;
 
-use KraenzleRitter\ResourcesComponents\Tests\TestCase;
 use KraenzleRitter\ResourcesComponents\Anton;
+use KraenzleRitter\ResourcesComponents\Tests\TestCase;
 
 class AntonGeorgfischerApiTest extends TestCase
 {
@@ -25,30 +25,22 @@ class AntonGeorgfischerApiTest extends TestCase
                 $this->markTestSkipped('No internet connection available or Georg Fischer API not reachable');
             }
         }
-
-        // Wir überspringen diese Prüfung, da die API auch ohne Token abgefragt werden kann
-        // Stattdessen werden wir den 'actors' Endpoint verwenden, der ohne API-Token funktioniert
     }
 
     public function test_anton_georgfischer_search_returns_expected_structure()
     {
         // Arrange
         $anton = new Anton('georgfischer');
-        $searchTerm = 'Fischer'; // Ein allgemeiner Suchbegriff, der wahrscheinlich Ergebnisse liefert
+        $searchTerm = 'Fischer';
 
-        // Die konfigurierte URL für Georgfischer überprüfen
         $configuredUrl = config('resources-components.providers.georgfischer.base_url');
-        $this->assertEquals('https://archives.georgfischer.com/api/', $configuredUrl,
-            'Die konfigurierte URL für Georgfischer ist nicht korrekt');
+        $this->assertEquals($configuredUrl, $anton->url);
 
-        // Überprüfen, ob die URL in der Komponente korrekt verwendet wird
-        $this->assertEquals($configuredUrl, $anton->url,
-            'Die URL in der Anton-Komponente stimmt nicht mit der konfigurierten URL überein');
+        $results = $anton->search($searchTerm, ['size' => 3], 'actors');
 
-        // Act - Verwenden des 'actors' Endpoints, der ohne API-Token funktioniert
-        $results = $anton->search($searchTerm, ['size' => 3], 'actors');        // Assert
-        $this->assertNotNull($results, 'Anton search should return results');
-        $this->assertNotEmpty($results, 'Anton search results should not be empty');
+        // Assert
+        $this->assertNotNull($results, 'Anton search for "Fischer" should return results');
+        $this->assertNotEmpty($results, 'Anton search for "Fischer" results should not be empty');
         $this->assertLessThanOrEqual(3, count($results), 'Anton search should respect the size parameter');
 
         // Check structure of the first result

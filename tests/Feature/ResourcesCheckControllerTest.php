@@ -21,14 +21,14 @@ class ResourcesCheckControllerTest extends TestCase
         ]);
 
         $controller = new ResourcesCheckController();
-        
+
         // Use reflection to access the protected method
         $reflection = new \ReflectionClass($controller);
         $method = $reflection->getMethod('getTestQuery');
         $method->setAccessible(true);
-        
+
         $result = $method->invoke($controller, 'test-provider');
-        
+
         $this->assertEquals('Custom Test Query', $result);
     }
 
@@ -45,14 +45,14 @@ class ResourcesCheckControllerTest extends TestCase
         ]);
 
         $controller = new ResourcesCheckController();
-        
+
         // Use reflection to access the protected method
         $reflection = new \ReflectionClass($controller);
         $method = $reflection->getMethod('getTestQuery');
         $method->setAccessible(true);
-        
+
         $result = $method->invoke($controller, 'test-provider-2');
-        
+
         $this->assertEquals('test', $result);
     }
 
@@ -62,14 +62,14 @@ class ResourcesCheckControllerTest extends TestCase
     public function test_controller_handles_non_existent_provider()
     {
         $controller = new ResourcesCheckController();
-        
+
         // Use reflection to access the protected method
         $reflection = new \ReflectionClass($controller);
         $method = $reflection->getMethod('getTestQuery');
         $method->setAccessible(true);
-        
+
         $result = $method->invoke($controller, 'non-existent-provider');
-        
+
         $this->assertEquals('test', $result);
     }
 
@@ -79,16 +79,16 @@ class ResourcesCheckControllerTest extends TestCase
     public function test_real_providers_have_test_search()
     {
         $providers = Config::get('resources-components.providers');
-        
+
         foreach ($providers as $key => $config) {
             // Skip manual-input as it doesn't need test_search
             if ($key === 'manual-input') {
                 continue;
             }
-            
-            $this->assertArrayHasKey('test_search', $config, 
+
+            $this->assertArrayHasKey('test_search', $config,
                 "Provider '{$key}' should have 'test_search' configured");
-            $this->assertNotEmpty($config['test_search'], 
+            $this->assertNotEmpty($config['test_search'],
                 "Provider '{$key}' should have a non-empty 'test_search' value");
         }
     }

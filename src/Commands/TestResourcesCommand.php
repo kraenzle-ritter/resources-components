@@ -7,14 +7,14 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use KraenzleRitter\Resources\Resource;
-use KraenzleRitter\ResourcesComponents\Anton;
 use KraenzleRitter\ResourcesComponents\Gnd;
-use KraenzleRitter\ResourcesComponents\Wikipedia;
-use KraenzleRitter\ResourcesComponents\Wikidata;
+use KraenzleRitter\ResourcesComponents\Anton;
 use KraenzleRitter\ResourcesComponents\Geonames;
 use KraenzleRitter\ResourcesComponents\Metagrid;
+use KraenzleRitter\ResourcesComponents\Wikidata;
 use KraenzleRitter\ResourcesComponents\Idiotikon;
 use KraenzleRitter\ResourcesComponents\Ortsnamen;
+use KraenzleRitter\ResourcesComponents\Wikipedia;
 
 class TestResourcesCommand extends Command
 {
@@ -43,7 +43,7 @@ class TestResourcesCommand extends Command
         if (count($args) > 0) {
             return new $className(...$args);
         }
-        
+
         // Try to resolve from container, fallback to new instance
         try {
             return $this->laravel ? $this->laravel->make($className) : new $className();

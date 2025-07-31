@@ -37,7 +37,7 @@ class Anton
 
         $this->query_params = $params ?: $this->query_params;
 
-        $limit = $params['limit'] ?? 
+        $limit = $params['limit'] ??
             $params['size'] ?? // Support both 'size' and 'limit' parameters
             config("resources-components.providers.{$this->providerKey}.limit") ??
             config('resources-components.limit') ??

@@ -32,7 +32,7 @@ abstract class TestCase extends Orchestra
     protected function setUp(): void
     {
         parent::setUp();
-        
+
         // Skip migrations in testing environment to avoid console command issues
         // We create tables manually in setUpDatabase instead
         if ($this->app) {

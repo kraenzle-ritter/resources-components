@@ -25,7 +25,7 @@ abstract class SimpleTestCase extends Orchestra
     {
         // Only minimal config setup, no database
         $app['config']->set('app.key', 'base64:' . base64_encode(random_bytes(32)));
-        
+
         // Set up minimal config for our providers
         $app['config']->set('resources-components.limit', 5);
         $app['config']->set('resources-components.providers.wikidata.target_url', 'https://www.wikidata.org/wiki/{provider_id}');

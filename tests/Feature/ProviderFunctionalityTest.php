@@ -13,7 +13,7 @@ class ProviderFunctionalityTest extends SimpleTestCase
     public function test_metagrid_provider_functionality()
     {
         $result = ProviderTestHelper::testMetagridProvider('Albert Einstein');
-        
+
         $this->assertTrue($result['success'], $result['error'] ?? 'Test failed');
         $this->assertNotEmpty($result['title']);
         $this->assertNotEmpty($result['provider_id']);
@@ -27,7 +27,7 @@ class ProviderFunctionalityTest extends SimpleTestCase
     public function test_wikidata_provider_functionality()
     {
         $result = ProviderTestHelper::testWikidataProvider('Albert Einstein');
-        
+
         $this->assertTrue($result['success'], $result['error'] ?? 'Test failed');
         $this->assertNotEmpty($result['title']);
         $this->assertNotEmpty($result['provider_id']);
@@ -40,7 +40,7 @@ class ProviderFunctionalityTest extends SimpleTestCase
     public function test_wikipedia_provider_functionality()
     {
         $result = ProviderTestHelper::testWikipediaProvider('de', 'Albert Einstein');
-        
+
         $this->assertTrue($result['success'], $result['error'] ?? 'Test failed');
         $this->assertNotEmpty($result['title']);
         $this->assertNotEmpty($result['provider_id']);
@@ -53,7 +53,7 @@ class ProviderFunctionalityTest extends SimpleTestCase
     public function test_gnd_provider_functionality()
     {
         $result = ProviderTestHelper::testGndProvider('Albert Einstein');
-        
+
         $this->assertTrue($result['success'], $result['error'] ?? 'Test failed');
         $this->assertNotEmpty($result['title']);
         $this->assertNotEmpty($result['provider_id']);
@@ -66,11 +66,11 @@ class ProviderFunctionalityTest extends SimpleTestCase
     public function test_geonames_provider_functionality()
     {
         $result = ProviderTestHelper::testGeonamesProvider('Zürich');
-        
+
         if ($result['error'] === 'No valid username found') {
             $this->markTestSkipped('Geonames test skipped: No valid username configured');
         }
-        
+
         $this->assertTrue($result['success'], $result['error'] ?? 'Test failed');
         $this->assertNotEmpty($result['title']);
         $this->assertNotEmpty($result['provider_id']);
@@ -83,7 +83,7 @@ class ProviderFunctionalityTest extends SimpleTestCase
     public function test_idiotikon_provider_functionality()
     {
         $result = ProviderTestHelper::testIdiotikonProvider('Allmend');
-        
+
         $this->assertTrue($result['success'], $result['error'] ?? 'Test failed');
         $this->assertNotEmpty($result['title']);
         $this->assertNotEmpty($result['provider_id']);
@@ -96,7 +96,7 @@ class ProviderFunctionalityTest extends SimpleTestCase
     public function test_ortsnamen_provider_functionality()
     {
         $result = ProviderTestHelper::testOrtsnamenProvider('Zürich');
-        
+
         $this->assertTrue($result['success'], $result['error'] ?? 'Test failed');
         $this->assertNotEmpty($result['title']);
         $this->assertNotEmpty($result['provider_id']);
@@ -109,7 +109,7 @@ class ProviderFunctionalityTest extends SimpleTestCase
     public function test_anton_provider_functionality()
     {
         $result = ProviderTestHelper::testAntonProvider('georgfischer', 'archiv', 'actors');
-        
+
         $this->assertTrue($result['success'], $result['error'] ?? 'Test failed');
         $this->assertNotEmpty($result['title']);
         $this->assertNotEmpty($result['provider_id']);
@@ -124,7 +124,7 @@ class ProviderFunctionalityTest extends SimpleTestCase
         $url = ProviderTestHelper::getProviderUrl('wikidata', 'Q937');
         $this->assertNotNull($url);
         $this->assertStringContainsString('Q937', $url);
-        
+
         $url = ProviderTestHelper::getProviderUrl('gnd', '118529579');
         $this->assertNotNull($url);
         $this->assertStringContainsString('118529579', $url);

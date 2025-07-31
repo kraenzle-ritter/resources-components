@@ -50,12 +50,12 @@ class Geonames
     {
         // Adopt the passed parameters or use the default values
         $this->query_params = $params ?: $this->query_params;
-        
+
         // Ensure that the limit from the passed parameters is used
         if (isset($params['limit'])) {
             $this->query_params['maxRows'] = $params['limit'];
         }
-        
+
         $this->query_params = array_merge(['q' => $string, 'username' => $this->username], $this->query_params);
 
         $query_string = Params::toQueryString($this->query_params);
