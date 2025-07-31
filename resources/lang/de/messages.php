@@ -17,4 +17,5 @@ return [
     'API Limit Message' => 'Das tägliche Limit für den Demo-Account wurde überschritten.',
     'Register for a free account' => 'Registrieren Sie sich für einen kostenlosen Account',
     'and set the username in your .env file' => 'und setzen Sie den Benutzernamen in Ihrer .env-Datei',
+    'Show All' => 'Alle anzeigen',
 ];

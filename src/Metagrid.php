@@ -20,16 +20,20 @@ class Metagrid
         $this->client = new Client(['base_uri' => 'https://api.metagrid.ch/']);
     }
 
-    public function search($search, $params)
+    public function search($search, $params = [])
     {
         if (!$search) {
             return [];
         }
 
         $search = str_replace(',', ' ', $search);
+        
+        // Determine limit from parameters or configuration
+        $limit = $params['limit'] ?? config('resources-components.limit') ?? 5;
+        
         try {
-            //https://api.metagrid.ch/search?group=1&query=cassirer&skip=0&take=10
-            $response = $this->client->get('/search?query=' . $search . '&group=1&_format=json');
+            // https://api.metagrid.ch/search?group=1&query=cassirer&skip=0&take=10
+            $response = $this->client->get('/search?query=' . $search . '&group=1&take=' . $limit . '&_format=json');
         } catch (\Exception $e) {
             \Log::error($e->getMessage());
             return [];

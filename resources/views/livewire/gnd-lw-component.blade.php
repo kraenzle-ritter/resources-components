@@ -13,6 +13,7 @@
     'providerName' => 'GND',
     'model' => $model,
     'results' => $results,
+    'showAll' => $showAll,
     'saveAction' => function($result) {
         return "saveResource('{$result->gndIdentifier}', '{$result->id}', '" . json_encode($result, JSON_UNESCAPED_UNICODE) . "')";
     },

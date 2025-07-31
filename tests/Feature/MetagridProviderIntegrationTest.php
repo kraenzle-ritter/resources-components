@@ -189,7 +189,7 @@ class MetagridProviderIntegrationTest extends TestCase
     {
         // Wir prüfen nur, ob die Methode existiert und keinen Fehler wirft
         $metagrid = new Metagrid();
-        
+
         // Mock für die API-Anfrage, falls implementiert
         try {
             // Statt direkt die Methode zu testen, überprüfen wir nur, ob sie existiert

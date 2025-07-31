@@ -16,7 +16,7 @@ class Ortsnamen
         $this->client = new Client(['base_uri' => 'https://search.ortsnamen.ch/de/api/']);
     }
 
-    public function search(string $search, $params)
+    public function search(string $search, $params = [])
     {
         if (!$search) {
             return [];
@@ -31,6 +31,12 @@ class Ortsnamen
         }
 
         $body = json_decode($response->getBody());
+        
+        // Limit anwenden, falls angegeben
+        $limit = $params['limit'] ?? config('resources-components.limit') ?? 5;
+        if ($limit && is_array($body->results)) {
+            return array_slice($body->results, 0, $limit);
+        }
 
         return $body->results;
 

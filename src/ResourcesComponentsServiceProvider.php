@@ -10,6 +10,13 @@ use KraenzleRitter\ResourcesComponents\WikidataLwComponent;
 use KraenzleRitter\ResourcesComponents\WikipediaLwComponent;
 use KraenzleRitter\ResourcesComponents\ProviderSelect;
 use KraenzleRitter\ResourcesComponents\ResourcesList;
+use KraenzleRitter\ResourcesComponents\Wikidata;
+use KraenzleRitter\ResourcesComponents\Wikipedia;
+use KraenzleRitter\ResourcesComponents\Gnd;
+use KraenzleRitter\ResourcesComponents\Geonames;
+use KraenzleRitter\ResourcesComponents\Metagrid;
+use KraenzleRitter\ResourcesComponents\Idiotikon;
+use KraenzleRitter\ResourcesComponents\Ortsnamen;
 use Livewire\Livewire;
 
 class ResourcesComponentsServiceProvider extends ServiceProvider
@@ -25,6 +32,9 @@ class ResourcesComponentsServiceProvider extends ServiceProvider
 
         // Load translation files
         $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'resources-components');
+        
+        // Load routes
+        $this->loadRoutesFrom(__DIR__.'/../routes/web.php');
 
         Livewire::component('provider-select', ProviderSelect::class);
         Livewire::component('resources-list', ResourcesList::class);
@@ -58,6 +68,16 @@ class ResourcesComponentsServiceProvider extends ServiceProvider
         $this->app->singleton('resources-components', function ($app) {
             return new ResourcesComponents;
         });
+        
+        // Register Provider classes for dependency injection
+        $this->app->bind(Wikidata::class);
+        $this->app->bind(Wikipedia::class);
+        $this->app->bind(Gnd::class);
+        $this->app->bind(Geonames::class);
+        $this->app->bind(Metagrid::class);
+        $this->app->bind(Idiotikon::class);
+        $this->app->bind(Ortsnamen::class);
+        // Anton is handled separately as it requires parameters
     }
 
     /**
@@ -91,7 +111,7 @@ class ResourcesComponentsServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'/../resources/lang' => resource_path('lang/vendor/resources-components'),
         ], 'resources-components.lang');
-        
+
         // Register commands
         $this->commands([
             \KraenzleRitter\ResourcesComponents\Commands\TestResourcesCommand::class

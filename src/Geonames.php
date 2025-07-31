@@ -43,13 +43,19 @@ class Geonames
      * - countryBias: Datensätze aus diesem Land werden zuerst aufgelistet (z.B. 'CH')
      *
      * @param string $string Der Suchbegriff
-     * @param array $params Zusätzliche Parameter für die API-Anfrage
+     * @param array $params Additional parameters for the API request
      * @return array Gefundene Orte
      */
     public function search($string, $params = [])
     {
-        // Übernehme die übergebenen Parameter oder verwende die Standardwerte
+        // Adopt the passed parameters or use the default values
         $this->query_params = $params ?: $this->query_params;
+        
+        // Ensure that the limit from the passed parameters is used
+        if (isset($params['limit'])) {
+            $this->query_params['maxRows'] = $params['limit'];
+        }
+        
         $this->query_params = array_merge(['q' => $string, 'username' => $this->username], $this->query_params);
 
         $query_string = Params::toQueryString($this->query_params);
@@ -76,7 +82,7 @@ class Geonames
             $result = json_decode($response->getBody());
             \Log::debug('Geonames response', ['result' => json_encode($result)]);
 
-            // Prüfe auf Fehler in der Antwort, auch wenn der Status 200 ist
+            // Check for errors in the response, even if the status is 200
             if (isset($result->status) && isset($result->status->value) && $result->status->value > 0) {
                 \Log::error('Geonames API error', [
                     'status' => $result->status->value,

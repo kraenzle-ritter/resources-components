@@ -8,16 +8,18 @@ return [
             'api-type' => 'Gnd',
             'base_url' => 'https://lobid.org/gnd/',
             'target_url' => 'https://d-nb.info/gnd/{provider_id}', // For saved links
+            'test_search' => 'Ernst Cassirer',
         ],
         'geonames' => [
             'label' => 'Geonames',
             'api-type' => 'Geonames',
             'base_url' => 'http://api.geonames.org/',
             'user_name' => env('GEONAMES_USERNAME', 'demo'),
-            // Standardisierte Konfigurationsschlüssel mit Unterstrichen:
+            // Standardized configuration keys with underscores:
             'continent_code' => null, // Restricts the search for toponym of the given continent
             'country_bias' => null ,   // Records from the countryBias are listed first
             'target_url' => 'https://www.geonames.org/{provider_id}',
+            'test_search' => 'Augsburg',
         ],
         'georgfischer' => [
             'label' => 'Konzernarchiv der Georg Fischer AG',
@@ -25,7 +27,8 @@ return [
             'base_url' => 'https://archives.georgfischer.com/api/',
             'api_token' => env('GEORGFISCHER_API_TOKEN', ''),
             'target_url' => 'https://archives.georgfischer.com/{endpoint}/{short_provider_id}',
-            'slug' => 'gfa'
+            'slug' => 'gfa',
+            'test_search' => 'Georg Fischer',
         ],
         'gosteli' => [
             'label' => 'Gosteli-Archiv',
@@ -33,13 +36,15 @@ return [
             'base_url' => 'https://gosteli.anton.ch/api/',
             'api_token' => env('GOSTELI_API_TOKEN', ''),
             'target_url' => 'https://gosteli.anton.ch/api/{endpoint}/{short_provider_id}',
-            'slug' => 'gosteli'
+            'slug' => 'gosteli',
+            'test_search' => 'Marthe Gosteli',
         ],
         'idiotikon' => [
             'label' => 'Idiotikon',
             'api-type' => 'Idiotikon',
             'base_url' => 'https://api.idiotikon.ch/',
-            'target_url' => 'https://digital.idiotikon.ch/p/lem/{provider_id}'
+            'target_url' => 'https://digital.idiotikon.ch/p/lem/{provider_id}',
+            'test_search' => 'Allmend',
         ],
         'kba' => [
             'label' => 'Karl Barth-Archiv',
@@ -47,7 +52,8 @@ return [
             'base_url' => 'https://kba.karl-barth.ch/api/',
             'api_token' => env('KBA_API_TOKEN', ''),
             'target_url' => 'https://kba.karl-barth.ch/api/{endpoint}/{short_provider_id}',
-            'slug' => 'kba'
+            'slug' => 'kba',
+            'test_search' => 'Karl Barth',
         ],
         'manual-input' => [
             'api-type' => 'ManualInput',
@@ -56,6 +62,8 @@ return [
             'label' => 'Metagrid',
             'api-type' => 'Metagrid',
             'base_url' => 'https://metagrid.ch/api/',
+            'target_url' => 'https://metagrid.ch/{provider_id}',
+            'test_search' => 'Albert Einstein',
         ],
         'ortsnamen' => [
             'label' => 'Ortsnamen',

@@ -20,6 +20,8 @@ class GndLwComponent extends Component
     public $resourceable_id;
 
     public $provider = 'GND';
+    
+    public $showAll = false; // Flag for displaying all results
 
     public $saveMethod = 'updateOrCreateResource'; // Method name for saving resources
 
@@ -35,22 +37,35 @@ class GndLwComponent extends Component
 
         $this->queryOptions = $params['queryOptions'] ?? ['limit' => 5];
     }
+    
+    /**
+     * Handler für Änderungen an der Sucheingabe
+     * Diese Methode wird von Livewire automatisch aufgerufen, wenn sich der Wert von $search ändert
+     * 
+     * @param string $value Der neue Suchwert
+     * @return void
+     */
+    public function updatedSearch($value)
+    {
+        $this->search = $value;
+        // Der render() wird automatisch aufgerufen
+    }
 
     public function saveResource($provider_id, $url, $full_json = null)
     {
-        // Prüfe, ob eine target_url in der Konfiguration definiert ist
+        // Check if a target_url is defined in the configuration
         $targetUrlTemplate = config("resources-components.providers.gnd.target_url");
-        
+
         if ($targetUrlTemplate) {
             // Platzhalter im Template ersetzen
             $url = str_replace('{provider_id}', $provider_id, $targetUrlTemplate);
-            
+
             if (class_exists('\Log')) {
                 \Log::debug('GndLwComponent using target_url template: ' . $targetUrlTemplate);
                 \Log::debug('GndLwComponent generated URL: ' . $url);
             }
         }
-        
+
         $data = [
             'provider' => $this->provider,
             'provider_id' => $provider_id,
@@ -95,7 +110,8 @@ class GndLwComponent extends Component
 
             return view($view, [
                 'results' => [],
-                'base_url' => $base_url
+                'base_url' => $base_url,
+                'showAll' => $this->showAll
             ]);
         }
 
@@ -120,7 +136,8 @@ class GndLwComponent extends Component
 
         return view($view, [
             'results' => $resources->member,
-            'base_url' => $base_url
+            'base_url' => $base_url,
+            'showAll' => $this->showAll
         ]);
     }
 }

@@ -43,19 +43,19 @@ class MetagridLwComponent extends Component
 
     public function saveResource($provider_id, $url, $full_json = null)
     {
-        // Prüfe, ob eine target_url in der Konfiguration definiert ist
+        // Check if a target_url is defined in the configuration
         $targetUrlTemplate = config("resources-components.providers.metagrid.target_url");
-        
+
         if ($targetUrlTemplate) {
             // Platzhalter im Template ersetzen
             $url = str_replace('{provider_id}', $provider_id, $targetUrlTemplate);
-            
+
             if (class_exists('\Log')) {
                 \Log::debug('MetagridLwComponent using target_url template: ' . $targetUrlTemplate);
                 \Log::debug('MetagridLwComponent generated URL: ' . $url);
             }
         }
-        
+
         $data = [
             'provider' => $this->provider,
             'provider_id' => $provider_id,

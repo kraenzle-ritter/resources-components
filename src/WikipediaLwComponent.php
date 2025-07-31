@@ -39,9 +39,9 @@ class WikipediaLwComponent extends Component
             \Log::debug('- providerKey: ' . $providerKey);
         }
 
-        // Stelle sicher, dass der providerKey gültig ist
+        // Ensure the providerKey is valid
         if (empty($providerKey) || !is_string($providerKey) || strpos($providerKey, 'wikipedia-') !== 0) {
-            $providerKey = 'wikipedia-de'; // Fallback auf Deutsch
+            $providerKey = 'wikipedia-de'; // Fallback to German
             if (class_exists('\Log')) {
                 \Log::warning('WikipediaLwComponent: Invalid providerKey, using default: wikipedia-de');
             }
@@ -54,12 +54,12 @@ class WikipediaLwComponent extends Component
         // Read base_url from configuration
         $apiUrl = config('resources-components.providers.' . $providerKey . '.base_url');
 
-        // Debug-Ausgabe für die Konfiguration
+        // Debug output for the configuration
         if (class_exists('\Log')) {
             \Log::debug('WikipediaLwComponent: Config path: resources-components.providers.' . $providerKey . '.base_url');
             \Log::debug('WikipediaLwComponent: Config value: ' . ($apiUrl ?: 'NULL'));
 
-            // Liste alle verfügbaren Provider-Konfigurationen auf
+            // List all available provider configurations
             $providers = config('resources-components.providers');
             if ($providers) {
                 \Log::debug('WikipediaLwComponent: Available provider configs: ' . implode(', ', array_keys($providers)));
@@ -69,7 +69,7 @@ class WikipediaLwComponent extends Component
         }
 
         if (!$apiUrl) {
-            // Fallback, wenn keine API-URL in der Konfiguration gefunden wird
+            // Fallback if no API URL is found in the configuration
             $locale = substr($providerKey, strlen('wikipedia-'));
             $apiUrl = "https://{$locale}.wikipedia.org/w/api.php";
             if (class_exists('\Log')) {
@@ -84,9 +84,9 @@ class WikipediaLwComponent extends Component
 
         $this->search = trim($search) ?: '';
 
-        // Verwende den providerKey direkt für die API-Anfragen
+        // Use the providerKey directly for API requests
         $this->queryOptions = [];
-        $this->queryOptions['providerKey'] = $providerKey; // Wichtig: Übergebe den providerKey statt locale
+        $this->queryOptions['providerKey'] = $providerKey; // Important: Pass the providerKey instead of locale
         $this->queryOptions['limit'] = 5;
 
         if (class_exists('\Log')) {
@@ -97,27 +97,27 @@ class WikipediaLwComponent extends Component
 
     public function saveResource($provider_id, $url, $title = null)
     {
-        // Debug-Ausgabe für die URL und ID, die gespeichert wird
+        // Debug output for the URL and ID being saved
         if (class_exists('\Log')) {
             \Log::debug('WikipediaLwComponent saveResource URL before: ' . $url);
             \Log::debug('WikipediaLwComponent saveResource ID: ' . $provider_id);
             \Log::debug('WikipediaLwComponent saveResource title: ' . $title);
         }
-        
-        // Prüfen ob eine target_url in der Konfiguration definiert ist
+
+        // Check if a target_url is defined in the configuration
         $targetUrlTemplate = config("resources-components.providers.{$this->queryOptions['providerKey']}.target_url");
-        
+
         if ($targetUrlTemplate && $title) {
-            // Leerzeichen durch Unterstriche ersetzen für den Artikelnamen
+            // Replace spaces with underscores for the article name
             $underscoredName = str_replace(' ', '_', $title);
-            
+
             // Platzhalter im Template ersetzen
             $url = str_replace(
-                ['{provider_id}', '{underscored_name}'], 
-                [$provider_id, $underscoredName], 
+                ['{provider_id}', '{underscored_name}'],
+                [$provider_id, $underscoredName],
                 $targetUrlTemplate
             );
-            
+
             if (class_exists('\Log')) {
                 \Log::debug('WikipediaLwComponent using target_url template: ' . $targetUrlTemplate);
                 \Log::debug('WikipediaLwComponent generated URL: ' . $url);
@@ -135,11 +135,11 @@ class WikipediaLwComponent extends Component
             'url' => $url
         ];
 
-        // Debug-Ausgabe für die verarbeitete URL
+        // Debug output for the processed URL
         if (class_exists('\Log')) {
             \Log::debug('WikipediaLwComponent saveResource URL after: ' . $data['url']);
 
-            // Prüfe, ob die URL für die richtige Sprache ist
+            // Check if the URL is for the correct language
             if (preg_match('/https?:\/\/([a-z]{2})\.wikipedia\.org\/wiki\//', $data['url'], $matches)) {
                 $language = $matches[1];
                 \Log::debug('WikipediaLwComponent saveResource language detected: ' . $language);
@@ -175,14 +175,14 @@ class WikipediaLwComponent extends Component
         // Perform the search
         $resources = $client->search($this->search, $this->queryOptions);
 
-        // Verarbeite die Ergebnisse: Extrahiere den ersten Satz für jedes Ergebnis
+        // Process the results: Extract the first sentence for each result
         if (!empty($resources)) {
             foreach ($resources as $key => $result) {
                 if (!empty($result->snippet)) {
                     // Bereinige HTML-Tags und spezielle Formate vor der Verarbeitung
                     $cleanedSnippet = html_entity_decode(strip_tags($result->snippet));
 
-                    // Besonders gründliche Bereinigung für Wikipedia-Snippets
+                    // Particularly thorough cleanup for Wikipedia snippets
                     $cleanedSnippet = preg_replace('/\} \]\)|\[\[.*?\]\]|<.*?>|\{\{.*?\}\}/', '', $cleanedSnippet);
 
                     // Formatiere oder entferne weitere Wikipedia-spezifische Markup-Elemente
@@ -213,7 +213,7 @@ class WikipediaLwComponent extends Component
 
         return view($view, [
             'results' => $resources,
-            'base_url' => $this->base_url // Übergebe die base_url an die View
+            'base_url' => $this->base_url // Pass the base_url to the view
         ]);
     }
 }

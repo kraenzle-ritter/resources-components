@@ -37,15 +37,15 @@ class ResourcesProvidersCombinedTest extends TestCase
     public function test_config_loading()
     {
         $providers = Config::get('resources-components.providers');
-        
+
         $this->assertNotEmpty($providers);
         $this->assertArrayHasKey('idiotikon', $providers);
         $this->assertArrayHasKey('metagrid', $providers);
-        
+
         $this->assertEquals('Idiotikon', $providers['idiotikon']['label']);
         $this->assertEquals('Metagrid', $providers['metagrid']['label']);
     }
-    
+
     /**
      * Testet, dass die URL-Templates für alle Provider korrekt konfiguriert sind
      */
@@ -53,18 +53,18 @@ class ResourcesProvidersCombinedTest extends TestCase
     {
         // Überprüfen, ob alle relevanten Provider eine target_url haben oder korrekt verarbeitet werden können
         $providers = Config::get('resources-components.providers');
-        
+
         // Die Provider, die target_url haben sollten
         $providersWithUrl = ['gnd', 'geonames', 'idiotikon', 'wikidata', 'ortsnamen'];
-        
+
         foreach ($providersWithUrl as $provider) {
             $this->assertArrayHasKey($provider, $providers, "Provider {$provider} ist nicht konfiguriert");
-            
+
             if (isset($providers[$provider])) {
                 // Entweder sollte target_url existieren oder es gibt eine spezielle Fallback-Logik
                 $hasTargetUrl = array_key_exists('target_url', $providers[$provider]);
                 $this->assertTrue($hasTargetUrl, "Provider {$provider} hat keine target_url konfiguriert");
-                
+
                 // Wenn target_url existiert, sollte es den provider_id-Platzhalter enthalten
                 if ($hasTargetUrl) {
                     $this->assertStringContainsString('{provider_id}', $providers[$provider]['target_url']);
@@ -72,7 +72,7 @@ class ResourcesProvidersCombinedTest extends TestCase
             }
         }
     }
-    
+
     /**
      * Kombinierter Funktionstest für TestResourcesCommand
      */
@@ -80,22 +80,22 @@ class ResourcesProvidersCombinedTest extends TestCase
     {
         // Test nur für die wichtigsten Provider
         $providers = ['wikipedia-de', 'idiotikon', 'metagrid'];
-        
+
         foreach ($providers as $provider) {
             // Führen wir den Test-Befehl für jeden Provider aus
             $exitCode = Artisan::call('resources-components:test-resources', [
                 '--provider' => $provider,
-                '--no-cleanup' => true 
+                '--no-cleanup' => true
             ]);
-            
+
             // Befehl sollte erfolgreich ausgeführt werden
             $this->assertEquals(0, $exitCode, "Command für Provider {$provider} ist fehlgeschlagen");
         }
-        
+
         // Wir müssen hier nicht aufräumen, da das im echten Command geschieht
         // Artisan::call('resources-components:test-resources');
     }
-    
+
     /**
      * Testet die Struktur und Implementierung der Provider-Klassen
      */
@@ -105,7 +105,7 @@ class ResourcesProvidersCombinedTest extends TestCase
         $idiotikon = new Idiotikon();
         $this->assertInstanceOf(Idiotikon::class, $idiotikon);
         $this->assertTrue(method_exists($idiotikon, 'search'), 'Idiotikon hat keine search-Methode');
-        
+
         // Überprüfen der Metagrid-Klasse
         $metagrid = new Metagrid();
         $this->assertInstanceOf(Metagrid::class, $metagrid);

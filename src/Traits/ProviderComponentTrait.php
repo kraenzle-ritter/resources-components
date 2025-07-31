@@ -44,6 +44,45 @@ trait ProviderComponentTrait
         // Can be overridden in derived components
         return $results;
     }
+    
+    /**
+     * Show all search results by updating the query options
+     * 
+     * @return void
+     */
+    public function showAllResults()
+    {
+        // Increase the limit for displaying all results
+        $this->queryOptions['limit'] = 50;
+        $this->showAll = true;
+        
+        if (class_exists('\Log')) {
+            \Log::debug('ShowAllResults called: setting limit to 50 and showAll=true');
+        }
+        
+        // If a search is active, we execute it again
+        if (!empty($this->search)) {
+            $this->updatedSearch($this->search);
+        }
+    }
+    
+    /**
+     * Debug-Methode für die Komponente (nur im Debug-Modus)
+     */
+    public function debugComponent()
+    {
+        if (!class_exists('\Log')) {
+            return;
+        }
+        
+        \Log::debug('Component Debug', [
+            'class' => get_class($this),
+            'search' => $this->search ?? null,
+            'showAll' => $this->showAll ?? false,
+            'queryOptions' => $this->queryOptions ?? [],
+            'model' => $this->model ? get_class($this->model) : null,
+        ]);
+    }
 
     /**
      * Save a resource to the associated model

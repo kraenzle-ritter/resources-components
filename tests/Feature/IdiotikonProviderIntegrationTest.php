@@ -146,8 +146,8 @@ class IdiotikonProviderIntegrationTest extends TestCase
         // Ohne konfigurierte target_url testen
         config()->set('resources-components.providers.idiotikon.target_url', null);
         $targetUrlTemplate = config('resources-components.providers.idiotikon.target_url');
-        $url = empty($targetUrlTemplate) 
-            ? "https://digital.idiotikon.ch/p/lem/{$id}" 
+        $url = empty($targetUrlTemplate)
+            ? "https://digital.idiotikon.ch/p/lem/{$id}"
             : str_replace('{provider_id}', $id, $targetUrlTemplate);
 
         // Prüfen, ob Standard-URL verwendet wird

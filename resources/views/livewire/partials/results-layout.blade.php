@@ -1,4 +1,18 @@
 <div class="px-3 py-2">
+    @if(config('app.debug'))
+        <div class="debug-info small text-muted mb-2">
+            Provider: {{ $providerKey }}, 
+            Results: {{ is_countable($results) ? count($results) : '0' }}, 
+            Limit: {{ config("resources-components.providers.{$providerKey}.limit") ?? config('resources-components.limit') ?? 5 }}, 
+            ShowAll: {{ empty($showAll) ? 'false' : 'true' }}
+            <button wire:click="debugComponent" class="btn btn-sm btn-link p-0 ms-2">Debug</button>
+            
+            @if(is_countable($results) && count($results) >= (config("resources-components.providers.{$providerKey}.limit") ?? config('resources-components.limit') ?? 5))
+                <button wire:click="showAllResults" class="btn btn-sm btn-link p-0 ms-2">Force Show All</button>
+            @endif
+        </div>
+    @endif
+    
     @if(!in_array($providerKey, $model->resources->pluck('provider')->toArray()))
         <div>
             @include('resources-components::livewire.partials.search-form', [
@@ -6,7 +20,26 @@
             ])
 
             @if($results && count($results))
-                <h5 class="mb-3">{{ __('resources-components::messages.List') }}</h5>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="mb-0">{{ __('resources-components::messages.List') }}</h5>
+                    
+                    @php
+                        $configLimit = config("resources-components.providers.{$providerKey}.limit") ?? config('resources-components.limit') ?? 5;
+                        $hasMore = count($results) >= $configLimit && empty($showAll);
+                        
+                        // Debug-Ausgabe, wenn im Debug-Modus
+                        if (config('app.debug')) {
+                            Log::debug("Button-Debug für {$providerKey}: limit={$configLimit}, count=" . count($results) . ", showAll=" . (empty($showAll) ? 'false' : 'true') . ", hasMore={$hasMore}");
+                        }
+                    @endphp
+                    
+                    @if($hasMore)
+                        <button wire:click="showAllResults" class="btn btn-sm btn-outline-primary">
+                            <i class="fas fa-list me-1"></i> {{ __('resources-components::messages.Show All') }}
+                        </button>
+                    @endif
+                </div>
+                
                 <div class="results-list">
                     @foreach($results as $result)
                         <div class="result-item mb-3">

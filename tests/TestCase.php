@@ -22,7 +22,9 @@ abstract class TestCase extends Orchestra
         $app = parent::createApplication();
 
         // Stellt sicher, dass Artisan korrekt initialisiert wird
-        $app->make('Illuminate\Contracts\Console\Kernel');
+        if ($app) {
+            $app->make('Illuminate\Contracts\Console\Kernel');
+        }
 
         return $app;
     }
@@ -30,8 +32,12 @@ abstract class TestCase extends Orchestra
     protected function setUp(): void
     {
         parent::setUp();
-
-        $this->setUpDatabase($this->app);
+        
+        // Skip migrations in testing environment to avoid console command issues
+        // We create tables manually in setUpDatabase instead
+        if ($this->app) {
+            $this->setUpDatabase($this->app);
+        }
     }
 
     /**
@@ -50,7 +56,7 @@ abstract class TestCase extends Orchestra
         $schema->create('dummy_models', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name')->nullable();
-            $table->timestamps(); // Fügt created_at und updated_at hinzu
+            $table->timestamps(); // Adds created_at and updated_at columns
         });
 
         // Resources Tabelle erstellen
@@ -79,7 +85,7 @@ abstract class TestCase extends Orchestra
             'foreign_key_constraints' => true,
         ]);
 
-        // View-Namespace für Komponenten
+        // View namespace for components
         $app['view']->addNamespace(
             'resources-components',
             base_path('packages/kraenzle-ritter/resources-components/resources/views')
@@ -93,15 +99,23 @@ abstract class TestCase extends Orchestra
         // Bei In-Memory-Datenbank nur Tabellen erstellen
         $schema = $app['db']->connection()->getSchemaBuilder();
 
-        // Tabellen erstellen
+        // Dummy Models Tabelle erstellen
         $schema->create('dummy_models', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name')->nullable();
-            $table->timestamps(); // Fügt created_at und updated_at hinzu
+            $table->timestamps();
         });
 
-        // Resources Tabelle erstellen
-        (require __DIR__.'/migrations/create_resources_table.php')->up();
+        // Resources Tabelle erstellen (manual schema creation to avoid migration commands)
+        $schema->create('resources', function (Blueprint $table) {
+            $table->id();
+            $table->string('provider');
+            $table->string('provider_id');
+            $table->string('url');
+            $table->json('full_json')->nullable();
+            $table->morphs('resourceable');
+            $table->timestamps();
+        });
     }
 
     protected function initializeDirectory(string $directory)

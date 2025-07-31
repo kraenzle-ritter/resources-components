@@ -8,7 +8,7 @@ use KraenzleRitter\Resources\HasResources;
 class TestModel extends Model
 {
     use HasResources;
-    
+
     protected $table = "test_models";
     protected $fillable = ["name"];
     public $timestamps = false;

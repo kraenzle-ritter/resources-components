@@ -18,6 +18,9 @@ Search for entities in authority databases and link them with your local data us
 - [Ortsnamen.ch](https://ortsnamen.ch/) (Swiss place names)
 - [Metagrid](https://metagrid.ch/) (Swiss humanities database network)
 - [Anton API](https://anton.ch/) (Archives and collections)
+  - [Archiv der Georg Fischer AG](https://archives.georgfischer.com)
+  - [Gosteli Archiv](https://gosteli.anton.ch)
+  - [Karl Barth-Archiv](https://kba.karl-barth.ch)
 - Manual Input (Custom links)
 
 ## Requirements

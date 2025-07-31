@@ -42,14 +42,14 @@ class IdiotikonLwComponent extends Component
     {
         $full_json = preg_replace('/[\x00-\x1F]/','', $full_json);
         \Log::debug(json_decode(json_last_error()));
-        
-        // Prüfe, ob eine target_url in der Konfiguration definiert ist
+
+        // Check if a target_url is defined in the configuration
         $targetUrlTemplate = config("resources-components.providers.idiotikon.target_url");
-        
+
         if ($targetUrlTemplate) {
             // Platzhalter im Template ersetzen
             $url = str_replace('{provider_id}', $provider_id, $targetUrlTemplate);
-            
+
             if (class_exists('\Log')) {
                 \Log::debug('IdiotikonLwComponent using target_url template: ' . $targetUrlTemplate);
                 \Log::debug('IdiotikonLwComponent generated URL: ' . $url);
