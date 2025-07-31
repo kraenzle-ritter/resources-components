@@ -41,6 +41,36 @@ After installation, publish the configuration file:
 php artisan vendor:publish --provider="KraenzleRitter\ResourcesComponents\ResourcesComponentsServiceProvider"
 ```
 
+## Testing
+
+This package includes comprehensive tests to ensure proper functionality of all providers. Run the tests with:
+
+```bash
+vendor/bin/phpunit
+```
+
+### Test Command
+
+The package provides a test command to verify all provider connections:
+
+```bash
+php artisan resources:test
+```
+
+Available options:
+
+```
+--provider=PROVIDER   Test a specific provider only (e.g. wikipedia-de, metagrid)
+--list                Only list available providers without testing them
+--no-cleanup          Do not remove test resources after running tests
+```
+
+Example:
+
+```bash
+php artisan resources:test --provider=idiotikon
+```
+
 ## Basic Usage
 
 In your views, use the components like this:

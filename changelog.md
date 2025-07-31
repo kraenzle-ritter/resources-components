@@ -2,6 +2,30 @@
 
 All notable changes to `resources-components` will be documented in this file.
 
+## 2.2.0 - 2025-07-31
+
+### Added
+
+- Enhanced test suite with comprehensive provider integration tests
+- Added `IdiotikonProviderIntegrationTest` and `MetagridProviderIntegrationTest` for better API integration coverage
+- Extended `TestResourcesCommandTest` with provider-specific tests
+- Added `ResourcesProvidersCombinedTest` for cross-provider integration testing
+- Improved error handling and debugging for Metagrid and Idiotikon providers
+- Added documentation for test command options and usage
+
+### Changed
+
+- Refactored test structure with better separation of unit and integration tests
+- Improved test coverage for URL construction and ID extraction
+- Enhanced mock responses for more realistic provider testing
+- Updated README with testing documentation and command options
+
+### Fixed
+
+- Fixed URL extraction in Metagrid and Idiotikon providers
+- Improved provider ID handling with multiple ID formats
+- Enhanced error catching in API requests
+
 ## 2.1.0 - 2023-08-02
 
 ### Added
