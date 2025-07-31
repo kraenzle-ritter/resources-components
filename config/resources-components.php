@@ -7,6 +7,7 @@ return [
             'label' => 'GND',
             'api-type' => 'Gnd',
             'base_url' => 'https://lobid.org/gnd/',
+            'target_url' => 'https://d-nb.info/gnd/{provider_id}', // For saved links
         ],
         'geonames' => [
             'label' => 'Geonames',
@@ -15,30 +16,38 @@ return [
             'user_name' => env('GEONAMES_USERNAME', 'demo'),
             // Standardisierte Konfigurationsschlüssel mit Unterstrichen:
             'continent_code' => null, // Restricts the search for toponym of the given continent
-            'country_bias' => null    // Records from the countryBias are listed first
+            'country_bias' => null ,   // Records from the countryBias are listed first
+            'target_url' => 'https://www.geonames.org/{provider_id}',
         ],
         'georgfischer' => [
             'label' => 'Konzernarchiv der Georg Fischer AG',
             'api-type' => 'Anton',
             'base_url' => 'https://archives.georgfischer.com/api/',
             'api_token' => env('GEORGFISCHER_API_TOKEN', ''),
+            'target_url' => 'https://archives.georgfischer.com/{endpoint}/{short_provider_id}',
+            'slug' => 'gfa'
         ],
         'gosteli' => [
             'label' => 'Gosteli-Archiv',
             'api-type' => 'Anton',
             'base_url' => 'https://gosteli.anton.ch/api/',
             'api_token' => env('GOSTELI_API_TOKEN', ''),
+            'target_url' => 'https://gosteli.anton.ch/api/{endpoint}/{short_provider_id}',
+            'slug' => 'gosteli'
         ],
         'idiotikon' => [
             'label' => 'Idiotikon',
             'api-type' => 'Idiotikon',
             'base_url' => 'https://api.idiotikon.ch/',
+            'target_url' => 'https://digital.idiotikon.ch/p/lem/{provider_id}'
         ],
         'kba' => [
             'label' => 'Karl Barth-Archiv',
             'api-type' => 'Anton',
             'base_url' => 'https://kba.karl-barth.ch/api/',
             'api_token' => env('KBA_API_TOKEN', ''),
+            'target_url' => 'https://kba.karl-barth.ch/api/{endpoint}/{short_provider_id}',
+            'slug' => 'kba'
         ],
         'manual-input' => [
             'api-type' => 'ManualInput',
@@ -51,32 +60,38 @@ return [
         'ortsnamen' => [
             'label' => 'Ortsnamen',
             'api-type' => 'Ortsnamen',
-            'base_url' => 'https://search.ortsnamen.ch/de/api/'
+            'base_url' => 'https://search.ortsnamen.ch/de/api/',
+            'target_url' => 'https://search.ortsnamen.ch/de/record/{provider_id}'
         ],
         'wikidata' => [
             'label' => 'Wikidata',
             'api-type' => 'Wikidata',
             'base_url' => 'https://www.wikidata.org/w/api.php',
+            'target_url' => 'https://www.wikidata.org/wiki/{provider_id}',
         ],
         'wikipedia-de' => [
             'label' => 'Wikipedia (de)',
             'api-type' => 'Wikipedia',
             'base_url' => 'https://de.wikipedia.org/w/api.php',
+            'target_url' => 'https://de.wikipedia.org/wiki/{underscored_name}'
         ],
         'wikipedia-en' => [
             'label' => 'Wikipedia (en)',
             'api-type' => 'Wikipedia',
             'base_url' => 'https://en.wikipedia.org/w/api.php',
+            'target_url' => 'https://en.wikipedia.org/wiki/{underscored_name}'
         ],
         'wikipedia-fr' => [
             'label' => 'Wikipedia (fr)',
             'api-type' => 'Wikipedia',
             'base_url' => 'https://fr.wikipedia.org/w/api.php',
+            'target_url' => 'https://fr.wikipedia.org/wiki/{underscored_name}'
         ],
         'wikipedia-it' => [
             'label' => 'Wikipedia (it)',
             'api-type' => 'Wikipedia',
             'base_url' => 'https://it.wikipedia.org/w/api.php',
+            'target_url' => 'https://it.wikipedia.org/wiki/{underscored_name}'
         ],
     ]
 ];

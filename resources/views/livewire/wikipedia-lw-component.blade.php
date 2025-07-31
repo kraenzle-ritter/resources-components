@@ -54,7 +54,7 @@
         $encodedTitle = str_replace("'", "\\'", $result->title);
         $encodedUrl = str_replace("'", "\\'", $base_url . $result->title);
 
-        return "saveResource('{$result->pageid}', '{$encodedUrl}')";
+        return "saveResource('{$result->pageid}', '{$encodedUrl}', '{$encodedTitle}')";
     },
     'result_heading' => function($result) {
         return $result->title ?? ''; // Titel als Überschrift verwenden

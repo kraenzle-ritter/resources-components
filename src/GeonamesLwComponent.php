@@ -38,6 +38,19 @@ class GeonamesLwComponent extends Component
 
     public function saveResource($provider_id, $url, $full_json = null)
     {
+        // Prüfe, ob eine target_url in der Konfiguration definiert ist
+        $targetUrlTemplate = config("resources-components.providers.geonames.target_url");
+        
+        if ($targetUrlTemplate) {
+            // Platzhalter im Template ersetzen
+            $url = str_replace('{provider_id}', $provider_id, $targetUrlTemplate);
+            
+            if (class_exists('\Log')) {
+                \Log::debug('GeonamesLwComponent using target_url template: ' . $targetUrlTemplate);
+                \Log::debug('GeonamesLwComponent generated URL: ' . $url);
+            }
+        }
+        
         $data = [
             'provider' => $this->provider,
             'provider_id' => $provider_id,

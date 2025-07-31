@@ -95,22 +95,44 @@ class WikipediaLwComponent extends Component
         }
     }
 
-    public function saveResource($provider_id, $url)
+    public function saveResource($provider_id, $url, $title = null)
     {
-        // Debug-Ausgabe für die URL, die gespeichert wird
+        // Debug-Ausgabe für die URL und ID, die gespeichert wird
         if (class_exists('\Log')) {
             \Log::debug('WikipediaLwComponent saveResource URL before: ' . $url);
+            \Log::debug('WikipediaLwComponent saveResource ID: ' . $provider_id);
+            \Log::debug('WikipediaLwComponent saveResource title: ' . $title);
         }
-
-        // Korrekte URL-Kodierung: Ersetze Leerzeichen durch Unterstriche und kodiere URL-unsichere Zeichen
-        $encodedUrl = preg_replace_callback('/ /', function($match) {
-            return '_';
-        }, $url);
+        
+        // Prüfen ob eine target_url in der Konfiguration definiert ist
+        $targetUrlTemplate = config("resources-components.providers.{$this->queryOptions['providerKey']}.target_url");
+        
+        if ($targetUrlTemplate && $title) {
+            // Leerzeichen durch Unterstriche ersetzen für den Artikelnamen
+            $underscoredName = str_replace(' ', '_', $title);
+            
+            // Platzhalter im Template ersetzen
+            $url = str_replace(
+                ['{provider_id}', '{underscored_name}'], 
+                [$provider_id, $underscoredName], 
+                $targetUrlTemplate
+            );
+            
+            if (class_exists('\Log')) {
+                \Log::debug('WikipediaLwComponent using target_url template: ' . $targetUrlTemplate);
+                \Log::debug('WikipediaLwComponent generated URL: ' . $url);
+            }
+        } else {
+            // Fallback auf die bisherige URL-Generierung
+            $url = preg_replace_callback('/ /', function($match) {
+                return '_';
+            }, $url);
+        }
 
         $data = [
             'provider' => $this->provider,
             'provider_id' => $provider_id,
-            'url' => $encodedUrl
+            'url' => $url
         ];
 
         // Debug-Ausgabe für die verarbeitete URL

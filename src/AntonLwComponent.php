@@ -33,12 +33,48 @@ class AntonLwComponent extends Component
 
     public function saveResource($provider_id, $url, $full_json = null)
     {
-        $base_url = Str::finish(config("resources-components.providers.{$this->providerKey}.base_url"), '/');
+        // Versuche, den slug aus der Konfiguration zu holen
+        $slug = config("resources-components.providers.{$this->providerKey}.slug");
+        
+        if (class_exists('\Log')) {
+            \Log::debug('AntonLwComponent saveResource: ', [
+                'providerKey' => $this->providerKey,
+                'provider_id' => $provider_id,
+                'endpoint' => $this->endpoint,
+                'slug' => $slug
+            ]);
+        }
+        
+        // Versuche, eine target_url aus der Konfiguration zu holen
+        $targetUrlTemplate = config("resources-components.providers.{$this->providerKey}.target_url");
+        
+        // Extrahiere die reine ID aus der provider_id
+        // Die provider_id hat das Format "slug-endpoint-id", z.B. "gfa-actors-37"
+        $idParts = explode('-', $provider_id);
+        $shortProviderId = end($idParts); // Letzte Komponente ist die ID
+        
+        if ($targetUrlTemplate) {
+            // Ersetze die Platzhalter in der target_url
+            $url = str_replace(
+                ['{endpoint}', '{short_provider_id}', '{provider_id}', '{slug}'], 
+                [$this->endpoint, $shortProviderId, $provider_id, $slug], 
+                $targetUrlTemplate
+            );
+            
+            if (class_exists('\Log')) {
+                \Log::debug('AntonLwComponent using target_url template: ' . $targetUrlTemplate);
+                \Log::debug('AntonLwComponent generated URL: ' . $url);
+            }
+        } else {
+            // Fallback: Verwende die bisherige URL-Generierungsmethode
+            $base_url = Str::finish(config("resources-components.providers.{$this->providerKey}.base_url"), '/');
+            $url = $base_url . $this->endpoint . '/' . $shortProviderId;
+        }
 
         $data = [
             'provider' => $this->providerKey,
             'provider_id' => $provider_id,
-            'url' => $base_url . $this->endpoint . '/' . $provider_id,
+            'url' => $url,
             'full_json' => json_decode($full_json)
         ];
 

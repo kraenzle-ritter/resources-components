@@ -5,6 +5,8 @@ Das Packet soll für ein Laravel Model, das den Trait `hasResource` (kraenzle-ri
 
 - Laravel 11 und  Livewire 3.4, Bootstrap >= 5 
 
+Alle Kommentare, interne Fehlermeldungen und die Dokumentation (readme.md, changelog.md, commit messages) sind in **Englisch** zu schreiben.
+
 ```html
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
@@ -60,6 +62,3 @@ Die Funktion `function processResult($results): array` sollte dann die Rückgabe
 - Anpassung der Wikipedia und der Antonkomponente gemäss neuer Config
 - Tests für die Livewire Components (werden sie geladen, funktioniert die Suche, werden die Ergebnisse angezeigt, können sie gespeichert werden)
 - Dokumentation für Installation, Verwendung und die Implementierung neuer Providertypen/Provider.
-
-
-- Alle Kommentare, interne Fehlermeldungen und die Dokumentation (readme.md, changelog.md) sind in Englisch zu schreiben.
