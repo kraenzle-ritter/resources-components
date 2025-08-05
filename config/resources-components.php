@@ -3,7 +3,7 @@
 return [
     'limit' => 5,
     'providers' => [
-       'gnd' => [
+        'gnd' => [
             'label' => 'GND',
             'api-type' => 'Gnd',
             'base_url' => 'https://lobid.org/gnd/',
@@ -17,7 +17,7 @@ return [
             'user_name' => env('GEONAMES_USERNAME', 'demo'),
             // Standardized configuration keys with underscores:
             'continent_code' => null, // Restricts the search for toponym of the given continent
-            'country_bias' => null ,   // Records from the countryBias are listed first
+            'country_bias' => null,   // Records from the countryBias are listed first
             'target_url' => 'https://www.geonames.org/{provider_id}',
             'test_search' => 'Augsburg',
         ],
@@ -107,5 +107,51 @@ return [
             'target_url' => 'https://it.wikipedia.org/wiki/{underscored_name}',
             'test_search' => 'Laura Bassi',
         ],
+        'bnf' => [
+            'label' => 'Bibliothèque nationale de France (BnF)',
+        ],
+        'bsg' => [
+            'label' => 'Bibliographie der Schweizergeschichte (BSG)',
+        ],
+        'burgerbibliothek' => [
+            'label' => 'Burgerbibliothek Bern',
+        ],
+        'ddb' => [
+            'label' => 'Deutsche Digitale Bibliothek (DDB)',
+        ],
+        'deutsche-biographie' => [
+            'label' => 'Deutsche Biographie',
+        ],
+        'encyclopaedia-britannica-online' => [
+            'label' => 'Encyclopaedia Britannica Online',
+        ],
+        'histhub' => [
+            'label' => 'Histhub',
+        ],
+        'hls-dhs-dss' => [
+            'label' => 'Historisches Lexikon der Schweiz (HLS/DHS/DSS)',
+        ],
+        'kalliope-verbund' => [
+            'label' => 'Kalliope Verbund',
+        ],
+        'kbga' => [
+            'label' => 'Karl Barth-Gesamtausgabe (KBGA)',
+        ],
+        'lcnaf' => [
+            'label' => 'Library of Congress (LCNAF)'
+        ],
+        'rag' => [
+            'label' => 'RAG (Repertorium Academicum Germanicum)',
+        ],
+        'sbn' => [
+            'label' => 'SBN (Servicio Bibliotecario Nazionale)',
+        ],
+        'ssrq' => [
+            'label' => 'Sammlung Schweizerischer Rechtsquellen',
+        ],
+        'viaf' => [
+            'label' => 'VIAF'
+        ],
+
     ]
 ];

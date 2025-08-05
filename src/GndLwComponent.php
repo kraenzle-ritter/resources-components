@@ -59,11 +59,6 @@ class GndLwComponent extends Component
         if ($targetUrlTemplate) {
             // Platzhalter im Template ersetzen
             $url = str_replace('{provider_id}', $provider_id, $targetUrlTemplate);
-
-            if (class_exists('\Log')) {
-                \Log::debug('GndLwComponent using target_url template: ' . $targetUrlTemplate);
-                \Log::debug('GndLwComponent generated URL: ' . $url);
-            }
         }
 
         $data = [
@@ -104,9 +99,6 @@ class GndLwComponent extends Component
             $base_url = config('resources-components.providers.gnd.base_url', 'https://lobid.org/gnd/');
 
             // Debug logging
-            if (class_exists('\Log')) {
-                \Log::debug('GndLwComponent: Using base_url: ' . $base_url);
-            }
 
             return view($view, [
                 'results' => [],
@@ -130,9 +122,6 @@ class GndLwComponent extends Component
         $base_url = config('resources-components.providers.gnd.base_url', 'https://lobid.org/gnd/');
 
         // Debug logging
-        if (class_exists('\Log')) {
-            \Log::debug('GndLwComponent: Using base_url: ' . $base_url);
-        }
 
         return view($view, [
             'results' => $resources->member,

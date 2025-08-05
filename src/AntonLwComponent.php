@@ -36,15 +36,6 @@ class AntonLwComponent extends Component
         // Try to get the slug from the configuration
         $slug = config("resources-components.providers.{$this->providerKey}.slug");
 
-        if (class_exists('\Log')) {
-            \Log::debug('AntonLwComponent saveResource: ', [
-                'providerKey' => $this->providerKey,
-                'provider_id' => $provider_id,
-                'endpoint' => $this->endpoint,
-                'slug' => $slug
-            ]);
-        }
-
         // Try to get a target_url from the configuration
         $targetUrlTemplate = config("resources-components.providers.{$this->providerKey}.target_url");
 
@@ -60,11 +51,6 @@ class AntonLwComponent extends Component
                 [$this->endpoint, $shortProviderId, $provider_id, $slug],
                 $targetUrlTemplate
             );
-
-            if (class_exists('\Log')) {
-                \Log::debug('AntonLwComponent using target_url template: ' . $targetUrlTemplate);
-                \Log::debug('AntonLwComponent generated URL: ' . $url);
-            }
         } else {
             // Fallback: Verwende die bisherige URL-Generierungsmethode
             $base_url = Str::finish(config("resources-components.providers.{$this->providerKey}.base_url"), '/');

@@ -5,7 +5,6 @@
 
     // Debug-Ausgabe
     if (class_exists('\Log')) {
-        \Log::debug('Geonames view using base_url: ' . $base_url);
     }
 @endphp
 

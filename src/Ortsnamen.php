@@ -26,7 +26,6 @@ class Ortsnamen
         try {
             $response = $this->client->get('search?q=' . $search);
         } catch (\Exception $e) {
-            \Log::error($e->getMessage());
             return [];
         }
 

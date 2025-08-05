@@ -20,18 +20,8 @@ class ProviderSelect extends Component
         $this->model = $model;
         $this->endpoint = $endpoint;
 
-        // Debug-Ausgabe für die übergebenen Provider
-        if (class_exists('\Log')) {
-            \Log::debug('ProviderSelect mount: Received providers: ', $providers);
-        }
-
         $this->providers_all = array_map('strtolower', $providers);
         $this->filterAvailableProviders();
-
-        // Debug-Ausgabe für die verfügbaren Provider nach Filterung
-        if (class_exists('\Log')) {
-            \Log::debug('ProviderSelect mount: Available providers after filtering: ', $this->providers);
-        }
 
         $this->updateActiveProvider($this->providers[0] ?? null);
     }
@@ -50,24 +40,15 @@ class ProviderSelect extends Component
         }
 
         // Debug: Was ist der ursprüngliche providerKey?
-        if (class_exists('\Log')) {
-            \Log::debug('ProviderSelect updateActiveProvider: Original providerKey: ' . $providerKey);
-        }
 
         // Legacy compatibility: 'wikipedia' => 'wikipedia-de'
         if ($providerKey === 'wikipedia') {
             $providerKey = 'wikipedia-de';
-            if (class_exists('\Log')) {
-                \Log::debug('ProviderSelect updateActiveProvider: Changed generic wikipedia to wikipedia-de');
-            }
         }
 
         $this->providerKey = $providerKey;
 
         // Debug: Was ist der endgültige providerKey?
-        if (class_exists('\Log')) {
-            \Log::debug('ProviderSelect updateActiveProvider: Final providerKey: ' . $this->providerKey);
-        }
 
         $apiType = config('resources-components.providers.' . $providerKey . '.api-type');
 
@@ -113,9 +94,6 @@ class ProviderSelect extends Component
         }
 
         // Debug-Ausgabe für die vorbereiteten Parameter
-        if (class_exists('\Log')) {
-            \Log::debug('ProviderSelect updateActiveProvider: Component params for ' . $this->componentToRender . ': ', $this->componentParams);
-        }
     }
 
     public function hydrate()

@@ -35,7 +35,6 @@ class Metagrid
             // https://api.metagrid.ch/search?group=1&query=cassirer&skip=0&take=10
             $response = $this->client->get('/search?query=' . $search . '&group=1&take=' . $limit . '&_format=json');
         } catch (\Exception $e) {
-            \Log::error($e->getMessage());
             return [];
         }
 

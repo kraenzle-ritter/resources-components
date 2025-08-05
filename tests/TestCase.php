@@ -89,7 +89,7 @@ abstract class TestCase extends Orchestra
         // Determine the actual path to the resources/views directory
         $packageRoot = dirname(__DIR__); // Go up one level from tests
         $viewsPath = $packageRoot . '/resources/views';
-        
+
         $app['view']->addNamespace(
             'resources-components',
             base_path('packages/kraenzle-ritter/resources-components/resources/views')

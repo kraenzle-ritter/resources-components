@@ -61,37 +61,24 @@ class Geonames
         $query_string = Params::toQueryString($this->query_params);
         $search = 'searchJSON?' . $query_string;
 
-        \Log::info('Geonames API request', [
-            'url' => $this->base_uri.$search,
-            'params' => $this->query_params
-        ]);
-
         $response = HTTP::get($this->base_uri.$search);
 
         if ($response->serverError()) {
-            \Log::error(__METHOD__, ['guzzle server error (geonames)', 'response' => $response->body()]);
             return [];
         }
 
         if ($response->clientError()) {
-            \Log::error('Geonames client error', ['status' => $response->status(), 'body' => $response->body()]);
             return [];
         }
 
         if ($response->getStatusCode() == 200) {
             $result = json_decode($response->getBody());
-            \Log::debug('Geonames response', ['result' => json_encode($result)]);
 
             // Check for errors in the response, even if the status is 200
             if (isset($result->status) && isset($result->status->value) && $result->status->value > 0) {
-                \Log::error('Geonames API error', [
-                    'status' => $result->status->value,
-                    'message' => $result->status->message ?? 'Unknown error'
-                ]);
 
                 // Falls es ein Limit-Problem mit dem Demo-Account ist, geben wir einen hilfreichen Hinweis
                 if (isset($result->status->message) && strpos($result->status->message, 'limit') !== false) {
-                    \Log::warning('Geonames API daily limit reached. Register for a free account at https://www.geonames.org/login');
                 }
 
                 return [];

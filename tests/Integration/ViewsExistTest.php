@@ -116,7 +116,7 @@ class ViewsExistTest extends TestCase
         foreach ($componentFiles as $file) {
             // Ensure the file exists before trying to read it
             $this->assertFileExists($file, "Component file {$file} does not exist");
-            
+
             $content = file_get_contents($file);
             $componentName = pathinfo($file, PATHINFO_FILENAME);
 

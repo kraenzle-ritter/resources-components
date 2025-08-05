@@ -26,7 +26,6 @@ class Idiotikon
         try {
             $response = $this->client->get('lemmata?query=' . $search);
         } catch (\Exception $e) {
-            \Log::error($e->getMessage());
             return [];
         }
 

@@ -92,23 +92,8 @@ class Wikidata
                 return $this->processSearchResults($data['search'], $lang);
             }
 
-            if (class_exists('\Log')) {
-                Log::debug('Wikidata API search returned no results', [
-                    'search' => $search,
-                    'lang' => $lang,
-                    'response' => $data
-                ]);
-            }
-
             return [];
         } catch (\Exception $e) {
-            if (class_exists('\Log')) {
-                Log::error('Wikidata API search error: ' . $e->getMessage(), [
-                    'search' => $search,
-                    'lang' => $lang,
-                    'error' => $e->getMessage()
-                ]);
-            }
             return [];
         }
     }

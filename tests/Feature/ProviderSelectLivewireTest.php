@@ -23,7 +23,7 @@ class ProviderSelectLivewireTest extends TestCase
         // Determine the actual path to the resources/views directory
         $packageRoot = dirname(__DIR__, 2); // Go up two levels from tests/Feature
         $viewsPath = $packageRoot . '/resources/views';
-        
+
         // Original directory
         $app['view']->addNamespace(
             'resources-components',

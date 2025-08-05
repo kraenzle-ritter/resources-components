@@ -208,7 +208,7 @@ class ResourcesCheckController
         } catch (\Exception $e) {
             $status = 'error';
             $message = 'Error: ' . $e->getMessage();
-            Log::error("Provider check error for {$key}: " . $e->getMessage());
+            // Silently handle the error
         }
 
         return [
@@ -303,7 +303,7 @@ class ResourcesCheckController
         } catch (\Exception $e) {
             $status = 'error';
             $message = 'Error: ' . $e->getMessage();
-            Log::error("Provider {$key} test error: " . $e->getMessage());
+            // Silently handle the error
         }
 
         return [

@@ -11,15 +11,11 @@
 
     // For debugging
     if (class_exists('\Log')) {
-        \Log::debug('Wikipedia view debug info: ' . $debugInfo);
-        \Log::debug('Wikipedia view using base_url: ' . $base_url);
 
         // Check if the URL is for the correct language
         if (preg_match('/https?:\/\/([a-z]{2})\.wikipedia\.org\/wiki\//', $base_url, $matches)) {
             $language = $matches[1];
-            \Log::debug('Wikipedia view language detected: ' . $language);
         } else {
-            \Log::warning('Wikipedia view could not detect language from URL: ' . $base_url);
         }
     }
 @endphp
@@ -35,7 +31,6 @@
     }
 
     if (class_exists('\Log')) {
-        \Log::debug('Wikipedia view using providerKey for display: ' . $displayProviderKey);
     }
 @endphp
 
@@ -47,7 +42,6 @@
     'saveAction' => function($result) use ($base_url) {
         // Debug output for the URL directly before use
         if (class_exists('\Log')) {
-            \Log::debug('Wikipedia saveAction URL: ' . $base_url . $result->title);
         }
 
         // Encode URL correctly for JavaScript attribute

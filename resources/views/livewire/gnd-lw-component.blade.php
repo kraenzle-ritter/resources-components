@@ -4,7 +4,6 @@
 
     // Debug-Ausgabe
     if (class_exists('\Log')) {
-        \Log::debug('GND view using base_url: ' . $base_url);
     }
 @endphp
 
