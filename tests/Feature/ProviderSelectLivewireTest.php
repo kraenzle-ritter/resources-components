@@ -20,6 +20,10 @@ class ProviderSelectLivewireTest extends TestCase
 
     protected function getEnvironmentSetUp($app)
     {
+        // Determine the actual path to the resources/views directory
+        $packageRoot = dirname(__DIR__, 2); // Go up two levels from tests/Feature
+        $viewsPath = $packageRoot . '/resources/views';
+        
         // Original directory
         $app['view']->addNamespace(
             'resources-components',
@@ -29,6 +33,11 @@ class ProviderSelectLivewireTest extends TestCase
         $app['view']->addNamespace(
             'resources-components',
             base_path('vendor/orchestra/testbench-core/laravel/packages/kraenzle-ritter/resources-components/resources/views')
+        );
+        // Dynamic path for GitHub Actions compatibility
+        $app['view']->addNamespace(
+            'resources-components',
+            $viewsPath
         );
         $app['config']->set('app.key', 'base64:' . base64_encode(random_bytes(32)));
     }

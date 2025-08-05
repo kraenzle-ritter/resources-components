@@ -86,9 +86,18 @@ abstract class TestCase extends Orchestra
         ]);
 
         // View namespace for components
+        // Determine the actual path to the resources/views directory
+        $packageRoot = dirname(__DIR__); // Go up one level from tests
+        $viewsPath = $packageRoot . '/resources/views';
+        
         $app['view']->addNamespace(
             'resources-components',
             base_path('packages/kraenzle-ritter/resources-components/resources/views')
+        );
+        // Dynamic path for GitHub Actions compatibility
+        $app['view']->addNamespace(
+            'resources-components',
+            $viewsPath
         );
 
         $app['config']->set('app.key', 'base64:' . base64_encode(random_bytes(32)));
