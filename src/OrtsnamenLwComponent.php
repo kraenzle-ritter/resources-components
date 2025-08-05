@@ -41,7 +41,6 @@ class OrtsnamenLwComponent extends Component
     public function saveResource($provider_id, $url, $full_json = null)
     {
         $full_json = preg_replace('/[\x00-\x1F]/','', $full_json);
-        \Log::debug(json_decode(json_last_error()));
 
         // Check if a target_url is defined in the configuration
         $targetUrlTemplate = config("resources-components.providers.ortsnamen.target_url");
@@ -49,11 +48,6 @@ class OrtsnamenLwComponent extends Component
         if ($targetUrlTemplate) {
             // Platzhalter im Template ersetzen
             $url = str_replace('{provider_id}', $provider_id, $targetUrlTemplate);
-
-            if (class_exists('\Log')) {
-                \Log::debug('OrtsnamenLwComponent using target_url template: ' . $targetUrlTemplate);
-                \Log::debug('OrtsnamenLwComponent generated URL: ' . $url);
-            }
         }
 
         $data = [

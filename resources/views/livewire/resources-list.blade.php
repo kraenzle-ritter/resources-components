@@ -10,7 +10,9 @@
                 @foreach($resources as $resource)
                     <li class="list-group-item {{ $resource->provider}}">
                         <div class="d-flex justify-content-between align-items-center">
-                            <a target="_blank" href="{{ $resource->url }}">{{ $resource->provider }}</a>
+                            <a target="_blank" href="{{ $resource->url }}">
+                                {{ config('resources-components.providers.' . $resource->provider . '.label', ucfirst($resource->provider)) }}
+                            </a>
                             @if($deleteButton)
                                 <button
                                     wire:click="removeResource({{ $resource->id }})"

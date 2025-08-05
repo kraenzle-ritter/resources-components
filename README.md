@@ -38,7 +38,30 @@ Via Composer:
 composer require kraenzle-ritter/resources-components
 ```
 
-After installation, publish the configuration file:
+After installation, you can publish various assets:
+
+### Configuration
+Publish the configuration file to customize provider settings:
+
+```bash
+php artisan vendor:publish --tag=resources-components.config
+```
+
+This will create `config/resources-components.php` where you can:
+- Configure API endpoints and credentials
+- Add custom providers
+- Modify provider labels and URLs
+- Set environment-specific settings (API tokens, etc.)
+
+### Language Files
+Publish translation files for customization:
+
+```bash
+php artisan vendor:publish --tag=resources-components.lang
+```
+
+### All Assets
+Publish everything at once:
 
 ```bash
 php artisan vendor:publish --provider="KraenzleRitter\ResourcesComponents\ResourcesComponentsServiceProvider"
@@ -69,7 +92,7 @@ Where:
 
 ## Configuration
 
-The package comes with a configuration file where you can customize the behavior of the components and configure the providers:
+The package comes with a pre-configured setup for various providers. After publishing the configuration file (see Installation), you can customize provider settings in `config/resources-components.php`:
 
 ```php
 // config/resources-components.php

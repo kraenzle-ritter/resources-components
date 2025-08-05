@@ -85,11 +85,6 @@ trait ProviderComponentTrait
     {
         $this->error = 'Error: ' . $e->getMessage();
         $this->results = [];
-
-        if (class_exists('\Log')) {
-            \Log::error('Search error in ' . get_class($this) . ': ' . $e->getMessage());
-            \Log::error($e->getTraceAsString());
-        }
     }
 
     /**

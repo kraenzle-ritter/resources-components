@@ -41,11 +41,6 @@ class WikidataLwComponent extends Component
         if ($targetUrlTemplate) {
             // Platzhalter im Template ersetzen
             $url = str_replace('{provider_id}', $provider_id, $targetUrlTemplate);
-
-            if (class_exists('\Log')) {
-                \Log::debug('WikidataLwComponent using target_url template: ' . $targetUrlTemplate);
-                \Log::debug('WikidataLwComponent generated URL: ' . $url);
-            }
         }
 
         $data = [
@@ -84,9 +79,6 @@ class WikidataLwComponent extends Component
         }
 
         // Debug logging
-        if (class_exists('\Log')) {
-            \Log::debug('WikidataLwComponent: Using base_url: ' . $base_url);
-        }
 
         $view = view()->exists('vendor.kraenzle-ritter.livewire.wikidata-lw-component')
               ? 'vendor.kraenzle-ritter.livewire.wikidata-lw-component'

@@ -49,11 +49,6 @@ class MetagridLwComponent extends Component
         if ($targetUrlTemplate) {
             // Platzhalter im Template ersetzen
             $url = str_replace('{provider_id}', $provider_id, $targetUrlTemplate);
-
-            if (class_exists('\Log')) {
-                \Log::debug('MetagridLwComponent using target_url template: ' . $targetUrlTemplate);
-                \Log::debug('MetagridLwComponent generated URL: ' . $url);
-            }
         }
 
         $data = [

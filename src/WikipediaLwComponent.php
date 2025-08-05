@@ -32,55 +32,21 @@ class WikipediaLwComponent extends Component
     {
         $this->model = $model;
 
-        if (class_exists('\Log')) {
-            \Log::debug('WikipediaLwComponent mount: Received parameters:');
-            \Log::debug('- model: ' . get_class($model));
-            \Log::debug('- search: ' . $search);
-            \Log::debug('- providerKey: ' . $providerKey);
-        }
-
         // Ensure the providerKey is valid
         if (empty($providerKey) || !is_string($providerKey) || strpos($providerKey, 'wikipedia-') !== 0) {
             $providerKey = 'wikipedia-de'; // Fallback to German
-            if (class_exists('\Log')) {
-                \Log::warning('WikipediaLwComponent: Invalid providerKey, using default: wikipedia-de');
-            }
-        }
-
-        if (class_exists('\Log')) {
-            \Log::debug('WikipediaLwComponent: Using providerKey: ' . $providerKey);
         }
 
         // Read base_url from configuration
         $apiUrl = config('resources-components.providers.' . $providerKey . '.base_url');
 
-        // Debug output for the configuration
-        if (class_exists('\Log')) {
-            \Log::debug('WikipediaLwComponent: Config path: resources-components.providers.' . $providerKey . '.base_url');
-            \Log::debug('WikipediaLwComponent: Config value: ' . ($apiUrl ?: 'NULL'));
-
-            // List all available provider configurations
-            $providers = config('resources-components.providers');
-            if ($providers) {
-                \Log::debug('WikipediaLwComponent: Available provider configs: ' . implode(', ', array_keys($providers)));
-            } else {
-                \Log::warning('WikipediaLwComponent: No providers found in config');
-            }
-        }
-
         if (!$apiUrl) {
             // Fallback if no API URL is found in the configuration
             $locale = substr($providerKey, strlen('wikipedia-'));
             $apiUrl = "https://{$locale}.wikipedia.org/w/api.php";
-            if (class_exists('\Log')) {
-                \Log::debug('WikipediaLwComponent: No API URL found in config, using fallback: ' . $apiUrl);
-            }
         }
 
         $this->base_url = str_replace('/w/api.php', '/wiki/', $apiUrl);
-        if (class_exists('\Log')) {
-            \Log::debug('WikipediaLwComponent: Set base_url: ' . $this->base_url);
-        }
 
         $this->search = trim($search) ?: '';
 
@@ -88,22 +54,10 @@ class WikipediaLwComponent extends Component
         $this->queryOptions = [];
         $this->queryOptions['providerKey'] = $providerKey; // Important: Pass the providerKey instead of locale
         $this->queryOptions['limit'] = 5;
-
-        if (class_exists('\Log')) {
-            \Log::debug('WikipediaLwComponent: providerKey: ' . $providerKey);
-            \Log::debug('WikipediaLwComponent: QueryOptions: ', $this->queryOptions);
-        }
     }
 
     public function saveResource($provider_id, $url, $title = null)
     {
-        // Debug output for the URL and ID being saved
-        if (class_exists('\Log')) {
-            \Log::debug('WikipediaLwComponent saveResource URL before: ' . $url);
-            \Log::debug('WikipediaLwComponent saveResource ID: ' . $provider_id);
-            \Log::debug('WikipediaLwComponent saveResource title: ' . $title);
-        }
-
         // Check if a target_url is defined in the configuration
         $targetUrlTemplate = config("resources-components.providers.{$this->queryOptions['providerKey']}.target_url");
 
@@ -117,11 +71,6 @@ class WikipediaLwComponent extends Component
                 [$provider_id, $underscoredName],
                 $targetUrlTemplate
             );
-
-            if (class_exists('\Log')) {
-                \Log::debug('WikipediaLwComponent using target_url template: ' . $targetUrlTemplate);
-                \Log::debug('WikipediaLwComponent generated URL: ' . $url);
-            }
         } else {
             // Fallback auf die bisherige URL-Generierung
             $url = preg_replace_callback('/ /', function($match) {
@@ -134,19 +83,6 @@ class WikipediaLwComponent extends Component
             'provider_id' => $provider_id,
             'url' => $url
         ];
-
-        // Debug output for the processed URL
-        if (class_exists('\Log')) {
-            \Log::debug('WikipediaLwComponent saveResource URL after: ' . $data['url']);
-
-            // Check if the URL is for the correct language
-            if (preg_match('/https?:\/\/([a-z]{2})\.wikipedia\.org\/wiki\//', $data['url'], $matches)) {
-                $language = $matches[1];
-                \Log::debug('WikipediaLwComponent saveResource language detected: ' . $language);
-            } else {
-                \Log::warning('WikipediaLwComponent saveResource could not detect language from URL: ' . $data['url']);
-            }
-        }
 
         $resource = $this->model->{$this->saveMethod}($data);
         $this->model->saveMoreResources('wikipedia');
@@ -165,12 +101,6 @@ class WikipediaLwComponent extends Component
     public function render()
     {
         $client = new Wikipedia();
-
-        // Ensure the correct locale is used
-        if (class_exists('\Log')) {
-            \Log::debug('WikipediaLwComponent render: base_url = ' . $this->base_url);
-            \Log::debug('WikipediaLwComponent render: queryOptions = ', $this->queryOptions);
-        }
 
         // Perform the search
         $resources = $client->search($this->search, $this->queryOptions);

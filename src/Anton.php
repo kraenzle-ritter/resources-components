@@ -60,26 +60,19 @@ class Anton
         // Construct the full URL
         $fullUrl = $endpoint . '?' . ltrim($query_string, '?');
         try {
-            \Log::debug("Anton provider: Making request to " . $baseUrl . $fullUrl);
             $response = $this->client->get($fullUrl);
 
             if ($response->getStatusCode() == 200) {
                 $result = json_decode($response->getBody());
-                \Log::debug("Anton provider: Got successful response");
             }
         } catch (RequestException $e) {
-            \Log::error('Anton provider - Request Exception: ' . $e->getMessage());
             if ($e->hasResponse()) {
-                \Log::error('Response: ' . $e->getResponse()->getBody()->getContents());
             }
         } catch (\GuzzleHttp\Exception\ClientException $e) {
-            \Log::error('Anton provider - Client Exception: ' . $e->getMessage());
             if ($e->hasResponse()) {
-                \Log::error('Response: ' . $e->getResponse()->getBody()->getContents());
             }
             $result = [];
         } catch (\Exception $e) {
-            \Log::error('Anton provider - General Exception: ' . $e->getMessage());
             $result = [];
         }
 

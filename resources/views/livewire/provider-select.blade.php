@@ -18,22 +18,6 @@
                 </div>
             </form>
             @if($componentToRender)
-                @php
-                    // Debug-Ausgabe für den Livewire-Key
-                    if (class_exists('\Log')) {
-                        \Log::debug('ProviderSelect livewire component key: ' . $providerKey);
-                        \Log::debug('ProviderSelect livewire component: ' . $componentToRender);
-                        \Log::debug('ProviderSelect component params: ', $componentParams);
-                    }
-                @endphp
-                @php
-                    // Debug-Ausgabe für den Livewire-Key
-                    if (class_exists('\Log')) {
-                        \Log::debug('ProviderSelect livewire component key: ' . $providerKey);
-                        \Log::debug('ProviderSelect livewire component: ' . $componentToRender);
-                        \Log::debug('ProviderSelect component params: ', $componentParams);
-                    }
-                @endphp
                 @livewire(
                     $componentToRender,
                     $componentParams,

@@ -44,11 +44,6 @@ class GeonamesLwComponent extends Component
         if ($targetUrlTemplate) {
             // Platzhalter im Template ersetzen
             $url = str_replace('{provider_id}', $provider_id, $targetUrlTemplate);
-
-            if (class_exists('\Log')) {
-                \Log::debug('GeonamesLwComponent using target_url template: ' . $targetUrlTemplate);
-                \Log::debug('GeonamesLwComponent generated URL: ' . $url);
-            }
         }
 
         $data = [
@@ -122,9 +117,6 @@ class GeonamesLwComponent extends Component
         }
 
         // Debug logging
-        if (class_exists('\Log')) {
-            \Log::debug('GeonamesLwComponent: Using base_url: ' . $base_url);
-        }
 
         $view = view()->exists('vendor.kraenzle-ritter.livewire.geonames-lw-component')
               ? 'vendor.kraenzle-ritter.livewire.geonames-lw-component'
