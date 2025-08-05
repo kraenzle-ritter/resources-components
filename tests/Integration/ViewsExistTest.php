@@ -83,18 +83,19 @@ class ViewsExistTest extends TestCase
      */
     public function test_component_view_paths_are_correct()
     {
+        $basePath = dirname(__DIR__, 2) . '/src/';
         $componentFiles = [
-            '/Users/ak/Sites/packages-laravel-7/packages/kraenzle-ritter/resources-components/src/AntonLwComponent.php',
-            '/Users/ak/Sites/packages-laravel-7/packages/kraenzle-ritter/resources-components/src/GeonamesLwComponent.php',
-            '/Users/ak/Sites/packages-laravel-7/packages/kraenzle-ritter/resources-components/src/GndLwComponent.php',
-            '/Users/ak/Sites/packages-laravel-7/packages/kraenzle-ritter/resources-components/src/IdiotikonLwComponent.php',
-            '/Users/ak/Sites/packages-laravel-7/packages/kraenzle-ritter/resources-components/src/ManualInputLwComponent.php',
-            '/Users/ak/Sites/packages-laravel-7/packages/kraenzle-ritter/resources-components/src/MetagridLwComponent.php',
-            '/Users/ak/Sites/packages-laravel-7/packages/kraenzle-ritter/resources-components/src/OrtsnamenLwComponent.php',
-            '/Users/ak/Sites/packages-laravel-7/packages/kraenzle-ritter/resources-components/src/ProviderSelect.php',
-            '/Users/ak/Sites/packages-laravel-7/packages/kraenzle-ritter/resources-components/src/ResourcesList.php',
-            '/Users/ak/Sites/packages-laravel-7/packages/kraenzle-ritter/resources-components/src/WikidataLwComponent.php',
-            '/Users/ak/Sites/packages-laravel-7/packages/kraenzle-ritter/resources-components/src/WikipediaLwComponent.php',
+            $basePath . 'AntonLwComponent.php',
+            $basePath . 'GeonamesLwComponent.php',
+            $basePath . 'GndLwComponent.php',
+            $basePath . 'IdiotikonLwComponent.php',
+            $basePath . 'ManualInputLwComponent.php',
+            $basePath . 'MetagridLwComponent.php',
+            $basePath . 'OrtsnamenLwComponent.php',
+            $basePath . 'ProviderSelect.php',
+            $basePath . 'ResourcesList.php',
+            $basePath . 'WikidataLwComponent.php',
+            $basePath . 'WikipediaLwComponent.php',
         ];
 
         // Array of view paths and their corresponding components
@@ -113,6 +114,9 @@ class ViewsExistTest extends TestCase
         ];
 
         foreach ($componentFiles as $file) {
+            // Ensure the file exists before trying to read it
+            $this->assertFileExists($file, "Component file {$file} does not exist");
+            
             $content = file_get_contents($file);
             $componentName = pathinfo($file, PATHINFO_FILENAME);
 
