@@ -130,7 +130,7 @@ class WikipediaLwComponent extends Component
         }
 
         $data = [
-            'provider' => $this->provider,
+            'provider' => $this->queryOptions['providerKey'], // Use the specific providerKey instead of generic 'Wikipedia'
             'provider_id' => $provider_id,
             'url' => $url
         ];

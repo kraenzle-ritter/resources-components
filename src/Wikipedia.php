@@ -91,6 +91,16 @@ class Wikipedia
 
             if (isset($body->query->pages)) {
                 foreach ($body->query->pages as $article) {
+                    // Ensure common properties are always available
+                    if (!isset($article->pageprops)) {
+                        $article->pageprops = new \stdClass();
+                    }
+                    if (!isset($article->extract)) {
+                        $article->extract = '';
+                    }
+                    if (!isset($article->title)) {
+                        $article->title = '';
+                    }
                     return $article;
                 }
             }

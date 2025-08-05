@@ -52,28 +52,6 @@ This package includes comprehensive tests to ensure proper functionality of all 
 vendor/bin/phpunit
 ```
 
-### Test Command
-
-The package provides a test command to verify all provider connections:
-
-```bash
-php artisan resources:test
-```
-
-Available options:
-
-```
---provider=PROVIDER   Test a specific provider only (e.g. wikipedia-de, metagrid)
---list                Only list available providers without testing them
---no-cleanup          Do not remove test resources after running tests
-```
-
-Example:
-
-```bash
-php artisan resources:test --provider=idiotikon
-```
-
 ## Basic Usage
 
 In your views, use the components like this:
@@ -183,44 +161,6 @@ You can publish and customize the views:
 php artisan vendor:publish --provider="KraenzleRitter\ResourcesComponents\ResourcesComponentsServiceProvider" --tag=resources-components.views
 ```
 
-## Changelog
-
-Please see [changelog.md](changelog.md) for more information on recent changes.
-
-## Testing
-
-```bash
-composer test
-```
-
-### Testing Provider Integrations
-
-You can test all providers or individual providers using the included command:
-
-```bash
-# Test all providers
-php artisan resources-components:test-resources
-
-# List all available providers
-php artisan resources-components:test-resources --list
-
-# Test a specific provider
-php artisan resources-components:test-resources --provider=wikipedia-de
-
-# Keep created resources (don't clean up after testing)
-php artisan resources-components:test-resources --no-cleanup
-```
-
-This is useful for verifying that all your providers are properly configured and working.
-
-## Contributing
-
-Please see [contributing.md](contributing.md) for details.
-
-## License
-
-MIT License. Please see the [license file](LICENSE.md) for more information.
-
 ### Handling Resource Events
 
 The components fire an event (`ResourceSaved`) when saving a resource. You can define and register a listener in your app:
@@ -288,30 +228,6 @@ GEONAMES_USERNAME=your_username
 
 # Anton API Providers (georgfischer, kba, gosteli)
 # No API tokens required for these providers
-```
-
-### Provider Configuration
-
-You can customize providers in the `config/resources-components.php` file:
-
-```php
-return [
-    'limit' => 5, // Default search results limit
-    
-    'providers' => [
-        'gnd' => [
-            'label' => 'GND',
-            'api-type' => 'Gnd',
-            'base_url' => 'https://lobid.org/gnd/',
-        ],
-        'wikipedia-de' => [
-            'label' => 'Wikipedia (DE)',
-            'api-type' => 'Wikipedia',
-            'base_url' => 'https://de.wikipedia.org/w/api.php',
-        ],
-        // Additional providers...
-    ]
-];
 ```
 
 ## Model Requirements
