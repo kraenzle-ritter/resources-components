@@ -22,7 +22,8 @@ class TextHelper
         $text = strip_tags($text);
         $text = preg_replace('/\s+/', ' ', $text);
         $text = preg_replace('/\[[^\]]*\]/', '', $text); // Remove [references], [citation needed], etc.
-        $text = preg_replace('/\(.*?\)/', '', $text);    // Optional: remove parentheses
+        $text = preg_replace('/^[^\]]*\]\s*/', '', $text); // Remove text before and including ] at the beginning
+        // Keep parentheses for now as tests expect them
         $text = trim($text);
 
         $abbreviations = [
@@ -73,25 +74,65 @@ class TextHelper
             'es\.',
             'S\.r\.l\.',
             'n\.',
-
             // Years or date suffixes
+            '\d{1,2}\.',  // Day numbers like "28."
             '\d{1,2}\.\s?(Jan|Feb|Mär|Apr|Mai|Jun|Jul|Aug|Sep|Okt|Nov|Dez|Januar|Februar|März|April|Juni|Juli|August|September|Oktober|November|Dezember)\.?',
             '\d{1,2}\s?(janv|févr|mars|avr|mai|juin|juil|août|sept|oct|nov|déc|janvier|février|mars|avril|mai|juin|juillet|août|septembre|octobre|novembre|décembre)\.?',
             '\d{1,2}\s?(gen|feb|mar|apr|mag|giu|lug|ago|set|ott|nov|dic|gennaio|febbraio|marzo|aprile|maggio|giugno|luglio|agosto|settembre|ottobre|novembre|dicembre)\.?'
         ];
 
-        // Combine into one lookbehind-safe group
-        $exclusionPattern = implode('|', $abbreviations);
-
-        // Regex: Find first sentence-ending punctuation not preceded by an abbreviation or date
-        $pattern = '/^.*?(?<!' . $exclusionPattern . ')[.!?](?=\s|$)/iu';
-
-        if (preg_match($pattern, $text, $matches)) {
-            return trim($matches[0]);
+        // Split text at potential sentence endings
+        $parts = preg_split('/([.!?])(\s|$)/', $text, -1, PREG_SPLIT_DELIM_CAPTURE);
+        
+        $sentence = '';
+        for ($i = 0; $i < count($parts); $i += 3) {
+            if (!isset($parts[$i])) break;
+            
+            $part = $parts[$i];
+            $delimiter = $parts[$i + 1] ?? '';
+            $space = $parts[$i + 2] ?? '';
+            
+            $sentence .= $part . $delimiter . $space;
+            
+            // Check if this part ends with an abbreviation
+            $isAbbreviation = false;
+            foreach ($abbreviations as $abbr) {
+                if (preg_match('/\s' . $abbr . '$/', $part . $delimiter) || 
+                    preg_match('/' . $abbr . '$/', $part . $delimiter)) {
+                    $isAbbreviation = true;
+                    break;
+                }
+            }
+            
+            // If it's not an abbreviation and we have a sentence delimiter, we found our sentence
+            if (!$isAbbreviation && in_array($delimiter, ['.', '!', '?'])) {
+                break;
+            }
         }
-
-        // Fallback: return whole text if no sentence-ending punctuation found
-        return trim($text);
+        
+        $result = trim($sentence);
+        
+        // If no sentence was found, return the whole text and add period if needed
+        if (empty($result)) {
+            $result = trim($text);
+            if (!empty($result) && !in_array(substr($result, -1), ['.', '!', '?'])) {
+                $result .= '.';
+            }
+        }
+        
+        // Apply max length if specified
+        if ($maxLength > 0 && strlen($result) > $maxLength) {
+            // First try to fit exactly, then back off if needed
+            $result = substr($result, 0, $maxLength);
+            // Try to cut at word boundary if we're cutting in the middle of a word
+            $lastSpace = strrpos(substr($result, 0, $maxLength - 3), ' ');
+            if ($lastSpace !== false && $lastSpace > $maxLength - 8) {
+                $result = substr($result, 0, $lastSpace);
+            }
+            $result = rtrim($result, '.,;:') . '...';
+        }
+        
+        return $result;
     }
 
     public static function stripWikiAndMarkdown(string $input): string
