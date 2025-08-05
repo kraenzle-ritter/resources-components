@@ -5,6 +5,7 @@
 [![License](https://poser.pugx.org/kraenzle-ritter/resources-components/license)](//packagist.org/packages/kraenzle-ritter/resources-components) 
 [![Tests](https://github.com/kraenzle-ritter/resources-components/actions/workflows/php-tests.yml/badge.svg)](https://github.com/kraenzle-ritter/resources-components/actions/workflows/php-tests.yml) 
 [![codecov](https://codecov.io/gh/kraenzle-ritter/resources-components/graph/badge.svg?token=13BQJVIHOV)](https://codecov.io/gh/kraenzle-ritter/resources-components)
+
 Search for entities in authority databases and link them with your local data using Livewire components. This package provides a seamless integration with various data providers to enhance your Laravel application with external resources.
 
 ## Supported Providers
