@@ -1,17 +1,17 @@
 # Development Guide
 
-Kurzanleitung für die Entwicklung neuer Provider für das `resources-components` Package.
+Quick guide for developing new providers for the `resources-components` package.
 
-## Provider-Struktur
+## Provider Structure
 
-Ein neuer Provider benötigt:
+A new provider requires:
 
-1. **Provider-Klasse** (`MyNewProvider.php`) - API-Kommunikation
-2. **Livewire-Component** (`MyNewProviderLwComponent.php`) - UI-Logik
-3. **View-Template** (`my-new-provider-lw-component.blade.php`) - Frontend
-4. **Konfiguration** in `resources-components.php`
+1. **Provider Class** (`MyNewProvider.php`) - API communication
+2. **Livewire Component** (`MyNewProviderLwComponent.php`) - UI logic
+3. **View Template** (`my-new-provider-lw-component.blade.php`) - Frontend
+4. **Configuration** in `resources-components.php`
 
-## 1. Provider-Klasse
+## 1. Provider Class
 
 ```php
 <?php
@@ -23,28 +23,28 @@ class MyNewProvider
     {
         $limit = $params['limit'] ?? config('resources-components.limit', 5);
         
-        // API-Aufruf implementieren
+        // Implement API call
         $rawResults = $this->fetchFromApi($search, $limit);
         
-        // Ergebnisse standardisieren (id, title, snippet/description)
+        // Standardize results (id, title, snippet/description)
         return $this->processResults($rawResults);
     }
     
     private function fetchFromApi(string $search, int $limit)
     {
-        // GuzzleHttp oder andere HTTP-Client verwenden
+        // Use GuzzleHttp or other HTTP client
         // return $client->get('https://api.example.com/search?q=' . urlencode($search));
     }
     
     private function processResults($results)
     {
-        // API-spezifische Datenstruktur in Standard-Format umwandeln
+        // Convert API-specific data structure to standard format
         return array_map(function($item) {
             return (object)[
                 'id' => $item->id,
                 'title' => $item->name,
                 'snippet' => $item->description ?? '',
-                // weitere Felder nach Bedarf
+                // additional fields as needed
             ];
         }, $results);
     }
@@ -116,7 +116,7 @@ class MyNewProviderLwComponent extends Component
 ])
 ```
 
-## 4. Konfiguration
+## 4. Configuration
 
 In `config/resources-components.php`:
 
@@ -127,7 +127,7 @@ In `config/resources-components.php`:
         'api-type' => 'MyNewProvider',
         'base_url' => 'https://api.example.com/',
         'api_key' => env('MY_PROVIDER_API_KEY', ''),
-        'test_search' => 'test query', // Für Provider-Check-Seite
+        'test_search' => 'test query', // For provider check page
     ],
 ]
 ```
@@ -145,7 +145,7 @@ public function boot()
 
 ## Testing
 
-Basis-Test in `tests/Feature/MyNewProviderTest.php`:
+Basic test in `tests/Feature/MyNewProviderTest.php`:
 
 ```php
 <?php
@@ -181,9 +181,9 @@ class MyNewProviderTest extends TestCase
 }
 ```
 
-## Erweiterte Features
+## Extended Features
 
-### Authentifizierung
+### Authentication
 
 ```php
 private function fetchFromApi(string $search, int $limit)
@@ -197,7 +197,7 @@ private function fetchFromApi(string $search, int $limit)
 }
 ```
 
-### Zusätzliche Daten speichern
+### Save Additional Data
 
 ```php
 public function saveResource($provider_id, $url, $full_json = null)
@@ -217,8 +217,8 @@ public function saveResource($provider_id, $url, $full_json = null)
 
 ## Best Practices
 
-- **Fehlerbehandlung**: Try-catch für API-Aufrufe verwenden
-- **Rate Limiting**: API-Limits respektieren
-- **Caching**: Häufige Suchanfragen cachen
-- **Konsistente Datenstruktur**: Standardisierte Ergebnisformate verwenden
-- **Tests**: Umfassende Tests für alle Provider-Funktionen schreiben
+- **Error Handling**: Use try-catch for API calls
+- **Rate Limiting**: Respect API limits
+- **Caching**: Cache frequent search queries
+- **Consistent Data Structure**: Use standardized result formats
+- **Testing**: Write comprehensive tests for all provider functions
