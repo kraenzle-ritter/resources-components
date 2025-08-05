@@ -78,7 +78,7 @@ class ProviderLifecycleTest extends TestCase
 
     /**
      * Test basic resource lifecycle for all providers
-     * 
+     *
      * @dataProvider providerDataProvider
      */
     public function test_provider_resource_lifecycle($provider, $providerId, $url)
@@ -135,7 +135,7 @@ class ProviderLifecycleTest extends TestCase
             'full_json' => $fullJson
         ]);
 
-        // Check resource exists 
+        // Check resource exists
         $this->assertTrue($model->resources->contains('provider_id', $providerId));
         $this->assertTrue($model->resources->contains('provider', $provider));
         $this->assertTrue($model->resources->contains('url', $url));
@@ -162,7 +162,7 @@ class ProviderLifecycleTest extends TestCase
         // Check resource was added
         $this->assertTrue($model->resources->contains('provider_id', $providerId));
         $this->assertTrue($model->resources->contains('url', $url1));
-        
+
         // Add same resource again - should not create duplicates (handled by underlying package)
         $model->updateOrCreateResource([
             'provider' => $provider,

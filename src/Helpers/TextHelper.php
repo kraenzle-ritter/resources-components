@@ -83,35 +83,35 @@ class TextHelper
 
         // Split text at potential sentence endings
         $parts = preg_split('/([.!?])(\s|$)/', $text, -1, PREG_SPLIT_DELIM_CAPTURE);
-        
+
         $sentence = '';
         for ($i = 0; $i < count($parts); $i += 3) {
             if (!isset($parts[$i])) break;
-            
+
             $part = $parts[$i];
             $delimiter = $parts[$i + 1] ?? '';
             $space = $parts[$i + 2] ?? '';
-            
+
             $sentence .= $part . $delimiter . $space;
-            
+
             // Check if this part ends with an abbreviation
             $isAbbreviation = false;
             foreach ($abbreviations as $abbr) {
-                if (preg_match('/\s' . $abbr . '$/', $part . $delimiter) || 
+                if (preg_match('/\s' . $abbr . '$/', $part . $delimiter) ||
                     preg_match('/' . $abbr . '$/', $part . $delimiter)) {
                     $isAbbreviation = true;
                     break;
                 }
             }
-            
+
             // If it's not an abbreviation and we have a sentence delimiter, we found our sentence
             if (!$isAbbreviation && in_array($delimiter, ['.', '!', '?'])) {
                 break;
             }
         }
-        
+
         $result = trim($sentence);
-        
+
         // If no sentence was found, return the whole text and add period if needed
         if (empty($result)) {
             $result = trim($text);
@@ -119,7 +119,7 @@ class TextHelper
                 $result .= '.';
             }
         }
-        
+
         // Apply max length if specified
         if ($maxLength > 0 && strlen($result) > $maxLength) {
             // First try to fit exactly, then back off if needed
@@ -131,7 +131,7 @@ class TextHelper
             }
             $result = rtrim($result, '.,;:') . '...';
         }
-        
+
         return $result;
     }
 
