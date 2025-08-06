@@ -9,7 +9,7 @@
 
 @include('resources-components::livewire.partials.results-layout', [
     'providerKey' => 'wikidata',
-    'providerName' => 'Wikidata',
+    'providerName' => \KraenzleRitter\ResourcesComponents\Helpers\LabelHelper::getProviderLabel('wikidata'),
     'model' => $model,
     'results' => $results,
     'saveAction' => function($result) use ($base_url) {

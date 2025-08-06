@@ -1,6 +1,6 @@
 @include('resources-components::livewire.partials.results-layout', [
     'providerKey' => 'ortsnamen',
-    'providerName' => 'Ortsnamen',
+    'providerName' => \KraenzleRitter\ResourcesComponents\Helpers\LabelHelper::getProviderLabel('ortsnamen'),
     'model' => $model,
     'results' => $results,
     'saveAction' => function($result) {

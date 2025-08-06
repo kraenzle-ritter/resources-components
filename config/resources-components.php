@@ -4,14 +4,14 @@ return [
     'limit' => 5,
     'providers' => [
         'gnd' => [
-            'label' => 'GND',
+            'label' => 'GND', // not localized, as it is a standard identifier
             'api-type' => 'Gnd',
             'base_url' => 'https://lobid.org/gnd/',
             'target_url' => 'https://d-nb.info/gnd/{provider_id}', // For saved links
             'test_search' => 'Hannah Arendt',
         ],
         'geonames' => [
-            'label' => 'Geonames',
+            'label' => "GeoNames", // not localized as it is a standard identifier
             'api-type' => 'Geonames',
             'base_url' => 'http://api.geonames.org/',
             'user_name' => env('GEONAMES_USERNAME', 'demo'),
@@ -22,7 +22,10 @@ return [
             'test_search' => 'Augsburg',
         ],
         'georgfischer' => [
-            'label' => 'Konzernarchiv der Georg Fischer AG',
+            'label' => [
+                'de' => 'Konzernarchiv der Georg Fischer AG',
+                'en' => 'Corporate Archives of Georg Fischer Ltd',
+            ],
             'api-type' => 'Anton',
             'base_url' => 'https://archives.georgfischer.com/api/',
             'api_token' => env('GEORGFISCHER_API_TOKEN', ''),
@@ -31,7 +34,12 @@ return [
             'test_search' => 'Georg Fischer',
         ],
         'gosteli' => [
-            'label' => 'Gosteli-Archiv',
+            'label' => [
+                'de' => 'Gosteli Archiv',
+                'en' => 'Gosteli Archive',
+                'fr' => 'Archives Gosteli',
+                'it' => 'Archivio Gosteli',
+            ],
             'api-type' => 'Anton',
             'base_url' => 'https://gosteli.anton.ch/api/',
             'api_token' => env('GOSTELI_API_TOKEN', ''),
@@ -47,7 +55,12 @@ return [
             'test_search' => 'Allmend',
         ],
         'kba' => [
-            'label' => 'Karl Barth-Archiv',
+            'label' => [
+                'de' => 'Karl Barth-Archiv',
+                'en' => 'Karl Barth Archive',
+                'fr' => 'Archives Karl Barth',
+                'it' => 'Archivio Karl Barth',
+            ],
             'api-type' => 'Anton',
             'base_url' => 'https://kba.karl-barth.ch/api/',
             'api_token' => env('KBA_API_TOKEN', ''),
@@ -56,6 +69,12 @@ return [
             'test_search' => 'Karl Barth',
         ],
         'manual-input' => [
+            'label' => [
+                'en' => 'Manual Input',
+                'de' => 'Manuelle Eingabe',
+                'fr' => 'Saisie manuelle',
+                'it' => 'Inserimento manuale',
+            ],
             'api-type' => 'ManualInput',
         ],
         'metagrid' => [
@@ -66,7 +85,7 @@ return [
             'test_search' => 'Anna Tumarkin',
         ],
         'ortsnamen' => [
-            'label' => 'Ortsnamen',
+            'label' => 'ortsnamen.ch',
             'api-type' => 'Ortsnamen',
             'base_url' => 'https://search.ortsnamen.ch/de/api/',
             'target_url' => 'https://search.ortsnamen.ch/de/record/{provider_id}',
@@ -90,15 +109,15 @@ return [
             'label' => 'Wikipedia (en)',
             'api-type' => 'Wikipedia',
             'base_url' => 'https://en.wikipedia.org/w/api.php',
-            'target_url' => 'https://en.wikipedia.org/wiki/{underscored_name}',
-            'test_search' => 'Mary Astell',
+            'target_url' => 'https://en.wikipedia.org/wiki/{provider_id}',
+            'test_search' => 'Lucretia Marinella',
         ],
         'wikipedia-fr' => [
             'label' => 'Wikipedia (fr)',
             'api-type' => 'Wikipedia',
             'base_url' => 'https://fr.wikipedia.org/w/api.php',
-            'target_url' => 'https://fr.wikipedia.org/wiki/{underscored_name}',
-            'test_search' => 'Marie de Gournay',
+            'target_url' => 'https://fr.wikipedia.org/wiki/{provider_id}',
+            'test_search' => 'Lucretia Marinella',
         ],
         'wikipedia-it' => [
             'label' => 'Wikipedia (it)',
@@ -107,11 +126,19 @@ return [
             'target_url' => 'https://it.wikipedia.org/wiki/{underscored_name}',
             'test_search' => 'Laura Bassi',
         ],
+        'alfred-escher' => [
+            'label' => 'Alfred Escher Briefedition',
+        ],
         'bnf' => [
             'label' => 'Bibliothèque nationale de France (BnF)',
         ],
         'bsg' => [
-            'label' => 'Bibliographie der Schweizergeschichte (BSG)',
+            'label' => [
+                'de' => 'Bibliographie der Schweizergeschichte (BSG)',
+                'en' => 'Bibliography of Swiss History (BSH)',
+                'fr' => 'Bibliographie de l‘histoire suisse (BHS)',
+                'it' => 'Bibliografia della storia svizzera (BSS)',
+            ],
         ],
         'burgerbibliothek' => [
             'label' => 'Burgerbibliothek Bern',
@@ -122,35 +149,74 @@ return [
         'deutsche-biographie' => [
             'label' => 'Deutsche Biographie',
         ],
+        'dodis' => [
+            'label' => 'Dodis'
+        ],
+        'elites-suisses-au-xxe-siecle' => [
+            'label' => 'Elites suisses au XXème siècle',
+        ],
         'encyclopaedia-britannica-online' => [
             'label' => 'Encyclopaedia Britannica Online',
+        ],
+        'ethz' => [
+            'label' => [
+                'de' => 'ETH Zürich (Hochschularchiv)',
+                'en' => 'ETH Zurich (University Archives)'
+            ],
+        ],
+        'fotostiftung' => [
+            'label' => 'Fotostiftung Schweiz',
+        ],
+        'hallernet' => [
+            'label' => 'HallerNet',
+        ],
+        'helveticat' => [
+            'label' =>  'helveticat',
         ],
         'histhub' => [
             'label' => 'Histhub',
         ],
+        'histoirerurale' => [
+            'label' => [
+                'de' => 'Archiv für Argrargeschichte',
+                'en' => 'Archives of rural history',
+                'fr' => 'Archives de l‘histoire rurale',
+            ],
+
+        ],
         'hls-dhs-dss' => [
-            'label' => 'Historisches Lexikon der Schweiz (HLS/DHS/DSS)',
+            'label' => [
+                'de' => 'Historisches Lexikon der Schweiz (HLS)',
+                'en' => 'Historical Dictionary of Switzerland',
+                'fr' => 'Dictionnaire historique de la Suisse (DHS)',
+                'it' => 'Dizionario storico della Svizzera (DSS)',
+            ],
         ],
         'kalliope-verbund' => [
-            'label' => 'Kalliope Verbund',
+            'label' => 'Kallipope Verbund',
         ],
         'kbga' => [
             'label' => 'Karl Barth-Gesamtausgabe (KBGA)',
         ],
         'lcnaf' => [
-            'label' => 'Library of Congress (LCNAF)'
+            'label' => 'Library of Congress (LCNAF)',
         ],
         'rag' => [
             'label' => 'RAG (Repertorium Academicum Germanicum)',
         ],
         'sbn' => [
-            'label' => 'SBN (Servicio Bibliotecario Nazionale)',
+            'label' => 'SBN (Servizio Bibliotecario Nazionale)',
         ],
         'ssrq' => [
-            'label' => 'Sammlung Schweizerischer Rechtsquellen',
+            'label' => [
+                'de' => 'Schweizerischer Rechtsquellen (SSRQ)',
+                'en' => 'Swiss Legal Sources (SLS)',
+                'fr' => 'Les sources du droit suisse (SDS)',
+                'it' => 'Fonti del diritto svizzero (FDS)',
+            ],
         ],
         'viaf' => [
-            'label' => 'VIAF'
+            'label' => 'VIAF (Virtual International Authority File)',
         ],
 
     ]

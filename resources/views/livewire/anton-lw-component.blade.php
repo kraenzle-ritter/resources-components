@@ -5,7 +5,7 @@
 
 @include('resources-components::livewire.partials.results-layout', [
     'providerKey' => $currentProviderKey,
-    'providerName' => config("resources-components.providers.{$currentProviderKey}.label", 'Anton'),
+    'providerName' => \KraenzleRitter\ResourcesComponents\Helpers\LabelHelper::getProviderLabel($currentProviderKey),
     'model' => $model,
     'results' => $results,
     'saveAction' => function($result) use ($currentProviderKey) {

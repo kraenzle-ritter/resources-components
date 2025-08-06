@@ -1,6 +1,6 @@
 @include('resources-components::livewire.partials.results-layout', [
     'providerKey' => 'metagrid',
-    'providerName' => 'Metagrid',
+    'providerName' => \KraenzleRitter\ResourcesComponents\Helpers\LabelHelper::getProviderLabel('metagrid'),
     'model' => $model,
     'results' => $results,
     'saveAction' => function($result) {

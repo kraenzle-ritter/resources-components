@@ -9,7 +9,7 @@
 
 @include('resources-components::livewire.partials.results-layout', [
     'providerKey' => 'gnd',
-    'providerName' => 'GND',
+    'providerName' => \KraenzleRitter\ResourcesComponents\Helpers\LabelHelper::getProviderLabel('gnd'),
     'model' => $model,
     'results' => $results,
     'showAll' => $showAll,

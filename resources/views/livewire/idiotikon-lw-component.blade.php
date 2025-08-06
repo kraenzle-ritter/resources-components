@@ -1,6 +1,6 @@
 @include('resources-components::livewire.partials.results-layout', [
     'providerKey' => 'idiotikon',
-    'providerName' => 'Idiotikon',
+    'providerName' => \KraenzleRitter\ResourcesComponents\Helpers\LabelHelper::getProviderLabel('idiotikon'),
     'model' => $model,
     'results' => $results,
     'saveAction' => function($result) {

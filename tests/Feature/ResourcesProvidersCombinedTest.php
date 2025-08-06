@@ -42,8 +42,19 @@ class ResourcesProvidersCombinedTest extends TestCase
         $this->assertArrayHasKey('idiotikon', $providers);
         $this->assertArrayHasKey('metagrid', $providers);
 
-        $this->assertEquals('Idiotikon', $providers['idiotikon']['label']);
-        $this->assertEquals('Metagrid', $providers['metagrid']['label']);
+        // Test that labels are arrays or strings and can be resolved
+        $this->assertTrue(
+            is_array($providers['idiotikon']['label']) || is_string($providers['idiotikon']['label']),
+            'Label should be array or string'
+        );
+        $this->assertTrue(
+            is_array($providers['metagrid']['label']) || is_string($providers['metagrid']['label']),
+            'Label should be array or string'
+        );
+
+        // Test that LabelHelper can resolve the labels
+        $this->assertIsString(\KraenzleRitter\ResourcesComponents\Helpers\LabelHelper::getProviderLabel('idiotikon'));
+        $this->assertIsString(\KraenzleRitter\ResourcesComponents\Helpers\LabelHelper::getProviderLabel('metagrid'));
     }
 
     /**

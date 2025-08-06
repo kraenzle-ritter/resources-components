@@ -11,7 +11,7 @@
                     <li class="list-group-item {{ $resource->provider}}">
                         <div class="d-flex justify-content-between align-items-center">
                             <a target="_blank" href="{{ $resource->url }}">
-                                {{ config('resources-components.providers.' . $resource->provider . '.label', ucfirst($resource->provider)) }}
+                                {{ \KraenzleRitter\ResourcesComponents\Helpers\LabelHelper::getProviderLabel($resource->provider) }}
                             </a>
                             @if($deleteButton)
                                 <button

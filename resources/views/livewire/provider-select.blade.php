@@ -10,8 +10,8 @@
                     <select wire:change="setProvider($event.target.value)" class="form-select" id="provider-select" aria-label="{{ __('resources-components::messages.Provider') }}">
                         @foreach($providers as $value)
                             <option value="{{ $value }}" {{ ($providerKey == $value) ? 'selected' : '' }}>
-                                {{-- Get the label from the new config structure --}}
-                                {{ config('resources-components.providers.' . $value . '.label', ucfirst($value)) }}
+                                {{-- Get the localized label using the LabelHelper --}}
+                                {{ \KraenzleRitter\ResourcesComponents\Helpers\LabelHelper::getProviderLabel($value) }}
                             </option>
                         @endforeach
                     </select>

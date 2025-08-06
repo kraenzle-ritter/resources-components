@@ -36,7 +36,7 @@
 
 @include('resources-components::livewire.partials.results-layout', [
     'providerKey' => $displayProviderKey,
-    'providerName' => config('resources-components.providers.' . $displayProviderKey . '.label', 'Wikipedia'),
+    'providerName' => \KraenzleRitter\ResourcesComponents\Helpers\LabelHelper::getProviderLabel($displayProviderKey),
     'model' => $model,
     'results' => $results,
     'saveAction' => function($result) use ($base_url) {

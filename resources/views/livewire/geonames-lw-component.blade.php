@@ -10,7 +10,7 @@
 
 @include('resources-components::livewire.partials.results-layout', [
     'providerKey' => 'geonames',
-    'providerName' => 'Geonames',
+    'providerName' => \KraenzleRitter\ResourcesComponents\Helpers\LabelHelper::getProviderLabel('geonames'),
     'model' => $model,
     'results' => $results,
     'apiLimitReached' => $apiLimitReached,

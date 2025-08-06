@@ -81,6 +81,11 @@ class ResourcesCheckControllerTest extends TestCase
         $providers = Config::get('resources-components.providers');
 
         foreach ($providers as $key => $config) {
+            // Only providers with api-type need test_search (searchable providers)
+            if (!isset($config['api-type'])) {
+                continue;
+            }
+            
             // Skip manual-input as it doesn't need test_search
             if ($key === 'manual-input') {
                 continue;
