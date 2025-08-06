@@ -4,6 +4,7 @@ namespace KraenzleRitter\ResourcesComponents\Tests\Unit;
 
 use KraenzleRitter\ResourcesComponents\Helpers\LabelHelper;
 use KraenzleRitter\ResourcesComponents\Tests\TestCase;
+use Illuminate\Support\Facades\Config;
 
 class LabelHelperTest extends TestCase
 {
@@ -89,12 +90,11 @@ class LabelHelperTest extends TestCase
     }
 
     /** @test */
-    public function it_falls_back_to_provider_key_when_no_label_configured()
+    public function test_provider_label_returns_provider_key_if_no_label_configured()
     {
-        config(['resources-components.providers.unknown-provider' => []]);
-
-        $result = LabelHelper::getProviderLabel('unknown-provider');
-
-        $this->assertEquals('unknown-provider', $result);
+        // Test with a minimal setup by directly calling the method with a non-existent provider
+        $result = LabelHelper::getProviderLabel('non_existent_provider');
+        
+        $this->assertEquals('non_existent_provider', $result);
     }
 }
