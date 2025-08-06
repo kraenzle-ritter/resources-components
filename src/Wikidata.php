@@ -114,7 +114,8 @@ class Wikidata
             $processed[] = (object) [
                 'id' => $item['id'],
                 'url' => "https://www.wikidata.org/wiki/{$item['id']}",
-                'title' => $item['label'] ?? $item['id'],
+                'label' => $item['label'] ?? $item['id'], // Use 'label' for consistency with other providers
+                'title' => $item['label'] ?? $item['id'], // Keep 'title' for backward compatibility
                 'description' => $item['description'] ?? '',
                 'lang' => $lang,
                 'fullJson' => json_encode($item)

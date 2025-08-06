@@ -143,11 +143,20 @@ return [
         'burgerbibliothek' => [
             'label' => 'Burgerbibliothek Bern',
         ],
+        'catholic-encyclopedia' => [
+            'label' => 'Catholic Encyclopedia'
+        ],
         'ddb' => [
             'label' => 'Deutsche Digitale Bibliothek (DDB)',
         ],
         'deutsche-biographie' => [
             'label' => 'Deutsche Biographie',
+        ],
+        'diju' => [
+            'label' => [
+                'de' => 'Lexikon des Jura',
+                'fr' => 'Dictionaire du Jura',
+            ],
         ],
         'dodis' => [
             'label' => 'Dodis'
@@ -163,6 +172,9 @@ return [
                 'de' => 'ETH Zürich (Hochschularchiv)',
                 'en' => 'ETH Zurich (University Archives)'
             ],
+        ],
+        'europeana' => [
+            'label' => 'Europeana'
         ],
         'fotostiftung' => [
             'label' => 'Fotostiftung Schweiz',
@@ -207,6 +219,9 @@ return [
         'lcnaf' => [
             'label' => 'Library of Congress (LCNAF)',
         ],
+        'munzinger-person' => [
+            'label' => 'Munzinger Online',
+        ],
         'perlentaucher' => [
             'label' => 'Perlentaucher',
         ],
@@ -226,6 +241,9 @@ return [
                 'fr' => 'Les sources du droit suisse (SDS)',
                 'it' => 'Fonti del diritto svizzero (FDS)',
             ],
+        ],
+        'stanford-encyclopedia-of-philosophy' => [
+            'label' => 'Stanford Encyclopedia of Philosophy',
         ],
         'viaf' => [
             'label' => 'VIAF (Virtual International Authority File)',
