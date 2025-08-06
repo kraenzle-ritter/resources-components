@@ -218,6 +218,9 @@ return [
         'viaf' => [
             'label' => 'VIAF (Virtual International Authority File)',
         ],
+        'worldcat' => [
+            'label' => 'WorldCat',
+        ]
 
     ]
 ];
