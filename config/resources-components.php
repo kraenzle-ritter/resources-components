@@ -225,6 +225,9 @@ return [
         'perlentaucher' => [
             'label' => 'Perlentaucher',
         ],
+        'phoebus' => [
+            'label' => 'Phoebus',
+        ],
         'rag' => [
             'label' => 'RAG (Repertorium Academicum Germanicum)',
         ],
