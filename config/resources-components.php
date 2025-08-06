@@ -184,6 +184,9 @@ return [
             ],
 
         ],
+        'hlfs' => [
+            'label' => 'Historisches Familienlexikon der Schweiz (HLFS)',
+        ],
         'hls-dhs-dss' => [
             'label' => [
                 'de' => 'Historisches Lexikon der Schweiz (HLS)',
@@ -191,6 +194,9 @@ return [
                 'fr' => 'Dictionnaire historique de la Suisse (DHS)',
                 'it' => 'Dizionario storico della Svizzera (DSS)',
             ],
+        ],
+        'huygens' => [
+            'label' => 'Huygens Instituut',
         ],
         'kalliope-verbund' => [
             'label' => 'Kallipope Verbund',
@@ -201,11 +207,17 @@ return [
         'lcnaf' => [
             'label' => 'Library of Congress (LCNAF)',
         ],
+        'perlentaucher' => [
+            'label' => 'Perlentaucher',
+        ],
         'rag' => [
             'label' => 'RAG (Repertorium Academicum Germanicum)',
         ],
         'sbn' => [
             'label' => 'SBN (Servizio Bibliotecario Nazionale)',
+        ],
+        'sikart' => [
+            'label' => 'Sikart',
         ],
         'ssrq' => [
             'label' => [
