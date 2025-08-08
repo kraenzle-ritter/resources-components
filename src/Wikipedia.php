@@ -44,6 +44,7 @@ class Wikipedia
 
         try {
             $response = $this->client->get('?' . join('&', $query));
+
             $body = json_decode($response->getBody());
 
             if (isset($body->query->searchinfo->totalhits) && $body->query->searchinfo->totalhits > 0) {
@@ -101,6 +102,7 @@ class Wikipedia
                     if (!isset($article->title)) {
                         $article->title = '';
                     }
+
                     return $article;
                 }
             }

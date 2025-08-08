@@ -65,23 +65,23 @@ class WikipediaLwComponent extends Component
             // Replace spaces with underscores for the article name
             $underscoredName = str_replace(' ', '_', $title);
 
-            // Platzhalter im Template ersetzen
+            // Replace placeholders in template - use title for URL generation, keep provider_id as pageid
             $url = str_replace(
                 ['{provider_id}', '{underscored_name}'],
-                [$provider_id, $underscoredName],
+                [$title, $underscoredName], // Use title for both URL placeholders
                 $targetUrlTemplate
             );
         } else {
-            // Fallback auf die bisherige URL-Generierung
+            // Fallback to previous URL generation
             $url = preg_replace_callback('/ /', function($match) {
                 return '_';
             }, $url);
         }
 
         $data = [
-            'provider' => $this->queryOptions['providerKey'], // Use the specific providerKey instead of generic 'Wikipedia'
-            'provider_id' => $provider_id,
-            'url' => $url
+            'provider' => $this->queryOptions['providerKey'],
+            'provider_id' => $provider_id, // Keep as pageid (numeric)
+            'url' => $url // But generate correct URL using article title
         ];
 
         $resource = $this->model->{$this->saveMethod}($data);
