@@ -5,6 +5,7 @@ namespace KraenzleRitter\ResourcesComponents;
 use \GuzzleHttp\Psr7;
 use \GuzzleHttp\Client;
 use \GuzzleHttp\Exception\RequestException;
+use KraenzleRitter\ResourcesComponents\Helpers\UserAgent;
 
 /**
  * Wikipedia queries
@@ -29,9 +30,12 @@ class Wikipedia
         $limit = $params['limit'] ?? 5;
         $providerKey = $params['providerKey'] ?? 'wikipedia-de';
 
-        $apiUrl = config('resources-components.providers.' . $providerKey . '.base_url');
-
-        $this->client = new Client(['base_uri' => $apiUrl]);
+        $baseUrl = config('resources-components.providers.' . $providerKey . '.base_url');
+        $this->client = new Client([
+            'base_uri' => $baseUrl,
+            'timeout' => 10,
+            'headers' => UserAgent::get(),
+        ]);
 
         $searchstring = trim(str_replace(' ', '_', $searchstring), '_');
         $query = [];

@@ -13,7 +13,13 @@ class Ortsnamen
 
     public function __construct()
     {
-        $this->client = new Client(['base_uri' => 'https://search.ortsnamen.ch/de/api/']);
+        $baseUrl = 'https://search.ortsnamen.ch/de/api/';
+
+        $this->client = new Client([
+            'base_uri' => $baseUrl,
+            'timeout' => 10,
+            'headers' => UserAgent::get(),
+        ]);
     }
 
     public function search(string $search, $params = [])

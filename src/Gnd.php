@@ -3,6 +3,7 @@
 namespace KraenzleRitter\ResourcesComponents;
 
 use GuzzleHttp\Client;
+use KraenzleRitter\ResourcesComponents\Helpers\UserAgent;
 
 /**
  * GND queries
@@ -35,7 +36,13 @@ class Gnd
 
     public function __construct()
     {
-        $this->client = new Client(['base_uri' => 'https://lobid.org/gnd/']);
+        $baseUrl = 'https://lobid.org/gnd/';
+
+        $this->client = new Client([
+            'base_uri' => $baseUrl,
+            'timeout'  => 10,
+            'headers'  => UserAgent::get()
+        ]);
     }
 
     public function search(string $search, $params = [])

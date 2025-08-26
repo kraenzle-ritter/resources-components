@@ -3,6 +3,7 @@
 namespace KraenzleRitter\ResourcesComponents;
 
 use \GuzzleHttp\Client;
+use KraenzleRitter\ResourcesComponents\Helpers\UserAgent;
 
 /**
  * Metagrid queries
@@ -16,8 +17,13 @@ class Metagrid
 
     public function __construct()
     {
+        $baseUrl = 'https://api.metagrid.ch/';
 
-        $this->client = new Client(['base_uri' => 'https://api.metagrid.ch/']);
+        $this->client = new Client([
+            'base_uri' => $baseUrl,
+            'timeout' => 10,
+            'headers' => UserAgent::get(),
+        ]);
     }
 
     public function search($search, $params = [])

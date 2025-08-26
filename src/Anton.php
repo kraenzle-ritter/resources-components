@@ -2,10 +2,12 @@
 
 namespace KraenzleRitter\ResourcesComponents;
 
+use GuzzleHttp\Psr7;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
-use GuzzleHttp\Psr7;
 use KraenzleRitter\ResourcesComponents\Helpers\Params;
+use KraenzleRitter\ResourcesComponents\Helpers\UserAgent;
+
 
 class Anton
 {
@@ -32,8 +34,11 @@ class Anton
         // Make sure URL ends with a slash
         $baseUrl = rtrim($this->url, '/') . '/';
 
-        // Fix the base_uri construction to include trailing slash for endpoint
-        $this->client = new Client(['base_uri' => $baseUrl]);
+        $this->client = new Client([
+            'base_uri' => $baseUrl,
+            'timeout'  => 10,
+            'headers'  => UserAgent::get(),
+        ]);
 
         $this->query_params = $params ?: $this->query_params;
 
@@ -59,6 +64,7 @@ class Anton
 
         // Construct the full URL
         $fullUrl = $endpoint . '?' . ltrim($query_string, '?');
+
         try {
             $response = $this->client->get($fullUrl);
 

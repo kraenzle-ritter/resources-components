@@ -4,6 +4,7 @@ namespace KraenzleRitter\ResourcesComponents;
 
 use Illuminate\Support\Facades\Http;
 use KraenzleRitter\ResourcesComponents\Helpers\Params;
+use KraenzleRitter\ResourcesComponents\Helpers\UserAgent;
 
 class Geonames
 {
@@ -61,7 +62,7 @@ class Geonames
         $query_string = Params::toQueryString($this->query_params);
         $search = 'searchJSON?' . $query_string;
 
-        $response = HTTP::get($this->base_uri.$search);
+        $response = HTTP::withHeaders(UserAgent::get())->get($this->base_uri.$search);
 
         if ($response->serverError()) {
             return [];

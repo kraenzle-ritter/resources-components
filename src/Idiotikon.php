@@ -3,7 +3,7 @@
 namespace KraenzleRitter\ResourcesComponents;
 
 use GuzzleHttp\Client;
-use KraenzleRitter\ResourcesComponents\Helpers\Params;
+use KraenzleRitter\ResourcesComponents\Helpers\UserAgent;
 
 class Idiotikon
 {
@@ -13,7 +13,13 @@ class Idiotikon
 
     public function __construct()
     {
-        $this->client = new Client(['base_uri' => 'https://digital.idiotikon.ch/api/']);
+        $baseUrl ='https://digital.idiotikon.ch/api/';
+
+        $this->client = new Client([
+            'base_uri' => $baseUrl,
+            'timeout' => 10,
+            'headers' => UserAgent::get(),
+        ]);
     }
 
     public function search(string $search, $params = [])

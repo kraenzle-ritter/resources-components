@@ -225,6 +225,9 @@ return [
         'perlentaucher' => [
             'label' => 'Perlentaucher',
         ],
+        'parlamentch' => [
+            'label' => 'Schweizer Parlament'
+        ],
         'phoebus' => [
             'label' => 'Phoebus',
         ],
@@ -247,6 +250,11 @@ return [
         ],
         'stanford-encyclopedia-of-philosophy' => [
             'label' => 'Stanford Encyclopedia of Philosophy',
+        ],
+        [
+            'swa' => [
+                'label' => 'Schweizerisches Wirtschaftsarchiv'
+            ]
         ],
         'viaf' => [
             'label' => 'VIAF (Virtual International Authority File)',

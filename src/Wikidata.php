@@ -4,6 +4,7 @@ namespace KraenzleRitter\ResourcesComponents;
 
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Log;
+use KraenzleRitter\ResourcesComponents\Helpers\UserAgent;
 
 /**
  * Wikidata queries
@@ -22,7 +23,11 @@ class Wikidata
     public function __construct()
     {
         $baseUrl = config('resources-components.providers.wikidata.base_url', 'https://www.wikidata.org/w/api.php');
-        $this->client = new \GuzzleHttp\Client(['base_uri' => $baseUrl]);
+        $this->client = new Client([
+            'base_uri' => $baseUrl,
+            'timeout' => 10,
+            'headers' => UserAgent::get(),
+        ]);
     }
 
     /**
