@@ -4,6 +4,7 @@ namespace KraenzleRitter\ResourcesComponents;
 
 use GuzzleHttp\Client;
 use KraenzleRitter\ResourcesComponents\Helpers\Params;
+use KraenzleRitter\ResourcesComponents\Helpers\UserAgent;
 
 class Ortsnamen
 {

@@ -2,8 +2,8 @@
 
 namespace KraenzleRitter\ResourcesComponents\Tests\Feature;
 
-use KraenzleRitter\ResourcesComponents\Tests\TestCase;
 use KraenzleRitter\ResourcesComponents\Wikipedia;
+use KraenzleRitter\ResourcesComponents\Tests\TestCase;
 
 class WikipediaApiLocaleTest extends TestCase
 {
@@ -64,17 +64,13 @@ class WikipediaApiLocaleTest extends TestCase
         $wikipedia = new Wikipedia();
         $title = 'Albert Einstein';
 
-        // Artikel in deutscher Sprache abrufen
         $deArticle = $wikipedia->getArticle($title, ['providerKey' => 'wikipedia-de']);
 
-        // Artikel in englischer Sprache abrufen
         $enArticle = $wikipedia->getArticle($title, ['providerKey' => 'wikipedia-en']);
 
-        // Beide sollten Artikel zurückgeben
         $this->assertNotNull($deArticle, 'Deutscher Artikel sollte gefunden werden');
         $this->assertNotNull($enArticle, 'Englischer Artikel sollte gefunden werden');
 
-        // Die Extracts sollten unterschiedlich sein
         if ($deArticle && $enArticle) {
             $this->assertNotEquals($deArticle->extract, $enArticle->extract,
                 'Deutsche und englische Artikel-Extracts sollten unterschiedlich sein');
@@ -83,7 +79,6 @@ class WikipediaApiLocaleTest extends TestCase
             $this->assertTrue(
                 stripos($deArticle->extract, 'physiker') !== false ||
                 stripos($deArticle->extract, 'deutscher') !== false ||
-                stripos($deArticle->extract, 'theorie') !== false,
                 'Der deutsche Artikel sollte deutsche Begriffe enthalten'
             );
 
