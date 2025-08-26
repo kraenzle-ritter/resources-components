@@ -77,7 +77,12 @@ class Wikipedia
 
         $apiUrl = config('resources-components.providers.' . $providerKey . '.base_url');
 
-        $this->client = new Client(['base_uri' => $apiUrl]);
+        // Set User-Agent and timeout to comply with Wikipedia robot policy
+        $this->client = new Client([
+            'base_uri' => $apiUrl,
+            'timeout' => 10,
+            'headers' => UserAgent::get(),
+        ]);
 
         $title = trim(str_replace(' ', '_', $title), '_');
         $query = [];
