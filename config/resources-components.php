@@ -1,6 +1,14 @@
 <?php
 
 return [
+    // Default user agent for external API requests (Wikipedia requires one).
+    // Can be overridden via env RESOURCES_COMPONENTS_USER_AGENT or
+    // via config('resources-components.user_agent') in the host app.
+    //'user_agent' => env(
+    //    'RESOURCES_COMPONENTS_USER_AGENT',
+    //    'resources-components/1.1 (+https://github.com/kraenzle-ritter/resources-components)'
+    //),
+
     'limit' => 5,
     'providers' => [
         'gnd' => [
