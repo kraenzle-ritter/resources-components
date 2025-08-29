@@ -151,9 +151,9 @@ class ProviderSelect extends Component
                 // Anton components need an additional endpoint parameter
                 $this->componentParams = [
                     'model' => $this->model,
-                    'search' => $search,
                     'providerKey' => $providerKey,
                     'endpoint' => $this->endpoint
+                    'search' => $search,
                 ];
                 break;
 
