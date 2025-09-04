@@ -3,17 +3,17 @@
 namespace KraenzleRitter\ResourcesComponents\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Config;
-use KraenzleRitter\ResourcesComponents\Wikidata;
-use KraenzleRitter\ResourcesComponents\Wikipedia;
-use KraenzleRitter\ResourcesComponents\Gnd;
-use KraenzleRitter\ResourcesComponents\Geonames;
-use KraenzleRitter\ResourcesComponents\Idiotikon;
-use KraenzleRitter\ResourcesComponents\Metagrid;
-use KraenzleRitter\ResourcesComponents\Ortsnamen;
-use KraenzleRitter\ResourcesComponents\Anton;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Schema;
+use KraenzleRitter\ResourcesComponents\Gnd;
+use KraenzleRitter\ResourcesComponents\Anton;
+use KraenzleRitter\ResourcesComponents\Geonames;
+use KraenzleRitter\ResourcesComponents\Metagrid;
+use KraenzleRitter\ResourcesComponents\Wikidata;
+use KraenzleRitter\ResourcesComponents\Idiotikon;
+use KraenzleRitter\ResourcesComponents\Ortsnamen;
+use KraenzleRitter\ResourcesComponents\Wikipedia;
 
 class ResourcesCheckController
 {
@@ -23,7 +23,10 @@ class ResourcesCheckController
      */
     protected function getTestQuery($providerKey)
     {
-        $providers = Config::get('resources-components.providers');
+        $providers = array_filter(
+            Config::get('resources-components.providers'),
+            fn($provider) => !empty($provider['base_url'])
+        );
         return $providers[$providerKey]['test_search'] ?? 'test';
     }
 
@@ -32,7 +35,10 @@ class ResourcesCheckController
      */
     public function index()
     {
-        $providers = Config::get('resources-components.providers');
+        $providers = $providers = array_filter(
+            Config::get('resources-components.providers'),
+            fn($provider) => !empty($provider['base_url'])
+        );
         $results = [];
 
         // Schleife durch alle Provider und teste sie
