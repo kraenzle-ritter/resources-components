@@ -2,9 +2,9 @@
 
 namespace KraenzleRitter\ResourcesComponents\Tests\Unit;
 
-use KraenzleRitter\ResourcesComponents\Helpers\LabelHelper;
-use KraenzleRitter\ResourcesComponents\Tests\TestCase;
 use Illuminate\Support\Facades\Config;
+use KraenzleRitter\ResourcesComponents\Tests\TestCase;
+use KraenzleRitter\ResourcesComponents\Helpers\LabelHelper;
 
 class LabelHelperTest extends TestCase
 {
@@ -94,7 +94,7 @@ class LabelHelperTest extends TestCase
     {
         // Test with a minimal setup by directly calling the method with a non-existent provider
         $result = LabelHelper::getProviderLabel('non_existent_provider');
-        
+
         $this->assertEquals('non_existent_provider', $result);
     }
 }

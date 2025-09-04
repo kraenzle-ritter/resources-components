@@ -30,7 +30,7 @@ class WikidataDisplayTest extends TestCase
 
         // Create a Wikidata instance
         $wikidata = new Wikidata();
-        
+
         // Use reflection to access the protected method
         $reflection = new \ReflectionClass($wikidata);
         $method = $reflection->getMethod('processSearchResults');
@@ -44,7 +44,7 @@ class WikidataDisplayTest extends TestCase
         $this->assertNotEmpty($results);
 
         $firstResult = $results[0];
-        
+
         // Check that both 'label' and 'title' fields exist (for compatibility)
         $this->assertObjectHasProperty('label', $firstResult);
         $this->assertObjectHasProperty('title', $firstResult);
@@ -77,7 +77,7 @@ class WikidataDisplayTest extends TestCase
         ];
 
         $wikidata = new Wikidata();
-        
+
         // Use reflection to access the protected method
         $reflection = new \ReflectionClass($wikidata);
         $method = $reflection->getMethod('processSearchResults');
@@ -87,7 +87,7 @@ class WikidataDisplayTest extends TestCase
 
         $this->assertNotEmpty($results);
         $firstResult = $results[0];
-        
+
         // Should fallback to ID when no label is present
         $this->assertEquals('Q9999', $firstResult->label);
         $this->assertEquals('Q9999', $firstResult->title);
