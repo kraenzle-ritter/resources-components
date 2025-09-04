@@ -17,7 +17,8 @@ class ResourcesCheckControllerTest extends TestCase
         Config::set('resources-components.providers.test-provider', [
             'label' => 'Test Provider',
             'api-type' => 'TestType',
-            'test_search' => 'Custom Test Query'
+            'test_search' => 'Custom Test Query',
+            'base_url' => 'http://dummy'
         ]);
 
         $controller = new ResourcesCheckController();
