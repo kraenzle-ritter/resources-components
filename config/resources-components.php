@@ -131,24 +131,29 @@ return [
             'api-type' => 'Wikipedia',
             'base_url' => 'https://fi.wikipedia.org/w/api.php',
             'target_url' => 'https://fi.wikipedia.org/wiki/{underscored_name}',
+            'test_search' => 'Lucina Hagman',
         ],
         'wikipedia-da' => [
             'label' => 'Wikipedia (da)',
             'api-type' => 'Wikipedia',
             'base_url' => 'https://da.wikipedia.org/w/api.php',
             'target_url' => 'https://da.wikipedia.org/wiki/{underscored_name}',
+            'test_search' => 'Mary Steen',
         ],
         'wikipedia-nl' => [
             'label' => 'Wikipedia (nl)',
             'api-type' => 'Wikipedia',
             'base_url' => 'https://nl.wikipedia.org/w/api.php',
             'target_url' => 'https://nl.wikipedia.org/wiki/{underscored_name}',
+            'test_search' => 'Aletta Jacobs',
         ],
         'wikipedia-sv' => [
             'label' => 'Wikipedia (sv)',
-            'api-type' => 'Wikipedia',
-            'base_url' => 'https://sv.wikipedia.org/w/api.php',
-            'target_url' => 'https://sv.wikipedia.org/wiki/{underscored_name}',
+            // the API does not exist?
+            //'api-type' => 'Wikipedia',
+            //'base_url' => 'https://sv.wikipedia.org/w/api.php',
+            //'target_url' => 'https://sv.wikipedia.org/wiki/{underscored_name}',
+            //'test_search' => 'Sophia Elisabet Brenner',
         ],
         'alfred-escher' => [
             'label' => 'Alfred Escher Briefedition',
