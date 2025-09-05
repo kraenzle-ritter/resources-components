@@ -1,14 +1,6 @@
 <?php
 
 return [
-    // Default user agent for external API requests (Wikipedia requires one).
-    // Can be overridden via env RESOURCES_COMPONENTS_USER_AGENT or
-    // via config('resources-components.user_agent') in the host app.
-    //'user_agent' => env(
-    //    'RESOURCES_COMPONENTS_USER_AGENT',
-    //    'resources-components/1.1 (+https://github.com/kraenzle-ritter/resources-components)'
-    //),
-
     'limit' => 5,
     'providers' => [
         'gnd' => [
@@ -134,6 +126,30 @@ return [
             'target_url' => 'https://it.wikipedia.org/wiki/{underscored_name}',
             'test_search' => 'Laura Bassi',
         ],
+        'wikipedia-fi' => [
+            'label' => 'Wikipedia (fi)',
+            'api-type' => 'Wikipedia',
+            'base_url' => 'https://fi.wikipedia.org/w/api.php',
+            'target_url' => 'https://fi.wikipedia.org/wiki/{underscored_name}',
+        ],
+        'wikipedia-da' => [
+            'label' => 'Wikipedia (da)',
+            'api-type' => 'Wikipedia',
+            'base_url' => 'https://da.wikipedia.org/w/api.php',
+            'target_url' => 'https://da.wikipedia.org/wiki/{underscored_name}',
+        ],
+        'wikipedia-nl' => [
+            'label' => 'Wikipedia (nl)',
+            'api-type' => 'Wikipedia',
+            'base_url' => 'https://nl.wikipedia.org/w/api.php',
+            'target_url' => 'https://nl.wikipedia.org/wiki/{underscored_name}',
+        ],
+        'wikipedia-sv' => [
+            'label' => 'Wikipedia (sv)',
+            'api-type' => 'Wikipedia',
+            'base_url' => 'https://sv.wikipedia.org/w/api.php',
+            'target_url' => 'https://sv.wikipedia.org/wiki/{underscored_name}',
+        ],
         'alfred-escher' => [
             'label' => 'Alfred Escher Briefedition',
         ],
@@ -169,11 +185,17 @@ return [
         'dodis' => [
             'label' => 'Dodis'
         ],
+        'dwds' => [
+            'label' => 'DWDS (Digitales Wörterbuch der deutschen Sprache)',
+        ],
         'elites-suisses-au-xxe-siecle' => [
             'label' => 'Elites suisses au XXème siècle',
         ],
         'encyclopaedia-britannica-online' => [
             'label' => 'Encyclopaedia Britannica Online',
+        ],
+        'e-rara' => [
+            'label' => 'e-rara',
         ],
         'ethz' => [
             'label' => [
@@ -183,6 +205,12 @@ return [
         ],
         'europeana' => [
             'label' => 'Europeana'
+        ],
+        'familienlexikon' => [
+            'label' => 'Familienlexikon der Schweiz',
+        ],
+        'fotoch' => [
+            'label' => 'fotoCH',
         ],
         'fotostiftung' => [
             'label' => 'Fotostiftung Schweiz',
@@ -202,7 +230,6 @@ return [
                 'en' => 'Archives of rural history',
                 'fr' => 'Archives de l‘histoire rurale',
             ],
-
         ],
         'hlfs' => [
             'label' => 'Historisches Familienlexikon der Schweiz (HLFS)',
@@ -218,23 +245,51 @@ return [
         'huygens' => [
             'label' => 'Huygens Instituut',
         ],
+        'idref' => [
+            'label' => 'IdRef',
+        ],
         'kalliope-verbund' => [
             'label' => 'Kallipope Verbund',
+        ],
+        'kartenportal.ch' => [
+            'label' => 'Kartenportal.ch',
         ],
         'kbga' => [
             'label' => 'Karl Barth-Gesamtausgabe (KBGA)',
         ],
+        'lavater' => [
+            'label' => 'Lavater Briefwechsel'
+        ],
         'lcnaf' => [
             'label' => 'Library of Congress (LCNAF)',
+        ],
+        'lonsea' => [
+            'label' => 'Lonsea',
+            'full-label' => 'League of nations search engine'
+        ],
+        'mcclintock-and-strong-biblical-cyclopedia' => [
+            'label' => 'McClintock and Strong Biblical Cyclopedia',
         ],
         'munzinger-person' => [
             'label' => 'Munzinger Online',
         ],
+        'oesterreichisches-biographisches-lexikon' => [
+            'label' => 'Österreichisches Biographisches Lexikon',
+        ],
+        'okumenisches-heiligenlexikon' => [
+            'label' => 'Ökumenisches Heiligenlexikon',
+        ],
+        'oxford-dnb' => [
+            'label' => 'Oxford Dictionary of National Biography',
+        ],
+        'parlamentch' => [
+            'label' => 'Schweizer Parlament',
+        ],
         'perlentaucher' => [
             'label' => 'Perlentaucher',
         ],
-        'parlamentch' => [
-            'label' => 'Schweizer Parlament'
+        'pestalozzianum' => [
+            'label' => 'Pestalozzianum',
         ],
         'phoebus' => [
             'label' => 'Phoebus',
@@ -245,8 +300,15 @@ return [
         'sbn' => [
             'label' => 'SBN (Servizio Bibliotecario Nazionale)',
         ],
+        'scottish-shale' => [
+            'label'  => 'Scottish Shale',
+            'full-label' => 'Museum of the Scottish Shale Oil Industry',
+        ],
         'sikart' => [
             'label' => 'Sikart',
+        ],
+        'smartify' => [
+            'label' => 'Smartify',
         ],
         'ssrq' => [
             'label' => [
@@ -259,17 +321,36 @@ return [
         'stanford-encyclopedia-of-philosophy' => [
             'label' => 'Stanford Encyclopedia of Philosophy',
         ],
-        [
-            'swa' => [
-                'label' => 'Schweizerisches Wirtschaftsarchiv'
-            ]
+        'sturzenegger' => [
+            'label' => 'Sturzenegger Stiftung',
+        ],
+        'swa' => [
+            'label' => 'Schweizerisches Wirtschaftsarchiv',
         ],
         'viaf' => [
             'label' => 'VIAF (Virtual International Authority File)',
         ],
+        'vitrosearch' => [
+            'label' => 'VitroSearch',
+        ],
+        'wikimedia-commons' => [
+            'label' => 'Wikimedia Commons',
+        ],
+        'wiktionary' => [
+            'label' => 'Wiktionary',
+        ],
         'worldcat' => [
             'label' => 'WorldCat',
         ]
-
-    ]
+    ],
+    'rename' => [
+        'deutsch-biographie' => 'deutsche-biographie',
+        'hls' => 'hls-dhs-dss',
+        'library of congress' => 'lcnaf',
+        'loc' => 'lcnaf',
+        'oxford dnb' => 'oxford-dnb',
+        'scottish shale' => 'scottish-shale',
+        'sturzenegger-stiftung' => 'sturzenegger',
+        'sudoc' => 'idref',
+    ],
 ];
