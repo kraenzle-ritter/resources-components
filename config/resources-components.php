@@ -9,6 +9,7 @@ return [
             'base_url' => 'https://lobid.org/gnd/',
             'target_url' => 'https://d-nb.info/gnd/{provider_id}', // For saved links
             'test_search' => 'Hannah Arendt',
+            'wikidata_property' => 'P227', // For syncing from Wikidata
         ],
         'geonames' => [
             'label' => "GeoNames", // not localized as it is a standard identifier
@@ -20,6 +21,7 @@ return [
             'country_bias' => null,   // Records from the countryBias are listed first
             'target_url' => 'https://www.geonames.org/{provider_id}',
             'test_search' => 'Augsburg',
+            'wikidata_property' => 'P1566', // For syncing from Wikidata
         ],
         'georgfischer' => [
             'label' => [
@@ -89,7 +91,8 @@ return [
             'api-type' => 'Ortsnamen',
             'base_url' => 'https://search.ortsnamen.ch/de/api/',
             'target_url' => 'https://search.ortsnamen.ch/de/record/{provider_id}',
-            'test_search' => 'Wiedikon'
+            'test_search' => 'Wiedikon',
+            'wikidata_property' => 'P6144', // For syncing from Wikidata
         ],
         'wikidata' => [
             'label' => 'Wikidata',
@@ -157,9 +160,11 @@ return [
         ],
         'alfred-escher' => [
             'label' => 'Alfred Escher Briefedition',
+
         ],
         'bnf' => [
             'label' => 'Bibliothèque nationale de France (BnF)',
+            'wikidata_property' => 'P268',
         ],
         'bsg' => [
             'label' => [
@@ -173,13 +178,16 @@ return [
             'label' => 'Burgerbibliothek Bern',
         ],
         'catholic-encyclopedia' => [
-            'label' => 'Catholic Encyclopedia'
+            'label' => 'Catholic Encyclopedia',
+            'wikidata_property' => 'P3241',
         ],
         'ddb' => [
             'label' => 'Deutsche Digitale Bibliothek (DDB)',
+            'wikidata_property' => 'P13049',
         ],
         'deutsche-biographie' => [
             'label' => 'Deutsche Biographie',
+            'wikidata_property' => 'P7902',
         ],
         'diju' => [
             'label' => [
@@ -198,6 +206,7 @@ return [
         ],
         'encyclopaedia-britannica-online' => [
             'label' => 'Encyclopaedia Britannica Online',
+            'wikidata_property' => 'P1417'
         ],
         'e-rara' => [
             'label' => 'e-rara',
@@ -209,7 +218,8 @@ return [
             ],
         ],
         'europeana' => [
-            'label' => 'Europeana'
+            'label' => 'Europeana',
+            'wikidata_property' => 'P7704',
         ],
         'familienlexikon' => [
             'label' => 'Familienlexikon der Schweiz',
@@ -224,7 +234,11 @@ return [
             'label' => 'HallerNet',
         ],
         'helveticat' => [
-            'label' =>  'helveticat',
+            'label' =>  'Helveticat',
+            'wikidata_property' => 'P12899',
+        ],
+        'hfls' => [
+            'label' => 'Historisches Familienlexikon der Schweiz (HLFS)',
         ],
         'histhub' => [
             'label' => 'Histhub',
@@ -236,9 +250,6 @@ return [
                 'fr' => 'Archives de l‘histoire rurale',
             ],
         ],
-        'hlfs' => [
-            'label' => 'Historisches Familienlexikon der Schweiz (HLFS)',
-        ],
         'hls-dhs-dss' => [
             'label' => [
                 'de' => 'Historisches Lexikon der Schweiz (HLS)',
@@ -246,15 +257,18 @@ return [
                 'fr' => 'Dictionnaire historique de la Suisse (DHS)',
                 'it' => 'Dizionario storico della Svizzera (DSS)',
             ],
+            'wikidata_property' => 'P902',
         ],
         'huygens' => [
             'label' => 'Huygens Instituut',
         ],
         'idref' => [
             'label' => 'IdRef',
+            'wikidata_property' => 'P269',
         ],
         'kalliope-verbund' => [
             'label' => 'Kallipope Verbund',
+            'wikidata_property' => 'P9964',
         ],
         'kartenportal.ch' => [
             'label' => 'Kartenportal.ch',
@@ -267,31 +281,38 @@ return [
         ],
         'lcnaf' => [
             'label' => 'Library of Congress (LCNAF)',
+            'wikidata_property' => 'P244',
         ],
         'lonsea' => [
             'label' => 'Lonsea',
-            'full-label' => 'League of nations search engine'
+            'full-label' => 'League of nations search engine',
+            'wikidata_property' => 'P5306',
         ],
         'mcclintock-and-strong-biblical-cyclopedia' => [
             'label' => 'McClintock and Strong Biblical Cyclopedia',
+            'wikidata_property' => 'P8636',
         ],
         'munzinger-person' => [
             'label' => 'Munzinger Online',
+            'wikidata_property' => 'P1284',
         ],
         'oesterreichisches-biographisches-lexikon' => [
             'label' => 'Österreichisches Biographisches Lexikon',
         ],
         'okumenisches-heiligenlexikon' => [
             'label' => 'Ökumenisches Heiligenlexikon',
+            'wikidata_property' => 'P8080',
         ],
         'oxford-dnb' => [
             'label' => 'Oxford Dictionary of National Biography',
+            'wikidata_property' => 'P1415',
         ],
         'parlamentch' => [
             'label' => 'Schweizer Parlament',
         ],
         'perlentaucher' => [
             'label' => 'Perlentaucher',
+            'wikidata_property' => 'P866',
         ],
         'pestalozzianum' => [
             'label' => 'Pestalozzianum',
@@ -301,9 +322,11 @@ return [
         ],
         'rag' => [
             'label' => 'RAG (Repertorium Academicum Germanicum)',
+            'wikidata_property' => 'P12697',
         ],
         'sbn' => [
             'label' => 'SBN (Servizio Bibliotecario Nazionale)',
+            'wikidata_property' => 'P296',
         ],
         'scottish-shale' => [
             'label'  => 'Scottish Shale',
@@ -311,9 +334,11 @@ return [
         ],
         'sikart' => [
             'label' => 'Sikart',
+            'wikidata_property' => 'P781',
         ],
         'smartify' => [
             'label' => 'Smartify',
+            'wikidata_property' => 'P9787',
         ],
         'ssrq' => [
             'label' => [
@@ -325,6 +350,7 @@ return [
         ],
         'stanford-encyclopedia-of-philosophy' => [
             'label' => 'Stanford Encyclopedia of Philosophy',
+            'wikidata_property' => 'P3123',
         ],
         'sturzenegger' => [
             'label' => 'Sturzenegger Stiftung',
@@ -334,6 +360,7 @@ return [
         ],
         'viaf' => [
             'label' => 'VIAF (Virtual International Authority File)',
+            'wikidata_property' => 'P214',
         ],
         'vitrosearch' => [
             'label' => 'VitroSearch',
@@ -346,6 +373,7 @@ return [
         ],
         'worldcat' => [
             'label' => 'WorldCat',
+            'wikidata_property' => 'P5505',
         ]
     ],
     'rename' => [
@@ -357,5 +385,6 @@ return [
         'scottish shale' => 'scottish-shale',
         'sturzenegger-stiftung' => 'sturzenegger',
         'sudoc' => 'idref',
+        'wikimedia commons' => 'wikimedia-commons',
     ],
 ];

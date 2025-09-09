@@ -7,7 +7,7 @@
             </div>
 
             <ul class="list-group list-group-flush">
-                @foreach($resources as $resource)
+                @foreach($resources->sortBy('provider') as $resource)
                     <li class="list-group-item {{ $resource->provider}}">
                         <div class="d-flex justify-content-between align-items-center">
                             <a target="_blank" href="{{ $resource->url }}">

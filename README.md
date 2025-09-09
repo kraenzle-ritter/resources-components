@@ -1,3 +1,7 @@
+# Package will not maintained anymore (2025-09-09)
+
+It is fully integrated in `kraenzle-ritter/resources` now.
+
 # Resources Components for Laravel
 
 [![Latest Stable Version](https://poser.pugx.org/kraenzle-ritter/resources-components/v)](//packagist.org/packages/kraenzle-ritter/resources-components) 
